@@ -35,24 +35,68 @@ int main(int argc, char* args[])
         exit(1);
     }
 
-    // Fill the surface white
-    SDL_FillRect(
-        gScreenSurface, 
-        NULL, 
-        SDL_MapRGB(
-            gScreenSurface->format, 
-            0xFF, 
-            0xFF, 
-            0xFF
-        )
-    );
-    // Draw sprite image
-	SDL_BlitSurface(gSpriteImg, NULL, gScreenSurface, NULL);
-    // Update surface
-    SDL_UpdateWindowSurface(gWindow);
-
-    // Wait two seconds
-    SDL_Delay(2000);
+    bool quit = false;
+    SDL_Event next_event;
+    // Main loop
+    while (!quit)
+    {
+        //Handle events on queue
+        while(SDL_PollEvent(&next_event) != 0)
+        {
+            // User requests quit
+            if (next_event.type == SDL_QUIT)
+            {
+                quit = true;
+            }
+            // User presses a key
+            else if (next_event.type == SDL_KEYDOWN)
+            {
+                switch(next_event.key.keysym.sym)
+                {
+                    case SDLK_UP:
+                    {
+                        printf("Pressed the <UP> key\n");
+                        break;
+                    }
+                    case SDLK_DOWN:
+                    {
+                        printf("Pressed the <DOWN> key\n");
+                        break;
+                    }
+                    case SDLK_LEFT:
+                    {
+                        printf("Pressed the <LEFT> key\n");
+                        break;
+                    }
+                    case SDLK_RIGHT:
+                    {
+                        printf("Pressed the <RIGHT> key\n");
+                        break;
+                    }
+                    default:
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+    
+        // Fill the surface white
+        SDL_FillRect(
+            gScreenSurface, 
+            NULL, 
+            SDL_MapRGB(
+                gScreenSurface->format, 
+                0xFF, 
+                0xFF, 
+                0xFF
+            )
+        );
+        // Draw sprite image
+        SDL_BlitSurface(gSpriteImg, NULL, gScreenSurface, NULL);
+        // Update surface
+        SDL_UpdateWindowSurface(gWindow);
+    }
 
 	close();
 }
