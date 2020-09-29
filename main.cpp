@@ -4,8 +4,9 @@
 
 // Screen dimensions
 const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
-
+const int SCREEN_HEIGHT = 512;
+// TODO: I WOULD LIKE TO INCREASE TILE WIDTH TO 64X64 (BETTER RESOLUTION)
+const int TILE_WIDTH_PX = 32;
 
 // Starts up SDL and creates window
 bool init();
@@ -18,8 +19,9 @@ void close();
 SDL_Window* gWindow = NULL;
 // The surface contained by the window
 SDL_Surface* gScreenSurface = NULL;
-//The image we will load and show on the screen
+
 SDL_Surface* gSpriteImg = NULL;
+SDL_Surface* gGrassTile = NULL;
 
 
 int main(int argc, char* args[])
@@ -92,6 +94,23 @@ int main(int argc, char* args[])
                 0xFF
             )
         );
+        // Draw tiles
+        SDL_Rect source_rect = {0, 0, 32, 32};
+        SDL_Rect dest_rect;
+        for (int i = 0; i < SCREEN_HEIGHT; i += TILE_WIDTH_PX)
+        {
+            for (int j = 0; j < SCREEN_WIDTH; j += TILE_WIDTH_PX)
+            {
+                dest_rect.x = j;
+                dest_rect.y = i;
+                SDL_BlitSurface(
+                    gGrassTile, 
+                    &source_rect, 
+                    gScreenSurface, 
+                    &dest_rect
+                );
+            }
+        }
         // Draw sprite image
         SDL_BlitSurface(gSpriteImg, NULL, gScreenSurface, NULL);
         // Update surface
@@ -141,14 +160,18 @@ bool init()
 
 bool loadMedia() 
 {
-    // Load image
     gSpriteImg = IMG_Load("graphics/sprite-front.png");
     if (gSpriteImg == NULL)
     {
         printf("Unable to load image! SDL Error: %s\n", SDL_GetError());
         return false;
     }
-
+    gGrassTile = IMG_Load("graphics/grass-tile.png");
+    if (gGrassTile == NULL)
+    {
+        printf("Unable to load image! SDL Error: %s\n", SDL_GetError());
+        return false;
+    }
     return true;
 }
 
