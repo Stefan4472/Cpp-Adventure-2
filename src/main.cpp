@@ -6,6 +6,8 @@
 #include <sstream>
 #include "texture_id.h"
 #include "texture_cache.h"
+#include "map.h"
+#include "tile_type.h"
 
 // Path to project directory root
 const boost::filesystem::path ROOT_PATH("/home/stefan/Cpp-Adventure-2");
@@ -17,8 +19,6 @@ const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 512;
 // TODO: I WOULD LIKE TO INCREASE TILE WIDTH TO 64X64 (BETTER RESOLUTION)
 const int TILE_WIDTH_PX = 32;
-const int MAP_WIDTH = SCREEN_WIDTH / TILE_WIDTH_PX;
-const int MAP_HEIGHT = SCREEN_HEIGHT / TILE_WIDTH_PX;
 
 // Starts up SDL and creates window
 bool init();
@@ -33,20 +33,6 @@ SDL_Surface* gScreenSurface = NULL;
 int tileRow = 5;
 int tileCol = 5;
 
-enum class TileType 
-{
-    GRASS,
-    SAND,
-    DIRT,
-    STONE
-};
-
-// Tile map
-TileType map[MAP_HEIGHT][MAP_WIDTH];
-TextureCache textureCache(GRAPHICS_PATH);
-
-TextureId getTileTextureId(TileType tileType);
-void readMap();
 
 int main(int argc, char* args[])
 {
@@ -56,7 +42,8 @@ int main(int argc, char* args[])
         exit(1);
     }
 
-    readMap();
+    TextureCache textureCache(GRAPHICS_PATH);
+    Map map = Map::fromFile(ROOT_PATH / "map.txt");
 
     bool quit = false;
     SDL_Event next_event;
@@ -88,7 +75,7 @@ int main(int argc, char* args[])
                     case SDLK_DOWN:
                     {
                         std::cout << "Pressed the <DOWN> key" << std::endl;
-                        if (tileRow < MAP_HEIGHT)
+                        if (tileRow < map.numRows)
                         {
                             tileRow += 1;
                         }
@@ -106,7 +93,7 @@ int main(int argc, char* args[])
                     case SDLK_RIGHT:
                     {
                         std::cout << "Pressed the <RIGHT> key" << std::endl;
-                        if (tileCol < MAP_WIDTH - 1)
+                        if (tileCol < map.numCols - 1)
                         {
                             tileCol += 1;
                         }
@@ -134,15 +121,17 @@ int main(int argc, char* args[])
         // Draw tiles
         SDL_Rect source_rect = {0, 0, TILE_WIDTH_PX, TILE_WIDTH_PX};
         SDL_Rect dest_rect;
-        for (int i = 0; i < MAP_HEIGHT; i++)
+        for (int i = 0; i < map.numRows; i++)
         {
-            for (int j = 0; j < MAP_WIDTH; j++)
+            for (int j = 0; j < map.numCols; j++)
             {
                 dest_rect.x = j * TILE_WIDTH_PX;
                 dest_rect.y = i * TILE_WIDTH_PX;
-                
+                // Look up the TextureId for this tile
+                TextureId tile_texture = getTileTextureId(map.mapTiles[i][j]);
+
                 SDL_BlitSurface(
-                    textureCache.getTexture(getTileTextureId(map[i][j])), 
+                    textureCache.getTexture(tile_texture), 
                     &source_rect, 
                     gScreenSurface, 
                     &dest_rect
@@ -162,101 +151,12 @@ int main(int argc, char* args[])
         dest_rect.x = tileCol * TILE_WIDTH_PX;
         dest_rect.y = tileRow * TILE_WIDTH_PX - sprite_img->h;
         SDL_BlitSurface(sprite_img, &source_rect, gScreenSurface, &dest_rect);
+        
         // Update surface
         SDL_UpdateWindowSurface(gWindow);
     }
 
 	close();
-}
-
-TextureId getTileTextureId(TileType tileType)
-{
-    switch (tileType)
-    {
-        case TileType::GRASS:
-        {
-            return TextureId::GRASS_TILE;
-        }
-        case TileType::DIRT:
-        {
-            return TextureId::DIRT_TILE;
-        }
-        case TileType::SAND:
-        {
-            return TextureId::SAND_TILE;
-        }
-        case TileType::STONE:
-        {
-            return TextureId::STONE_TILE;
-        }
-        default:
-        {
-            throw std::invalid_argument("Unsupported TileType");
-        }
-    }
-}
-
-void readMap()
-{
-    boost::filesystem::path map_path = ROOT_PATH / "map.txt";
-    
-    std::ifstream map_file(map_path.string());
-    if (!map_file.is_open())
-    {
-        throw std::runtime_error("Couldn't open map file");
-    }
-    
-    int row = 0;
-    std::string next_line;
-
-    while (std::getline(map_file, next_line))
-    {
-        int col = 0;
-        int next_val;
-        std::stringstream str_stream(next_line);
-     
-        // Get each integer
-        while (str_stream >> next_val)
-        {
-            switch (next_val)
-            {
-                case 1:
-                {
-                    std::cout << "Grass";
-                    map[row][col] = TileType::GRASS;
-                    break;
-                }
-                case 2:
-                {
-                    std::cout << "Sand";
-                    map[row][col] = TileType::SAND;
-                    break;
-                }
-                case 3:
-                {
-                    std::cout << "Dirt";
-                    map[row][col] = TileType::DIRT;
-                    break;
-                }
-                case 4:
-                {
-                    std::cout << "Stone";
-                    map[row][col] = TileType::STONE;
-                    break;
-                }
-                default:
-                {
-                    throw std::invalid_argument(
-                        std::string("Unsupported tile ID ") + 
-                        std::to_string(next_val)
-                    );
-                }
-            }
-            col++;
-        }
-        row++;
-    }
-    map_file.close();
 }
 
 bool init()
