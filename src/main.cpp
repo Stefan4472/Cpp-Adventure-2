@@ -163,6 +163,18 @@ TextureId getTileTextureId(TileType tileType)
         {
             return TextureId::GRASS_TILE;
         }
+        case TileType::DIRT:
+        {
+            return TextureId::DIRT_TILE;
+        }
+        case TileType::SAND:
+        {
+            return TextureId::SAND_TILE;
+        }
+        case TileType::STONE:
+        {
+            return TextureId::STONE_TILE;
+        }
         default:
         {
             throw std::invalid_argument("Unsupported TileType");
@@ -188,7 +200,7 @@ void readMap()
         int col = 0;
         int next_val;
         std::stringstream str_stream(next_line);
-
+     
         // Get each integer
         while (str_stream >> next_val)
         {
@@ -198,6 +210,24 @@ void readMap()
                 {
                     std::cout << "Grass";
                     map[row][col] = TileType::GRASS;
+                    break;
+                }
+                case 2:
+                {
+                    std::cout << "Sand";
+                    map[row][col] = TileType::SAND;
+                    break;
+                }
+                case 3:
+                {
+                    std::cout << "Dirt";
+                    map[row][col] = TileType::DIRT;
+                    break;
+                }
+                case 4:
+                {
+                    std::cout << "Stone";
+                    map[row][col] = TileType::STONE;
                     break;
                 }
                 default:
