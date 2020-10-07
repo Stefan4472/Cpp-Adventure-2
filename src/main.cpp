@@ -79,25 +79,37 @@ int main(int argc, char* args[])
                     case SDLK_UP:
                     {
                         std::cout << "Pressed the <UP> key" << std::endl;
-                        tileRow -= 1;
+                        if (tileRow > 1)
+                        {
+                            tileRow -= 1;
+                        }
                         break;
                     }
                     case SDLK_DOWN:
                     {
                         std::cout << "Pressed the <DOWN> key" << std::endl;
-                        tileRow += 1;
+                        if (tileRow < MAP_HEIGHT)
+                        {
+                            tileRow += 1;
+                        }
                         break;
                     }
                     case SDLK_LEFT:
                     {
                         std::cout << "Pressed the <LEFT> key" << std::endl;
-                        tileCol -= 1;
+                        if (tileCol > 0)
+                        {
+                            tileCol -= 1;
+                        }
                         break;
                     }
                     case SDLK_RIGHT:
                     {
                         std::cout << "Pressed the <RIGHT> key" << std::endl;
-                        tileCol += 1;
+                        if (tileCol < MAP_WIDTH - 1)
+                        {
+                            tileCol += 1;
+                        }
                         break;
                     }
                     default:
@@ -138,16 +150,18 @@ int main(int argc, char* args[])
             }
         }
 
-        // Draw sprite image
+        // Draw sprite image.
+        // Make the image bottom line up with the tile the sprite is on.
+        SDL_Surface* sprite_img = textureCache.getTexture(TextureId::SPRITE_FRONT);
         source_rect = {
             0,
             0,
-            textureCache.getTexture(TextureId::SPRITE_FRONT)->w,
-            textureCache.getTexture(TextureId::SPRITE_FRONT)->h
+            sprite_img->w,
+            sprite_img->h
         };
         dest_rect.x = tileCol * TILE_WIDTH_PX;
-        dest_rect.y = tileRow * TILE_WIDTH_PX,
-        SDL_BlitSurface(textureCache.getTexture(TextureId::SPRITE_FRONT), &source_rect, gScreenSurface, &dest_rect);
+        dest_rect.y = tileRow * TILE_WIDTH_PX - sprite_img->h;
+        SDL_BlitSurface(sprite_img, &source_rect, gScreenSurface, &dest_rect);
         // Update surface
         SDL_UpdateWindowSurface(gWindow);
     }
