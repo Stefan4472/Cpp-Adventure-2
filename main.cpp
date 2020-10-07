@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <iostream>
 
 
 // Screen dimensions
@@ -23,17 +24,19 @@ SDL_Surface* gScreenSurface = NULL;
 SDL_Surface* gSpriteImg = NULL;
 SDL_Surface* gGrassTile = NULL;
 
+int tileRow = 5;
+int tileCol = 5;
 
 int main(int argc, char* args[])
 {
     if (!init())
     {
-        printf("Failed to initialize\n");
+        std::cout << "Failed to initialize" << std::endl;;
         exit(1);
     }
     if (!loadMedia()) 
     {
-        printf("Failed to load media\n");
+        std::cout << "Failed to load media" << std::endl;
         exit(1);
     }
 
@@ -57,22 +60,26 @@ int main(int argc, char* args[])
                 {
                     case SDLK_UP:
                     {
-                        printf("Pressed the <UP> key\n");
+                        std::cout << "Pressed the <UP> key" << std::endl;
+                        tileRow -= 1;
                         break;
                     }
                     case SDLK_DOWN:
                     {
-                        printf("Pressed the <DOWN> key\n");
+                        std::cout << "Pressed the <DOWN> key" << std::endl;
+                        tileRow += 1;
                         break;
                     }
                     case SDLK_LEFT:
                     {
-                        printf("Pressed the <LEFT> key\n");
+                        std::cout << "Pressed the <LEFT> key" << std::endl;
+                        tileCol -= 1;
                         break;
                     }
                     case SDLK_RIGHT:
                     {
-                        printf("Pressed the <RIGHT> key\n");
+                        std::cout << "Pressed the <RIGHT> key" << std::endl;
+                        tileCol += 1;
                         break;
                     }
                     default:
@@ -111,8 +118,17 @@ int main(int argc, char* args[])
                 );
             }
         }
+
         // Draw sprite image
-        SDL_BlitSurface(gSpriteImg, NULL, gScreenSurface, NULL);
+        source_rect = {
+            0,
+            0,
+            gSpriteImg->w,
+            gSpriteImg->h
+        };
+        dest_rect.x = tileCol * TILE_WIDTH_PX;
+        dest_rect.y = tileRow * TILE_WIDTH_PX,
+        SDL_BlitSurface(gSpriteImg, &source_rect, gScreenSurface, &dest_rect);
         // Update surface
         SDL_UpdateWindowSurface(gWindow);
     }
@@ -126,14 +142,14 @@ bool init()
     // Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+		std::cout << "SDL could not initialize! SDL_Error: " << std::string(SDL_GetError()) << std::endl;
         return false;
 	}
     // Initialize PNG loading
     int imgFlags = IMG_INIT_PNG;
     if (!(IMG_Init(imgFlags) & imgFlags))
     {
-        printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+        std::cout << "SDL_image could not initialize! SDL_image Error: " << std::string(IMG_GetError()) << std::endl;
         return false;
     }
     
@@ -149,7 +165,7 @@ bool init()
 
     if (gWindow == NULL)
     {
-        printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+        std::cout << "Window could not be created! SDL_Error: " << std::string(SDL_GetError()) << std::endl;
         return false;
     }
 
@@ -163,13 +179,13 @@ bool loadMedia()
     gSpriteImg = IMG_Load("graphics/sprite-front.png");
     if (gSpriteImg == NULL)
     {
-        printf("Unable to load image! SDL Error: %s\n", SDL_GetError());
+        std::cout << "Unable to load image! SDL Error: " << std::string(SDL_GetError()) << std::endl;
         return false;
     }
     gGrassTile = IMG_Load("graphics/grass-tile.png");
     if (gGrassTile == NULL)
     {
-        printf("Unable to load image! SDL Error: %s\n", SDL_GetError());
+        std::cout << "Unable to load image! SDL Error: " << std::string(SDL_GetError()) << std::endl;
         return false;
     }
     return true;
