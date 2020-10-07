@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = main.cpp
+OBJS = texture_id.cpp texture_cache.cpp main.cpp
 
 #OBJ_NAME specifies the name of our exectuable
 OBJ_NAME = run

@@ -2,9 +2,13 @@
 #include <SDL2/SDL_image.h>
 #include <boost/filesystem.hpp>
 #include <iostream>
+#include "texture_id.h"
+#include "texture_cache.h"
 
 // Path to project directory root
 const boost::filesystem::path ROOT_PATH("/home/stefan/Cpp-Adventure-2");
+// Path to graphics directory
+boost::filesystem::path GRAPHICS_PATH = ROOT_PATH / "graphics";
 
 // Screen dimensions
 const int SCREEN_WIDTH = 640;
@@ -14,8 +18,6 @@ const int TILE_WIDTH_PX = 32;
 
 // Starts up SDL and creates window
 bool init();
-// Loads media
-bool loadMedia();
 // Frees media and shuts down SDL
 void close();
 
@@ -23,9 +25,6 @@ void close();
 SDL_Window* gWindow = NULL;
 // The surface contained by the window
 SDL_Surface* gScreenSurface = NULL;
-
-SDL_Surface* gSpriteImg = NULL;
-SDL_Surface* gGrassTile = NULL;
 
 int tileRow = 5;
 int tileCol = 5;
@@ -40,16 +39,13 @@ enum class TileType
 // Tile map
 TileType map[16][20];
 
+TextureCache textureCache(GRAPHICS_PATH);
+
 int main(int argc, char* args[])
 {
     if (!init())
     {
         std::cout << "Failed to initialize" << std::endl;;
-        exit(1);
-    }
-    if (!loadMedia()) 
-    {
-        std::cout << "Failed to load media" << std::endl;
         exit(1);
     }
 
@@ -125,7 +121,7 @@ int main(int argc, char* args[])
                 dest_rect.y = i;
                 
                 SDL_BlitSurface(
-                    gGrassTile, 
+                    textureCache.getTexture(TextureId::GRASS_TILE), 
                     &source_rect, 
                     gScreenSurface, 
                     &dest_rect
@@ -137,12 +133,12 @@ int main(int argc, char* args[])
         source_rect = {
             0,
             0,
-            gSpriteImg->w,
-            gSpriteImg->h
+            textureCache.getTexture(TextureId::SPRITE_FRONT)->w,
+            textureCache.getTexture(TextureId::SPRITE_FRONT)->h
         };
         dest_rect.x = tileCol * TILE_WIDTH_PX;
         dest_rect.y = tileRow * TILE_WIDTH_PX,
-        SDL_BlitSurface(gSpriteImg, &source_rect, gScreenSurface, &dest_rect);
+        SDL_BlitSurface(textureCache.getTexture(TextureId::SPRITE_FRONT), &source_rect, gScreenSurface, &dest_rect);
         // Update surface
         SDL_UpdateWindowSurface(gWindow);
     }
@@ -188,29 +184,11 @@ bool init()
     return true;
 }
 
-bool loadMedia() 
-{
-    boost::filesystem::path graphics_path = ROOT_PATH / "graphics";
-    gSpriteImg = IMG_Load((graphics_path / "sprite-front.png").c_str());
-    if (gSpriteImg == NULL)
-    {
-        std::cout << "Unable to load image! SDL Error: " << std::string(SDL_GetError()) << std::endl;
-        return false;
-    }
-    gGrassTile = IMG_Load((graphics_path / "grass-tile.png").c_str());
-    if (gGrassTile == NULL)
-    {
-        std::cout << "Unable to load image! SDL Error: " << std::string(SDL_GetError()) << std::endl;
-        return false;
-    }
-    return true;
-}
-
 void close()
 {
     // Deallocate surface
-    SDL_FreeSurface(gSpriteImg);
-    gSpriteImg = NULL;
+    SDL_FreeSurface(gScreenSurface);
+    gScreenSurface = NULL;
 
     //Destroy window
     SDL_DestroyWindow(gWindow);
