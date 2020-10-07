@@ -2,6 +2,8 @@
 #include <SDL2/SDL_image.h>
 #include <boost/filesystem.hpp>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include "texture_id.h"
 #include "texture_cache.h"
 
@@ -15,6 +17,8 @@ const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 512;
 // TODO: I WOULD LIKE TO INCREASE TILE WIDTH TO 64X64 (BETTER RESOLUTION)
 const int TILE_WIDTH_PX = 32;
+const int MAP_WIDTH = SCREEN_WIDTH / TILE_WIDTH_PX;
+const int MAP_HEIGHT = SCREEN_HEIGHT / TILE_WIDTH_PX;
 
 // Starts up SDL and creates window
 bool init();
@@ -36,10 +40,13 @@ enum class TileType
     DIRT,
     STONE
 };
-// Tile map
-TileType map[16][20];
 
+// Tile map
+TileType map[MAP_HEIGHT][MAP_WIDTH];
 TextureCache textureCache(GRAPHICS_PATH);
+
+TextureId getTileTextureId(TileType tileType);
+void readMap();
 
 int main(int argc, char* args[])
 {
@@ -48,6 +55,8 @@ int main(int argc, char* args[])
         std::cout << "Failed to initialize" << std::endl;;
         exit(1);
     }
+
+    readMap();
 
     bool quit = false;
     SDL_Event next_event;
@@ -111,17 +120,17 @@ int main(int argc, char* args[])
             )
         );
         // Draw tiles
-        SDL_Rect source_rect = {0, 0, 32, 32};
+        SDL_Rect source_rect = {0, 0, TILE_WIDTH_PX, TILE_WIDTH_PX};
         SDL_Rect dest_rect;
-        for (int i = 0; i < SCREEN_HEIGHT; i += TILE_WIDTH_PX)
+        for (int i = 0; i < MAP_HEIGHT; i++)
         {
-            for (int j = 0; j < SCREEN_WIDTH; j += TILE_WIDTH_PX)
+            for (int j = 0; j < MAP_WIDTH; j++)
             {
-                dest_rect.x = j;
-                dest_rect.y = i;
+                dest_rect.x = j * TILE_WIDTH_PX;
+                dest_rect.y = i * TILE_WIDTH_PX;
                 
                 SDL_BlitSurface(
-                    textureCache.getTexture(TextureId::GRASS_TILE), 
+                    textureCache.getTexture(getTileTextureId(map[i][j])), 
                     &source_rect, 
                     gScreenSurface, 
                     &dest_rect
@@ -146,6 +155,65 @@ int main(int argc, char* args[])
 	close();
 }
 
+TextureId getTileTextureId(TileType tileType)
+{
+    switch (tileType)
+    {
+        case TileType::GRASS:
+        {
+            return TextureId::GRASS_TILE;
+        }
+        default:
+        {
+            throw std::invalid_argument("Unsupported TileType");
+        }
+    }
+}
+
+void readMap()
+{
+    boost::filesystem::path map_path = ROOT_PATH / "map.txt";
+    
+    std::ifstream map_file(map_path.string());
+    if (!map_file.is_open())
+    {
+        throw std::runtime_error("Couldn't open map file");
+    }
+    
+    int row = 0;
+    std::string next_line;
+
+    while (std::getline(map_file, next_line))
+    {
+        int col = 0;
+        int next_val;
+        std::stringstream str_stream(next_line);
+
+        // Get each integer
+        while (str_stream >> next_val)
+        {
+            switch (next_val)
+            {
+                case 1:
+                {
+                    std::cout << "Grass";
+                    map[row][col] = TileType::GRASS;
+                    break;
+                }
+                default:
+                {
+                    throw std::invalid_argument(
+                        std::string("Unsupported tile ID ") + 
+                        std::to_string(next_val)
+                    );
+                }
+            }
+            col++;
+        }
+        row++;
+    }
+    map_file.close();
+}
 
 bool init()
 {
