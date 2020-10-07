@@ -5,13 +5,15 @@
 #include <SDL2/SDL_image.h>
 #include <boost/filesystem.hpp>
 #include <unordered_map>
+#include <stdexcept>
 #include "texture_id.h"
+
 
 class TextureCache
 {
 public:
     TextureCache(boost::filesystem::path graphicsPath);
-    // TODO: Use smart pointers
+    // TODO: Use smart pointers? (may be tough with SDL stuff)
     SDL_Surface* getTexture(TextureId id);
     ~TextureCache();
 

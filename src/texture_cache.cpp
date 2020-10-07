@@ -2,6 +2,12 @@
 
 TextureCache::TextureCache(boost::filesystem::path graphicsPath)
 {
+    if (!boost::filesystem::is_directory(graphicsPath))
+    {
+        throw std::invalid_argument(
+            "The provided path is not a directory"
+        );
+    }
     this->graphicsPath = graphicsPath;
 }
 
@@ -35,7 +41,12 @@ SDL_Surface* TextureCache::loadTexture(boost::filesystem::path path)
     SDL_Surface* surface = IMG_Load(path.c_str());
     if (surface == NULL)
     {
-        // TODO: COLLECT ERROR MESSAGE AND THROW EXCEPTION
+        throw std::runtime_error(
+            "Couldn't load image: SDL_Error " + std::string(SDL_GetError())
+        );
     }
-    return surface;
+    else
+    {
+        return surface;
+    }
 }
