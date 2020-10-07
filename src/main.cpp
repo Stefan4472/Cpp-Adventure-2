@@ -1,7 +1,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <boost/filesystem.hpp>
 #include <iostream>
 
+// Path to project directory root
+const boost::filesystem::path ROOT_PATH("/home/stefan/Cpp-Adventure-2");
 
 // Screen dimensions
 const int SCREEN_WIDTH = 640;
@@ -26,6 +29,16 @@ SDL_Surface* gGrassTile = NULL;
 
 int tileRow = 5;
 int tileCol = 5;
+
+enum class TileType 
+{
+    GRASS,
+    SAND,
+    DIRT,
+    STONE
+};
+// Tile map
+TileType map[16][20];
 
 int main(int argc, char* args[])
 {
@@ -110,6 +123,7 @@ int main(int argc, char* args[])
             {
                 dest_rect.x = j;
                 dest_rect.y = i;
+                
                 SDL_BlitSurface(
                     gGrassTile, 
                     &source_rect, 
@@ -176,13 +190,14 @@ bool init()
 
 bool loadMedia() 
 {
-    gSpriteImg = IMG_Load("graphics/sprite-front.png");
+    boost::filesystem::path graphics_path = ROOT_PATH / "graphics";
+    gSpriteImg = IMG_Load((graphics_path / "sprite-front.png").c_str());
     if (gSpriteImg == NULL)
     {
         std::cout << "Unable to load image! SDL Error: " << std::string(SDL_GetError()) << std::endl;
         return false;
     }
-    gGrassTile = IMG_Load("graphics/grass-tile.png");
+    gGrassTile = IMG_Load((graphics_path / "grass-tile.png").c_str());
     if (gGrassTile == NULL)
     {
         std::cout << "Unable to load image! SDL Error: " << std::string(SDL_GetError()) << std::endl;

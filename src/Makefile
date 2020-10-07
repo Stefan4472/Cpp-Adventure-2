@@ -6,4 +6,4 @@ OBJ_NAME = run
 
 #This is the target that compiles our executable
 all : $(OBJS)
-	g++ $(OBJS) -lSDL2 -lSDL2_image -o $(OBJ_NAME)
+	g++ $(OBJS) -std=c++11 -lSDL2 -lSDL2_image -lboost_system -lboost_filesystem -o ../build/$(OBJ_NAME)
