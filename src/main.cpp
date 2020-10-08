@@ -11,6 +11,8 @@
 #include "game_context.h"
 #include "sprite.h"
 #include "player_sprite.h"
+#include "game_engine.h"
+
 
 // Path to project directory root
 const boost::filesystem::path ROOT_PATH("/home/stefan/Cpp-Adventure-2");
@@ -42,6 +44,7 @@ int main(int argc, char* args[])
         exit(1);
     }
 
+    GameEngine gameEngine;
     TextureCache textureCache(GRAPHICS_PATH);
     Map map = Map::fromFile(ROOT_PATH / "map.txt");
     
@@ -77,24 +80,28 @@ int main(int argc, char* args[])
                     {
                         std::cout << "Pressed the <UP> key" << std::endl;
                         player.moveUp();
+                        gameEngine.handleUpPressed();
                         break;
                     }
                     case SDLK_DOWN:
                     {
                         std::cout << "Pressed the <DOWN> key" << std::endl;
                         player.moveDown();
+                        gameEngine.handleDownPressed();
                         break;
                     }
                     case SDLK_LEFT:
                     {
                         std::cout << "Pressed the <LEFT> key" << std::endl;
                         player.moveLeft();
+                        gameEngine.handleLeftPressed();
                         break;
                     }
                     case SDLK_RIGHT:
                     {
                         std::cout << "Pressed the <RIGHT> key" << std::endl;
                         player.moveRight();
+                        gameEngine.handleRightPressed();
                         break;
                     }
                     default:
@@ -105,6 +112,8 @@ int main(int argc, char* args[])
             }
         }
     
+        gameEngine.update();
+
         // Fill the surface white
         SDL_FillRect(
             gScreenSurface, 
