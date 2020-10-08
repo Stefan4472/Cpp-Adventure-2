@@ -4,14 +4,23 @@
 #include "texture_cache.h"
 #include "map.h"
 
-struct GameContext
+class GameContext
 {
+public:
     int screenWidth;
     int screenHeight;
     int tileSizePx;
     // TODO: USE SMART POINTER? NULLPTR?
     TextureCache* textureCache;
     Map* map;
+
+    GameContext(
+        int screenWidth,
+        int screenHeight,
+        int tileSizePx,
+        TextureCache* textureCache,
+        Map* map
+    );
 };
 
 #endif

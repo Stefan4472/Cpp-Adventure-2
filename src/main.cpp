@@ -4,26 +4,18 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "texture_id.h"
-#include "texture_cache.h"
-#include "map.h"
-#include "tile_type.h"
-#include "game_context.h"
-#include "sprite.h"
-#include "player_sprite.h"
+// Following two imports used to sleep between loops
+#include <chrono>
+#include <thread>
 #include "game_engine.h"
 
 
 // Path to project directory root
 const boost::filesystem::path ROOT_PATH("/home/stefan/Cpp-Adventure-2");
-// Path to graphics directory
-boost::filesystem::path GRAPHICS_PATH = ROOT_PATH / "graphics";
 
 // Screen dimensions
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 512;
-// TODO: I WOULD LIKE TO INCREASE TILE WIDTH TO 64X64 (BETTER RESOLUTION)
-const int TILE_WIDTH_PX = 32;
 
 // Starts up SDL and creates window
 bool init();
@@ -44,27 +36,20 @@ int main(int argc, char* args[])
         exit(1);
     }
 
-    GameEngine gameEngine;
-    TextureCache textureCache(GRAPHICS_PATH);
-    Map map = Map::fromFile(ROOT_PATH / "map.txt");
-    
-    GameContext gameContext = {
-        SCREEN_HEIGHT,
+    // Create GameEngine
+    GameEngine gameEngine(
+        ROOT_PATH,
         SCREEN_WIDTH,
-        TILE_WIDTH_PX,
-        &textureCache,
-        &map
-    };
-
-    PlayerSprite player(&gameContext, SpriteType::PLAYER, 320, 256);
+        SCREEN_HEIGHT
+    );
 
     bool quit = false;
     SDL_Event next_event;
     // Main loop
     while (!quit)
     {
-        //Handle events on queue
-        while(SDL_PollEvent(&next_event) != 0)
+        // Handle events on queue
+        while (SDL_PollEvent(&next_event) != 0)
         {
             // User requests quit
             if (next_event.type == SDL_QUIT)
@@ -79,29 +64,25 @@ int main(int argc, char* args[])
                     case SDLK_UP:
                     {
                         std::cout << "Pressed the <UP> key" << std::endl;
-                        player.moveUp();
-                        gameEngine.handleUpPressed();
+                        gameEngine.inputUpPressed();
                         break;
                     }
                     case SDLK_DOWN:
                     {
                         std::cout << "Pressed the <DOWN> key" << std::endl;
-                        player.moveDown();
-                        gameEngine.handleDownPressed();
+                        gameEngine.inputDownPressed();
                         break;
                     }
                     case SDLK_LEFT:
                     {
                         std::cout << "Pressed the <LEFT> key" << std::endl;
-                        player.moveLeft();
-                        gameEngine.handleLeftPressed();
+                        gameEngine.inputLeftPressed();
                         break;
                     }
                     case SDLK_RIGHT:
                     {
                         std::cout << "Pressed the <RIGHT> key" << std::endl;
-                        player.moveRight();
-                        gameEngine.handleRightPressed();
+                        gameEngine.inputRightPressed();
                         break;
                     }
                     default:
@@ -126,32 +107,13 @@ int main(int argc, char* args[])
             )
         );
 
-        // Draw tiles
-        SDL_Rect source_rect = {0, 0, TILE_WIDTH_PX, TILE_WIDTH_PX};
-        SDL_Rect dest_rect;
-        for (int i = 0; i < map.numRows; i++)
-        {
-            for (int j = 0; j < map.numCols; j++)
-            {
-                dest_rect.x = j * TILE_WIDTH_PX;
-                dest_rect.y = i * TILE_WIDTH_PX;
-                // Look up the TextureId for this tile
-                TextureId tile_texture = getTileTextureId(map.mapTiles[i][j]);
+        // Draw game graphics
+        gameEngine.draw(gScreenSurface);
 
-                SDL_BlitSurface(
-                    textureCache.getTexture(tile_texture), 
-                    &source_rect, 
-                    gScreenSurface, 
-                    &dest_rect
-                );
-            }
-        }
-
-        // Draw sprite
-        player.draw(gScreenSurface);
-        
         // Update surface
         SDL_UpdateWindowSurface(gWindow);
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
 
 	close();

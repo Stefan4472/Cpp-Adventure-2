@@ -45,12 +45,17 @@ void PlayerSprite::moveRight()
 
 void PlayerSprite::updateCoords()
 {
+    std::cout << "tile x,y " << tileX << ", " << tileY << std::endl;
+    std::cout << gameContext->tileSizePx << std::endl;
     worldX = tileX * gameContext->tileSizePx;
     worldY = tileY * gameContext->tileSizePx;
+    std::cout << worldX << ", " << worldY << std::endl;
 }
 
 void PlayerSprite::draw(SDL_Surface* surface)
 {
+    std::cout << "Drawing sprite to " << worldX << ", " << worldY - spriteImage->h << std::endl;
+    std::cout << spriteImage->w << ", " << spriteImage->h << std::endl;
     // Draw sprite image.
     SDL_Rect src_rect, dest_rect;
 

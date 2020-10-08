@@ -3,6 +3,8 @@
 
 #include "sprite.h"
 
+// TODO: REMOVE
+#include <iostream>
 
 class PlayerSprite : public Sprite 
 {
