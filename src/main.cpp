@@ -9,6 +9,8 @@
 #include "map.h"
 #include "tile_type.h"
 #include "game_context.h"
+#include "sprite.h"
+#include "player_sprite.h"
 
 // Path to project directory root
 const boost::filesystem::path ROOT_PATH("/home/stefan/Cpp-Adventure-2");
@@ -52,6 +54,8 @@ int main(int argc, char* args[])
         TILE_WIDTH_PX,
         &textureCache
     };
+
+    PlayerSprite player(&gameContext, SpriteType::PLAYER, 320, 256);
 
     bool quit = false;
     SDL_Event next_event;
@@ -146,7 +150,6 @@ int main(int argc, char* args[])
                 );
             }
         }
-
         // Draw sprite image.
         // Make the image bottom line up with the tile the sprite is on.
         SDL_Surface* sprite_img = textureCache.getTexture(TextureId::SPRITE_FRONT);
@@ -159,7 +162,8 @@ int main(int argc, char* args[])
         dest_rect.x = tileCol * TILE_WIDTH_PX;
         dest_rect.y = tileRow * TILE_WIDTH_PX - sprite_img->h;
         SDL_BlitSurface(sprite_img, &source_rect, gScreenSurface, &dest_rect);
-        
+        // Draw sprite
+        player.draw(gScreenSurface);
         // Update surface
         SDL_UpdateWindowSurface(gWindow);
     }
