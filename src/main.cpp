@@ -8,6 +8,7 @@
 #include "texture_cache.h"
 #include "map.h"
 #include "tile_type.h"
+#include "game_context.h"
 
 // Path to project directory root
 const boost::filesystem::path ROOT_PATH("/home/stefan/Cpp-Adventure-2");
@@ -44,6 +45,13 @@ int main(int argc, char* args[])
 
     TextureCache textureCache(GRAPHICS_PATH);
     Map map = Map::fromFile(ROOT_PATH / "map.txt");
+    
+    GameContext gameContext = {
+        SCREEN_HEIGHT,
+        SCREEN_WIDTH,
+        TILE_WIDTH_PX,
+        &textureCache
+    };
 
     bool quit = false;
     SDL_Event next_event;
