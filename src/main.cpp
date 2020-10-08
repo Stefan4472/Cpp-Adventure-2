@@ -33,9 +33,6 @@ SDL_Window* gWindow = NULL;
 // The surface contained by the window
 SDL_Surface* gScreenSurface = NULL;
 
-int tileRow = 5;
-int tileCol = 5;
-
 
 int main(int argc, char* args[])
 {
@@ -52,7 +49,8 @@ int main(int argc, char* args[])
         SCREEN_HEIGHT,
         SCREEN_WIDTH,
         TILE_WIDTH_PX,
-        &textureCache
+        &textureCache,
+        &map
     };
 
     PlayerSprite player(&gameContext, SpriteType::PLAYER, 320, 256);
@@ -78,37 +76,25 @@ int main(int argc, char* args[])
                     case SDLK_UP:
                     {
                         std::cout << "Pressed the <UP> key" << std::endl;
-                        if (tileRow > 1)
-                        {
-                            tileRow -= 1;
-                        }
+                        player.moveUp();
                         break;
                     }
                     case SDLK_DOWN:
                     {
                         std::cout << "Pressed the <DOWN> key" << std::endl;
-                        if (tileRow < map.numRows)
-                        {
-                            tileRow += 1;
-                        }
+                        player.moveDown();
                         break;
                     }
                     case SDLK_LEFT:
                     {
                         std::cout << "Pressed the <LEFT> key" << std::endl;
-                        if (tileCol > 0)
-                        {
-                            tileCol -= 1;
-                        }
+                        player.moveLeft();
                         break;
                     }
                     case SDLK_RIGHT:
                     {
                         std::cout << "Pressed the <RIGHT> key" << std::endl;
-                        if (tileCol < map.numCols - 1)
-                        {
-                            tileCol += 1;
-                        }
+                        player.moveRight();
                         break;
                     }
                     default:
@@ -130,6 +116,7 @@ int main(int argc, char* args[])
                 0xFF
             )
         );
+
         // Draw tiles
         SDL_Rect source_rect = {0, 0, TILE_WIDTH_PX, TILE_WIDTH_PX};
         SDL_Rect dest_rect;
@@ -150,20 +137,10 @@ int main(int argc, char* args[])
                 );
             }
         }
-        // Draw sprite image.
-        // Make the image bottom line up with the tile the sprite is on.
-        SDL_Surface* sprite_img = textureCache.getTexture(TextureId::SPRITE_FRONT);
-        source_rect = {
-            0,
-            0,
-            sprite_img->w,
-            sprite_img->h
-        };
-        dest_rect.x = tileCol * TILE_WIDTH_PX;
-        dest_rect.y = tileRow * TILE_WIDTH_PX - sprite_img->h;
-        SDL_BlitSurface(sprite_img, &source_rect, gScreenSurface, &dest_rect);
+
         // Draw sprite
         player.draw(gScreenSurface);
+        
         // Update surface
         SDL_UpdateWindowSurface(gWindow);
     }

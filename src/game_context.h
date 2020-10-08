@@ -2,7 +2,7 @@
 #define _GAME_CONTEXT_H
 
 #include "texture_cache.h"
-
+#include "map.h"
 
 struct GameContext
 {
@@ -11,6 +11,7 @@ struct GameContext
     int tileSizePx;
     // TODO: USE SMART POINTER? NULLPTR?
     TextureCache* textureCache;
+    Map* map;
 };
 
 #endif
