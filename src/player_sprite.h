@@ -1,11 +1,11 @@
 #ifndef _PLAYER_SPRITE_H
 #define _PLAYER_SPRITE_H
 
-#include "memory.h"
-#include "sprite.h"
-
+#include <memory>
 // TODO: REMOVE
 #include <iostream>
+#include "sprite.h"
+#include "spritesheet.h"
 
 class PlayerSprite : public Sprite 
 {
@@ -30,6 +30,7 @@ public:
 private:
     SDL_Texture* spriteTexture;
     int textureWidth, textureHeight;
+    std::shared_ptr<Spritesheet> walkDownSpritesheet;
 };
 
 #endif

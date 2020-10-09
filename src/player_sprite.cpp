@@ -14,6 +14,14 @@ PlayerSprite::PlayerSprite(
     std::tie(textureWidth, textureHeight) = gameContext->textureCache->getDimensions(
         TextureId::SPRITE_FRONT
     );
+
+    walkDownSpritesheet = std::make_shared<Spritesheet>(
+        gameContext->textureCache.get(),
+        TextureId::SPRITE_WALK_DOWN,
+        std::vector<int>({200, 200, 200, 200}),
+        true
+    );
+    walkDownSpritesheet->start();
 }
 
 
@@ -62,7 +70,9 @@ void PlayerSprite::updateCoords()
 
 void PlayerSprite::update(UpdateContext* updateContext)
 {
-
+    walkDownSpritesheet->update(
+        updateContext->msSincePrevUpdate
+    );
 }
 
 void PlayerSprite::draw(SDL_Renderer* renderer)
@@ -73,10 +83,18 @@ void PlayerSprite::draw(SDL_Renderer* renderer)
         textureWidth,
         textureHeight
     };
+    // SDL_RenderCopy(
+    //     renderer, 
+    //     gameContext->textureCache->getTexture(TextureId::SPRITE_FRONT), 
+    //     NULL, 
+    //     &dest_rect
+    // );
+    SDL_Rect src_rect = walkDownSpritesheet->getCurrentFrameSrc();
     SDL_RenderCopy(
-        renderer, 
-        gameContext->textureCache->getTexture(TextureId::SPRITE_FRONT), 
-        NULL, 
+        renderer,
+        gameContext->textureCache->getTexture(walkDownSpritesheet->getTextureID()),
+        &src_rect,
         &dest_rect
     );
+
 }

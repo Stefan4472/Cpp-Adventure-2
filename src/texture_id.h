@@ -10,7 +10,8 @@ enum class TextureId
     GRASS_TILE,
     DIRT_TILE,
     SAND_TILE,
-    STONE_TILE
+    STONE_TILE,
+    SPRITE_WALK_DOWN
 };
 
 std::string getFilename(TextureId id);

@@ -135,7 +135,7 @@ SDL_Rect Spritesheet::getCurrentFrameSrc()
     return SDL_Rect {
         frameW * currFrameIndex, 
         0, 
-        frameW * (currFrameIndex + 1), 
+        frameW, 
         frameH
     };
 }

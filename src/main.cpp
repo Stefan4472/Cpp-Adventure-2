@@ -126,11 +126,11 @@ int main(int argc, char* args[])
 
         // TextureCache textureCache(ROOT_PATH / "graphics", gRenderer);
         // SDL_RenderCopy(gRenderer, textureCache.getTexture(TextureId::SPRITE_FRONT), NULL, NULL);
-        
+
         // Update window
         SDL_RenderPresent(gRenderer);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
 
 	close();

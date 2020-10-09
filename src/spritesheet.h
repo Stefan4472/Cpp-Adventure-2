@@ -40,8 +40,6 @@ public:
      */
     void update(long milliseconds);
 
-    void incrementFrame();
-
     /*
     Returns Rect containing coordinates of the current frame, on the spritesheet
     */
@@ -74,6 +72,8 @@ private:
     int timeOnCurrFrameMs;
     // Total runtime of one loop of the animation (ms)
     int totalRuntimeMs;
+
+    void incrementFrame();
 };
 
 #endif
