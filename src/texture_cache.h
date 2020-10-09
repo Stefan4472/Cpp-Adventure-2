@@ -20,6 +20,8 @@ public:
     );
     // TODO: Use smart pointers? (may be tough with SDL stuff)
     SDL_Texture* getTexture(TextureId id);
+    // Get dimensions of specified texture (width, height)
+    std::pair<int, int> getDimensions(TextureId id);
     ~TextureCache();
 
 private:

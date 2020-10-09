@@ -33,6 +33,22 @@ SDL_Texture* TextureCache::getTexture(TextureId id)
     }
 }
 
+std::pair<int, int> TextureCache::getDimensions(TextureId id)
+{
+    SDL_Texture* texture = getTexture(id);
+    int width, height;
+
+    SDL_QueryTexture(
+        texture, 
+        NULL, 
+        NULL, 
+        &width, 
+        &height
+    );
+
+    return std::make_pair(width, height);
+}
+
 TextureCache::~TextureCache()
 {
     for (auto it = textureMap.begin(); it != textureMap.end(); it++)

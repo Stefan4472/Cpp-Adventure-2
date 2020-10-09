@@ -11,14 +11,9 @@ PlayerSprite::PlayerSprite(
         TextureId::SPRITE_FRONT
     );
 
-    SDL_QueryTexture(
-        spriteTexture, 
-        NULL, 
-        NULL, 
-        &textureWidth, 
-        &textureHeight
+    std::tie(textureWidth, textureHeight) = gameContext->textureCache->getDimensions(
+        TextureId::SPRITE_FRONT
     );
-
 }
 
 
