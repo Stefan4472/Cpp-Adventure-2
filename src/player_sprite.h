@@ -24,6 +24,7 @@ public:
     void moveRight();
     void updateCoords();
     
+    void update(UpdateContext* updateContext);
     void draw(SDL_Renderer* renderer);
 
 private:

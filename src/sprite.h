@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include <memory>
 #include "game_context.h"
+#include "update_context.h"
 #include "sprite_type.h"
 
 
@@ -27,6 +28,8 @@ public:
     int tileX, tileY;
     
     /* Abstract methods */
+    // Update
+    virtual void update(UpdateContext* updateContext) = 0;
     // Draw self onto provided renderer
     virtual void draw(SDL_Renderer* renderer) = 0;
 

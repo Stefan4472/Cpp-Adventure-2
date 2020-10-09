@@ -15,6 +15,8 @@
 #include "game_context.h"
 #include "sprite.h"
 #include "player_sprite.h"
+#include "update_context.h"
+
 
 class GameEngine
 {
@@ -47,6 +49,8 @@ private:
     std::shared_ptr<Map> map;
     std::shared_ptr<GameContext> gameContext;
     std::shared_ptr<PlayerSprite> player;
+
+    uint32_t prevUpdateMs;
 
     void handleInput(EventId inputId);
 };

@@ -64,6 +64,23 @@ void GameEngine::update()
         handleInput(next_input);
         inputQueue.pop();
     }
+
+    if (!prevUpdateMs)
+    {
+        prevUpdateMs = SDL_GetTicks();
+    }
+
+    uint32_t curr_game_time = SDL_GetTicks();
+    uint32_t ms_since_prev = curr_game_time - prevUpdateMs;
+
+    UpdateContext update_context = {
+        curr_game_time,
+        ms_since_prev
+    };
+
+    player->update(&update_context);
+    
+    prevUpdateMs = curr_game_time;
 }
 
 void GameEngine::handleInput(EventId inputId)
@@ -100,7 +117,6 @@ void GameEngine::handleInput(EventId inputId)
 void GameEngine::draw(SDL_Renderer* renderer)
 {
     // Draw tiles
-    SDL_Rect source_rect = {0, 0, TILE_SIZE_PX, TILE_SIZE_PX};
     SDL_Rect dest_rect;
     for (int i = 0; i < map->numRows; i++)
     {
@@ -116,33 +132,12 @@ void GameEngine::draw(SDL_Renderer* renderer)
             SDL_RenderCopy(
                 renderer,
                 textureCache->getTexture(tile_texture), 
-                NULL, //&source_rect,
+                NULL,
                 &dest_rect
             );
         }
     }
     
-    // SDL_RenderCopy(renderer, textureCache->getTexture(TextureId::SPRITE_FRONT), NULL, NULL);
-
-    // SDL_BlitSurface(
-    //     textureCache->getTexture(TextureId::SPRITE_FRONT), 
-    //     &source_rect,
-    //     surface, 
-    //     &dest_rect
-    // );
-    
-    // source_rect.w = TILE_SIZE_PX;
-    // source_rect.h = TILE_SIZE_PX;
-    // dest_rect.x = 400;
-    // dest_rect.y = 400;
-
-    // SDL_BlitSurface(
-    //     textureCache->getTexture(TextureId::DIRT_TILE), 
-    //     &source_rect, 
-    //     surface, 
-    //     &dest_rect
-    // );
-
     // Draw player
     player->draw(renderer);
 }

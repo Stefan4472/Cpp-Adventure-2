@@ -65,6 +65,11 @@ void PlayerSprite::updateCoords()
     // std::cout << worldX << ", " << worldY << std::endl;
 }
 
+void PlayerSprite::update(UpdateContext* updateContext)
+{
+
+}
+
 void PlayerSprite::draw(SDL_Renderer* renderer)
 {
     SDL_Rect dest_rect = {
