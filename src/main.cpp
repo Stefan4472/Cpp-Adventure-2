@@ -17,15 +17,15 @@ const boost::filesystem::path ROOT_PATH("/home/stefan/Cpp-Adventure-2");
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 512;
 
+// The window we'll be rendering to
+SDL_Window* gWindow = NULL;
+// Renderer used by the window
+SDL_Renderer* gRenderer = NULL;
+
 // Starts up SDL and creates window
 bool init();
 // Frees media and shuts down SDL
 void close();
-
-// The window we'll be rendering to
-SDL_Window* gWindow = NULL;
-// The surface contained by the window
-SDL_Surface* gScreenSurface = NULL;
 
 
 int main(int argc, char* args[])
@@ -40,7 +40,8 @@ int main(int argc, char* args[])
     GameEngine gameEngine(
         ROOT_PATH,
         SCREEN_WIDTH,
-        SCREEN_HEIGHT
+        SCREEN_HEIGHT,
+        gRenderer
     );
 
     bool quit = false;
@@ -63,25 +64,21 @@ int main(int argc, char* args[])
                 {
                     case SDLK_UP:
                     {
-                        std::cout << "Pressed the <UP> key" << std::endl;
                         gameEngine.inputUpPressed();
                         break;
                     }
                     case SDLK_DOWN:
                     {
-                        std::cout << "Pressed the <DOWN> key" << std::endl;
                         gameEngine.inputDownPressed();
                         break;
                     }
                     case SDLK_LEFT:
                     {
-                        std::cout << "Pressed the <LEFT> key" << std::endl;
                         gameEngine.inputLeftPressed();
                         break;
                     }
                     case SDLK_RIGHT:
                     {
-                        std::cout << "Pressed the <RIGHT> key" << std::endl;
                         gameEngine.inputRightPressed();
                         break;
                     }
@@ -93,25 +90,45 @@ int main(int argc, char* args[])
             }
         }
     
+        // Update game
         gameEngine.update();
-
-        // Fill the surface white
-        SDL_FillRect(
-            gScreenSurface, 
-            NULL, 
-            SDL_MapRGB(
-                gScreenSurface->format, 
-                0xFF, 
-                0xFF, 
-                0xFF
-            )
-        );
-
+        // Clear screen
+        SDL_RenderClear(gRenderer);
         // Draw game graphics
-        gameEngine.draw(gScreenSurface);
+        gameEngine.draw(gRenderer);
 
-        // Update surface
-        SDL_UpdateWindowSurface(gWindow);
+        // SDL_Surface* surface = IMG_Load("../graphics/sprite-front.png");
+        // if (surface == NULL)
+        // {
+        //     throw std::runtime_error(
+        //         "Couldn't load image: SDL_Error " + std::string(SDL_GetError())
+        //     );
+        // }
+        // else
+        // {
+        //     SDL_Texture* texture = SDL_CreateTextureFromSurface(
+        //         gRenderer,
+        //         surface
+        //     );
+            
+        //     if (texture == NULL)
+        //     {
+        //         throw std::runtime_error(
+        //             "Couldn't create texture: SDL_Error " + std::string(SDL_GetError())
+        //         );
+        //     }
+
+        //     // Free surface (no longer needed)
+        //     SDL_FreeSurface(surface);
+        //     SDL_RenderCopy(gRenderer, texture, NULL, NULL);
+        //     SDL_DestroyTexture(texture);
+        // }
+
+        // TextureCache textureCache(ROOT_PATH / "graphics", gRenderer);
+        // SDL_RenderCopy(gRenderer, textureCache.getTexture(TextureId::SPRITE_FRONT), NULL, NULL);
+        
+        // Update window
+        SDL_RenderPresent(gRenderer);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
@@ -127,6 +144,7 @@ bool init()
 		std::cout << "SDL could not initialize! SDL_Error: " << std::string(SDL_GetError()) << std::endl;
         return false;
 	}
+
     // Initialize PNG loading
     int imgFlags = IMG_INIT_PNG;
     if (!(IMG_Init(imgFlags) & imgFlags))
@@ -151,21 +169,28 @@ bool init()
         return false;
     }
 
-    // Get window surface
-    gScreenSurface = SDL_GetWindowSurface(gWindow);
+    //Create renderer for window
+    gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+    if (gRenderer == NULL)
+    {
+        std::cout << "Renderer could not be created! SDL Error: " << SDL_GetError() << std::endl;
+        return false;
+    }
+     
+    // Initialize renderer color
+    SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
     return true;
 }
 
 void close()
 {
-    // Deallocate surface
-    SDL_FreeSurface(gScreenSurface);
-    gScreenSurface = NULL;
-
-    //Destroy window
+    SDL_DestroyRenderer(gRenderer);
     SDL_DestroyWindow(gWindow);
     gWindow = NULL;
+    gRenderer = NULL;
 
     //Quit SDL subsystems
     SDL_Quit();
+    IMG_Quit();
 }

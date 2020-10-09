@@ -1,9 +1,24 @@
 #include "player_sprite.h"
 
-PlayerSprite::PlayerSprite(GameContext* gameContext, SpriteType spriteType, double worldX, double worldY) :
-    Sprite(gameContext, SpriteType::PLAYER, worldX, worldY)
+PlayerSprite::PlayerSprite(
+        std::shared_ptr<GameContext> gameContext, 
+        SpriteType spriteType, 
+        double worldX, 
+        double worldY
+) : Sprite(gameContext, SpriteType::PLAYER, worldX, worldY)
 {
-    spriteImage = gameContext->textureCache->getTexture(TextureId::SPRITE_FRONT);
+    spriteTexture = gameContext->textureCache->getTexture(
+        TextureId::SPRITE_FRONT
+    );
+
+    SDL_QueryTexture(
+        spriteTexture, 
+        NULL, 
+        NULL, 
+        &textureWidth, 
+        &textureHeight
+    );
+
 }
 
 
@@ -45,26 +60,23 @@ void PlayerSprite::moveRight()
 
 void PlayerSprite::updateCoords()
 {
-    std::cout << "tile x,y " << tileX << ", " << tileY << std::endl;
-    std::cout << gameContext->tileSizePx << std::endl;
     worldX = tileX * gameContext->tileSizePx;
     worldY = tileY * gameContext->tileSizePx;
-    std::cout << worldX << ", " << worldY << std::endl;
+    // std::cout << worldX << ", " << worldY << std::endl;
 }
 
-void PlayerSprite::draw(SDL_Surface* surface)
+void PlayerSprite::draw(SDL_Renderer* renderer)
 {
-    std::cout << "Drawing sprite to " << worldX << ", " << worldY - spriteImage->h << std::endl;
-    std::cout << spriteImage->w << ", " << spriteImage->h << std::endl;
-    // Draw sprite image.
-    SDL_Rect src_rect, dest_rect;
-
-    src_rect.w = spriteImage->w;
-    src_rect.h = spriteImage->h;
-
-    // Make the image bottom line up with the tile the sprite is on.
-    dest_rect.x = worldX;
-    dest_rect.y = worldY - spriteImage->h;
-
-    SDL_BlitSurface(spriteImage, &src_rect, surface, &dest_rect);
+    SDL_Rect dest_rect = {
+        static_cast<int>(worldX),
+        static_cast<int>(worldY - textureHeight),
+        textureWidth,
+        textureHeight
+    };
+    SDL_RenderCopy(
+        renderer, 
+        gameContext->textureCache->getTexture(TextureId::SPRITE_FRONT), 
+        NULL, 
+        &dest_rect
+    );
 }

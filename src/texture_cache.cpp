@@ -1,6 +1,9 @@
 #include "texture_cache.h"
 
-TextureCache::TextureCache(boost::filesystem::path graphicsPath)
+TextureCache::TextureCache(
+        boost::filesystem::path graphicsPath,
+        SDL_Renderer* renderer
+)
 {
     if (!boost::filesystem::is_directory(graphicsPath))
     {
@@ -9,19 +12,23 @@ TextureCache::TextureCache(boost::filesystem::path graphicsPath)
         );
     }
     this->graphicsPath = graphicsPath;
+    this->renderer = renderer;
 }
 
-SDL_Surface* TextureCache::getTexture(TextureId id)
+SDL_Texture* TextureCache::getTexture(TextureId id)
 {
+    // std::cout << "Looking up texture " << std::to_string(static_cast<int>(id)) << "...";
     auto it = textureMap.find(id);
     if (it == textureMap.end())
     {
-        SDL_Surface* surface = loadTexture(graphicsPath / getFilename(id));
-        textureMap[id] = surface;
-        return surface;
+        // std::cout << " Not Found" << std::endl;
+        SDL_Texture* texture = loadTexture(graphicsPath / getFilename(id));
+        textureMap[id] = texture;
+        return texture;
     }
     else
     {
+        // std::cout << " Found" << std::endl;
         return it->second;
     }
 }
@@ -30,13 +37,13 @@ TextureCache::~TextureCache()
 {
     for (auto it = textureMap.begin(); it != textureMap.end(); it++)
     {
-        SDL_FreeSurface(it->second);
+        SDL_DestroyTexture(it->second);
         // TODO: USE NULLPTR
         it->second = NULL;
     }
 }
 
-SDL_Surface* TextureCache::loadTexture(boost::filesystem::path path)
+SDL_Texture* TextureCache::loadTexture(boost::filesystem::path path)
 {
     SDL_Surface* surface = IMG_Load(path.c_str());
     if (surface == NULL)
@@ -47,6 +54,21 @@ SDL_Surface* TextureCache::loadTexture(boost::filesystem::path path)
     }
     else
     {
-        return surface;
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(
+            renderer, 
+            surface
+        );
+        
+        if (texture == NULL)
+        {
+            throw std::runtime_error(
+                "Couldn't create texture: SDL_Error " + std::string(SDL_GetError())
+            );
+        }
+
+        // Free surface (no longer needed)
+        SDL_FreeSurface(surface);
+
+        return texture;
     }
 }

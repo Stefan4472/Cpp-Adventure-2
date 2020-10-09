@@ -3,14 +3,17 @@
 GameEngine::GameEngine(
         boost::filesystem::path rootPath,
         int gameWidth,
-        int gameHeight)
+        int gameHeight,
+        SDL_Renderer* renderer
+)
 {
     std::cout << "Init GameEngine with width,height " << gameWidth << ", " << gameHeight << std::endl;
     auto graphics_path = rootPath / "graphics";
     auto map_path = rootPath / "map.txt";
 
     textureCache = std::make_shared<TextureCache>(
-        graphics_path
+        graphics_path,
+        renderer
     );
     
     map = std::make_shared<Map>(
@@ -21,12 +24,12 @@ GameEngine::GameEngine(
         gameWidth,
         gameHeight,
         TILE_SIZE_PX,
-        textureCache.get(),
-        map.get()
+        textureCache,
+        map
     );
 
     player = std::make_shared<PlayerSprite>(
-        gameContext.get(), 
+        gameContext, 
         SpriteType::PLAYER, 
         320, 
         256
@@ -94,7 +97,7 @@ void GameEngine::handleInput(EventId inputId)
     }
 }
 
-void GameEngine::draw(SDL_Surface* surface)
+void GameEngine::draw(SDL_Renderer* renderer)
 {
     // Draw tiles
     SDL_Rect source_rect = {0, 0, TILE_SIZE_PX, TILE_SIZE_PX};
@@ -105,30 +108,41 @@ void GameEngine::draw(SDL_Surface* surface)
         {
             dest_rect.x = j * TILE_SIZE_PX;
             dest_rect.y = i * TILE_SIZE_PX;
+            dest_rect.w = TILE_SIZE_PX;
+            dest_rect.h = TILE_SIZE_PX;
             // Look up the TextureId for this tile
             TextureId tile_texture = getTileTextureId(map->mapTiles[i][j]);
 
-            SDL_BlitSurface(
+            SDL_RenderCopy(
+                renderer,
                 textureCache->getTexture(tile_texture), 
-                &source_rect,
-                surface, 
+                NULL, //&source_rect,
                 &dest_rect
             );
         }
     }
     
-    // Draw sprite image.
-    SDL_Rect src_rect;
+    // SDL_RenderCopy(renderer, textureCache->getTexture(TextureId::SPRITE_FRONT), NULL, NULL);
 
-    src_rect.w = textureCache->getTexture(TextureId::SPRITE_FRONT)->w;
-    src_rect.h = textureCache->getTexture(TextureId::SPRITE_FRONT)->h;
+    // SDL_BlitSurface(
+    //     textureCache->getTexture(TextureId::SPRITE_FRONT), 
+    //     &source_rect,
+    //     surface, 
+    //     &dest_rect
+    // );
+    
+    // source_rect.w = TILE_SIZE_PX;
+    // source_rect.h = TILE_SIZE_PX;
+    // dest_rect.x = 400;
+    // dest_rect.y = 400;
 
-    // Make the image bottom line up with the tile the sprite is on.
-    dest_rect.x = 200;
-    dest_rect.y = 200;
-
-    SDL_BlitSurface(textureCache->getTexture(TextureId::SPRITE_FRONT), &src_rect, surface, &dest_rect);
+    // SDL_BlitSurface(
+    //     textureCache->getTexture(TextureId::DIRT_TILE), 
+    //     &source_rect, 
+    //     surface, 
+    //     &dest_rect
+    // );
 
     // Draw player
-    player->draw(surface);
+    player->draw(renderer);
 }

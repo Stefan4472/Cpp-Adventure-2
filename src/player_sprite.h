@@ -1,6 +1,7 @@
 #ifndef _PLAYER_SPRITE_H
 #define _PLAYER_SPRITE_H
 
+#include "memory.h"
 #include "sprite.h"
 
 // TODO: REMOVE
@@ -9,7 +10,12 @@
 class PlayerSprite : public Sprite 
 {
 public:
-    PlayerSprite(GameContext* gameContext, SpriteType spriteType, double worldX, double worldY);
+    PlayerSprite(
+        std::shared_ptr<GameContext> gameContext, 
+        SpriteType spriteType, 
+        double worldX, 
+        double worldY
+    );
     
     // Move by one tile
     void moveUp();
@@ -18,10 +24,11 @@ public:
     void moveRight();
     void updateCoords();
     
-    void draw(SDL_Surface* surface);
+    void draw(SDL_Renderer* renderer);
 
 private:
-    SDL_Surface* spriteImage;
+    SDL_Texture* spriteTexture;
+    int textureWidth, textureHeight;
 };
 
 #endif

@@ -4,8 +4,8 @@ GameContext::GameContext(
         int screenWidth,
         int screenHeight,
         int tileSizePx,
-        TextureCache* textureCache,
-        Map* map
+        std::shared_ptr<TextureCache> textureCache,
+        std::shared_ptr<Map> map
 )
 {
     this->screenWidth = screenWidth;

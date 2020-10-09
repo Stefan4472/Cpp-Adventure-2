@@ -19,17 +19,19 @@
 class GameEngine
 {
 public:
+    // TODO: GAMEENGINE SHOULDN'T DEAL WITH THE RENDERER AT ALL
     GameEngine(
             boost::filesystem::path rootPath,
             int gameWidth,
-            int gameHeight
+            int gameHeight,
+            SDL_Renderer* renderer
     );
 
     // TODO: INCREASE TILE WIDTH TO 64X64? (BETTER RESOLUTION)
     const int TILE_SIZE_PX = 32;
     
     void update();
-    void draw(SDL_Surface* surface);
+    void draw(SDL_Renderer* renderer);
     
     /* Input handlers */
     void inputUpPressed();

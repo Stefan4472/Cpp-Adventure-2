@@ -1,12 +1,20 @@
 #include "sprite.h"
 
-Sprite::Sprite(GameContext* gameContext, SpriteType spriteType)
+Sprite::Sprite(
+        std::shared_ptr<GameContext> gameContext, 
+        SpriteType spriteType
+)
 {
     this->gameContext = gameContext;
     this->spriteType = spriteType;
 }
 
-Sprite::Sprite(GameContext* gameContext, SpriteType spriteType, double worldX, double worldY)
+Sprite::Sprite(
+        std::shared_ptr<GameContext> gameContext, 
+        SpriteType spriteType, 
+        double worldX, 
+        double worldY
+)
 {
     this->gameContext = gameContext;
     this->spriteType = spriteType;
