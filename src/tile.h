@@ -8,11 +8,13 @@
 class Tile
 {
 public:
-    Tile(TileType tileType);
+    Tile(TileType tileType, double worldX, double worldY);
     virtual void update(UpdateContext* updateContext) = 0;
     virtual void draw(GameRenderer* gameRenderer) = 0;
-private:
+
+protected:
     TileType tileType;
+    double worldX, worldY;
 };
 
 #endif

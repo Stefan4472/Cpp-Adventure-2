@@ -24,16 +24,24 @@ Map Map::fromFile(boost::filesystem::path filePath)
     std::vector<TileType> next_map_row;
     std::string next_line;
 
+    std::vector<std::vector<std::shared_ptr<Tile>>> _map_tiles;
+
     while (std::getline(map_file, next_line))
     {
         int next_val;
         std::stringstream str_stream(next_line);
         next_map_row.clear();
+        _map_tiles.push_back(std::vector<std::shared_ptr<Tile>>());
      
         // Get each integer
         while (str_stream >> next_val)
         {
             next_map_row.push_back(resolveTileType(next_val));
+            _map_tiles.back().push_back(TileFactory::createTile(
+                resolveTileType(next_val),
+                0,
+                0
+            ));
         }
         map_tiles.push_back(next_map_row);
     }
