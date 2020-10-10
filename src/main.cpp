@@ -39,9 +39,9 @@ int main(int argc, char* args[])
     // Create GameEngine
     GameEngine gameEngine(
         ROOT_PATH,
+        gRenderer,
         SCREEN_WIDTH,
-        SCREEN_HEIGHT,
-        gRenderer
+        SCREEN_HEIGHT
     );
 
     bool quit = false;

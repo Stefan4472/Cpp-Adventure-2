@@ -16,6 +16,7 @@
 #include "sprite.h"
 #include "player_sprite.h"
 #include "update_context.h"
+#include "game_renderer.h"
 
 
 class GameEngine
@@ -23,10 +24,10 @@ class GameEngine
 public:
     // TODO: GAMEENGINE SHOULDN'T DEAL WITH THE RENDERER AT ALL
     GameEngine(
-            boost::filesystem::path rootPath,
-            int gameWidth,
-            int gameHeight,
-            SDL_Renderer* renderer
+        boost::filesystem::path rootPath,
+        SDL_Renderer* renderer,
+        int gameWidth,
+        int gameHeight
     );
 
     // TODO: INCREASE TILE WIDTH TO 64X64? (BETTER RESOLUTION)
@@ -45,6 +46,7 @@ private:
     std::queue<EventId> inputQueue;
 
     std::shared_ptr<TextureCache> textureCache;
+    std::shared_ptr<GameRenderer> gameRenderer;
     std::shared_ptr<Map> map;
     std::shared_ptr<GameContext> gameContext;
     std::shared_ptr<PlayerSprite> player;

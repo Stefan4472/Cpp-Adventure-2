@@ -137,7 +137,7 @@ void PlayerSprite::update(UpdateContext* updateContext)
     spriteModel->update(updateContext);
 }
 
-void PlayerSprite::draw(SDL_Renderer* renderer)
+void PlayerSprite::draw(GameRenderer* renderer)
 {
     // Get drawing information from spriteModel
     TextureId texture_id;
@@ -146,19 +146,25 @@ void PlayerSprite::draw(SDL_Renderer* renderer)
         spriteModel->getDrawInfo(gameContext->textureCache.get());
 
     // Create destination rectangle. Draw to correct world coordinates
-    SDL_Rect dest_rect = {
-        static_cast<int>(worldX),
-        static_cast<int>(worldY - src_rect.h),
-        src_rect.w,
-        src_rect.h
-    };
+    // SDL_Rect dest_rect = {
+    //     static_cast<int>(worldX),
+    //     static_cast<int>(worldY - src_rect.h),
+    //     src_rect.w,
+    //     src_rect.h
+    // };
 
-    SDL_RenderCopy(
-        renderer,
-        gameContext->textureCache->getTexture(texture_id),
-        &src_rect,
-        &dest_rect
+    renderer->drawToWorld(
+        texture_id,
+        src_rect,
+        worldX,
+        worldY - src_rect.h
     );
+    // SDL_RenderCopy(
+    //     renderer,
+    //     gameContext->textureCache->getTexture(texture_id),
+    //     &src_rect,
+    //     &dest_rect
+    // );
 }
 
 void PlayerSprite::updateWalkCommand()
@@ -168,13 +174,11 @@ void PlayerSprite::updateWalkCommand()
     {
         case WalkDirection::NONE:
         {
-            std::cout << "Stopped walking" << std::endl;
             spriteModel->stopMoving();
             break;
         }
         case WalkDirection::UP:
         {
-            std::cout << "Walk up" << std::endl;
             goalWorldX = worldX;
             goalWorldY = worldY - gameContext->tileSizePx;
             spriteModel->moveUp();
@@ -182,7 +186,6 @@ void PlayerSprite::updateWalkCommand()
         }
         case WalkDirection::DOWN:
         {
-            std::cout << "Walk down" << std::endl;
             goalWorldX = worldX;
             goalWorldY = worldY + gameContext->tileSizePx;
             spriteModel->moveDown();
@@ -190,7 +193,6 @@ void PlayerSprite::updateWalkCommand()
         }
         case WalkDirection::LEFT:
         {
-            std::cout << "Walk left" << std::endl;
             goalWorldX = worldX - gameContext->tileSizePx;
             goalWorldY = worldY;
             spriteModel->moveLeft();
@@ -198,7 +200,7 @@ void PlayerSprite::updateWalkCommand()
         }
         case WalkDirection::RIGHT:
         {
-            std::cout << "Walk right" << std::endl;
+            // TODO: ONLY SET GOAL IF THE TILE NEXT TO US IS WALKABLE
             goalWorldX = worldX + gameContext->tileSizePx;
             goalWorldY = worldY;
             spriteModel->moveRight();

@@ -6,6 +6,7 @@ GameRenderer::GameRenderer(
         int gameWidth,
         int gameHeight
 ) {
+    this->renderer = renderer;
     this->textureCache = textureCache;
     this->gameWidth = gameWidth;
     this->gameHeight = gameHeight;
@@ -31,13 +32,6 @@ void GameRenderer::drawToWorld(
     std::tie(texture_width, texture_height) = 
         textureCache->getDimensions(textureId);
 
-    SDL_Rect src = {
-        0,
-        0,
-        texture_width,
-        texture_height
-    };
-
     SDL_Rect dest = {
         static_cast<int>(worldX - topLeftWorldX),
         static_cast<int>(worldY - topLeftWorldY),
@@ -48,28 +42,28 @@ void GameRenderer::drawToWorld(
     SDL_RenderCopy(
         renderer,
         textureCache->getTexture(textureId),
-        &src,
+        NULL,
         &dest
     );
 }
 
 void GameRenderer::drawToWorld(
         TextureId textureId,
-        SDL_Rect* subRect,
+        SDL_Rect& subRect,
         double worldX,
         double worldY
 ) {
     SDL_Rect dest = {
         static_cast<int>(worldX - topLeftWorldX),
         static_cast<int>(worldY - topLeftWorldY),
-        subRect->w,
-        subRect->h
+        subRect.w,
+        subRect.h
     };
 
     SDL_RenderCopy(
         renderer,
         textureCache->getTexture(textureId),
-        subRect,
+        &subRect,
         &dest
     );
 }

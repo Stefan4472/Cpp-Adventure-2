@@ -2,11 +2,10 @@
 
 GameEngine::GameEngine(
         boost::filesystem::path rootPath,
+        SDL_Renderer* renderer,
         int gameWidth,
-        int gameHeight,
-        SDL_Renderer* renderer
-)
-{
+        int gameHeight
+) {
     std::cout << "Init GameEngine with width,height " << gameWidth << ", " << gameHeight << std::endl;
     auto graphics_path = rootPath / "graphics";
     auto map_path = rootPath / "map.txt";
@@ -16,6 +15,13 @@ GameEngine::GameEngine(
         renderer
     );
     
+    gameRenderer = std::make_shared<GameRenderer>(
+        renderer,
+        textureCache,
+        gameWidth,
+        gameHeight
+    );
+
     map = std::make_shared<Map>(
         Map::fromFile(map_path)
     );
@@ -89,15 +95,14 @@ void GameEngine::draw(SDL_Renderer* renderer)
             // Look up the TextureId for this tile
             TextureId tile_texture = getTileTextureId(map->mapTiles[i][j]);
 
-            SDL_RenderCopy(
-                renderer,
-                textureCache->getTexture(tile_texture), 
-                NULL,
-                &dest_rect
+            gameRenderer->drawToWorld(
+                tile_texture,
+                j * TILE_SIZE_PX,
+                i * TILE_SIZE_PX
             );
         }
     }
     
     // Draw player
-    player->draw(renderer);
+    player->draw(gameRenderer.get());
 }

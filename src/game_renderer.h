@@ -28,7 +28,7 @@ public:
 
     void drawToWorld(
         TextureId textureId,
-        SDL_Rect* subRect,
+        SDL_Rect& subRect,
         double worldX,
         double worldY
     );

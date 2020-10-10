@@ -30,7 +30,7 @@ public:
     // void updateCoords();
     
     void update(UpdateContext* updateContext);
-    void draw(SDL_Renderer* renderer);
+    void draw(GameRenderer* renderer);
 
 private:
     InputHandler inputHandler;
