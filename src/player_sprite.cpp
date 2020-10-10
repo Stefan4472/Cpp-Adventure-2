@@ -50,6 +50,10 @@ PlayerSprite::PlayerSprite(
     walkDownSpritesheet->start();
 }
 
+void PlayerSprite::giveInput(EventId eventId)
+{
+    
+}
 
 void PlayerSprite::moveUp()
 {

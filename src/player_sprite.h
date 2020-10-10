@@ -7,6 +7,8 @@
 #include "sprite.h"
 #include "spritesheet.h"
 #include "sprite_model.h"
+#include "walk_direction.h"
+#include "input_event.h"
 
 
 class PlayerSprite : public Sprite 
@@ -18,6 +20,8 @@ public:
         double worldX, 
         double worldY
     );
+    
+    void giveInput(EventId eventId);
     
     // Move by one tile
     void moveUp();
@@ -37,6 +41,11 @@ private:
     std::shared_ptr<Spritesheet> walkUpSpritesheet;
     std::shared_ptr<Spritesheet> walkLeftSpritesheet;
     std::shared_ptr<Spritesheet> walkRightSpritesheet;
+
+    // Direction currently being walked in
+    WalkDirection walkDirection = WalkDirection::NONE;
+    // How long does it take to walk the distance of one tile?
+    const int TILE_WALK_TIME_MS = 800;
 };
 
 #endif

@@ -6,7 +6,11 @@ enum class EventId
     PRESS_UP,
     PRESS_DOWN,
     PRESS_LEFT,
-    PRESS_RIGHT
+    PRESS_RIGHT,
+    UNPRESS_UP,
+    UNPRESS_DOWN,
+    UNPRESS_LEFT,
+    UNPRESS_RIGHT
 };
 
 #endif
