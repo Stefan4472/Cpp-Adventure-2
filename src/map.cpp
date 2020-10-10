@@ -42,6 +42,25 @@ Map Map::fromFile(boost::filesystem::path filePath)
     return Map(map_tiles);
 }
 
+void Map::draw(
+        GameRenderer* gameRenderer,
+        SDL_Rect& visibleWorld
+) {
+    // Draw tiles
+    for (int i = 0; i < numRows; i++)
+    {
+        for (int j = 0; j < numCols; j++)
+        {
+            // Look up the TextureId for this tile
+            gameRenderer->drawToWorld(
+                getTileTextureId(mapTiles[i][j]),
+                j * TextureCache::TILE_SIZE_PX,
+                i * TextureCache::TILE_SIZE_PX
+            );
+        }
+    }
+}
+
 bool Map::areTilesValid(std::vector<std::vector<TileType>> mapTiles)
 {
     // Make sure `mapTiles` is non-empty

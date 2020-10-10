@@ -29,7 +29,7 @@ GameEngine::GameEngine(
     gameContext = std::make_shared<GameContext>(
         gameWidth,
         gameHeight,
-        TILE_SIZE_PX,
+        TextureCache::TILE_SIZE_PX,
         textureCache,
         map
     );
@@ -82,26 +82,17 @@ void GameEngine::handleInput(EventId inputId)
 
 void GameEngine::draw(SDL_Renderer* renderer)
 {
-    // Draw tiles
-    SDL_Rect dest_rect;
-    for (int i = 0; i < map->numRows; i++)
-    {
-        for (int j = 0; j < map->numCols; j++)
-        {
-            dest_rect.x = j * TILE_SIZE_PX;
-            dest_rect.y = i * TILE_SIZE_PX;
-            dest_rect.w = TILE_SIZE_PX;
-            dest_rect.h = TILE_SIZE_PX;
-            // Look up the TextureId for this tile
-            TextureId tile_texture = getTileTextureId(map->mapTiles[i][j]);
+    SDL_Rect visible_bounds = {
+        0,
+        0,
+        gameContext->screenWidth,
+        gameContext->screenHeight    
+    };
 
-            gameRenderer->drawToWorld(
-                tile_texture,
-                j * TILE_SIZE_PX,
-                i * TILE_SIZE_PX
-            );
-        }
-    }
+    map->draw(
+        gameRenderer.get(),
+        visible_bounds
+    );
     
     // Draw player
     player->draw(gameRenderer.get());

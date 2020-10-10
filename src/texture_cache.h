@@ -15,9 +15,13 @@ class TextureCache
 {
 public:
     TextureCache(
-            boost::filesystem::path graphicsPath,
-            SDL_Renderer* renderer
+        boost::filesystem::path graphicsPath,
+        SDL_Renderer* renderer
     );
+
+    // TODO: INCREASE TILE WIDTH TO 64X64? (BETTER RESOLUTION)
+    static const int TILE_SIZE_PX;
+    
     // TODO: Use smart pointers? (may be tough with SDL stuff)
     SDL_Texture* getTexture(TextureId id);
     // Get dimensions of specified texture (width, height)

@@ -1,5 +1,7 @@
 #include "texture_cache.h"
 
+const int TextureCache::TILE_SIZE_PX = 32;
+
 TextureCache::TextureCache(
         boost::filesystem::path graphicsPath,
         SDL_Renderer* renderer

@@ -29,9 +29,6 @@ public:
         int gameWidth,
         int gameHeight
     );
-
-    // TODO: INCREASE TILE WIDTH TO 64X64? (BETTER RESOLUTION)
-    const int TILE_SIZE_PX = 32;
     
     // Handle player input
     void giveInput(EventId eventId);
