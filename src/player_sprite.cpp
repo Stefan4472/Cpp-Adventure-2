@@ -40,7 +40,7 @@ PlayerSprite::PlayerSprite(
         true
     );
     spriteModel = std::make_shared<SpriteModel>(
-        TextureId::SPRITE_WALK_UP,
+        TextureId::SPRITE_FRONT,
         walkUpSpritesheet,
         walkDownSpritesheet,
         walkLeftSpritesheet,
@@ -70,10 +70,6 @@ void PlayerSprite::giveInput(EventId eventId)
 
 void PlayerSprite::update(UpdateContext* updateContext)
 {
-    walkDownSpritesheet->update(
-        updateContext->msSincePrevUpdate
-    );
-
     // No current movement input: see if there's a new one
     if (currWalkCommand == WalkDirection::NONE)
     {
@@ -143,22 +139,23 @@ void PlayerSprite::update(UpdateContext* updateContext)
 
 void PlayerSprite::draw(SDL_Renderer* renderer)
 {
+    // Get drawing information from spriteModel
+    TextureId texture_id;
+    SDL_Rect src_rect;
+    std::tie(texture_id, src_rect) = 
+        spriteModel->getDrawInfo(gameContext->textureCache.get());
+
+    // Create destination rectangle. Draw to correct world coordinates
     SDL_Rect dest_rect = {
         static_cast<int>(worldX),
-        static_cast<int>(worldY - textureHeight),
-        textureWidth,
-        textureHeight
+        static_cast<int>(worldY - src_rect.h),
+        src_rect.w,
+        src_rect.h
     };
-    // SDL_RenderCopy(
-    //     renderer, 
-    //     gameContext->textureCache->getTexture(TextureId::SPRITE_FRONT), 
-    //     NULL, 
-    //     &dest_rect
-    // );
-    SDL_Rect src_rect = walkDownSpritesheet->getCurrentFrameSrc();
+
     SDL_RenderCopy(
         renderer,
-        gameContext->textureCache->getTexture(walkDownSpritesheet->getTextureID()),
+        gameContext->textureCache->getTexture(texture_id),
         &src_rect,
         &dest_rect
     );

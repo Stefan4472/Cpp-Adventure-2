@@ -3,6 +3,8 @@
 
 #include <memory>
 #include "spritesheet.h"
+#include "texture_cache.h"
+
 
 class SpriteModel
 {
@@ -13,6 +15,10 @@ public:
         std::shared_ptr<Spritesheet> walkDownSheet,
         std::shared_ptr<Spritesheet> walkLeftSheet,
         std::shared_ptr<Spritesheet> walkRightSheet
+    );
+
+    std::pair<TextureId, SDL_Rect> getDrawInfo(
+            TextureCache* textureCache
     );
 
 private:
