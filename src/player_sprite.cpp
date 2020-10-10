@@ -52,7 +52,7 @@ PlayerSprite::PlayerSprite(
 
 void PlayerSprite::giveInput(EventId eventId)
 {
-    
+
 }
 
 void PlayerSprite::moveUp()

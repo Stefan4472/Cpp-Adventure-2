@@ -36,24 +36,9 @@ GameEngine::GameEngine(
     );
 }
 
-void GameEngine::inputUpPressed()
+void GameEngine::giveInput(EventId eventId)
 {
-    inputQueue.push(EventId::PRESS_UP);
-}
-
-void GameEngine::inputDownPressed()
-{
-    inputQueue.push(EventId::PRESS_DOWN);
-}
-
-void GameEngine::inputLeftPressed()
-{
-    inputQueue.push(EventId::PRESS_LEFT);
-}
-
-void GameEngine::inputRightPressed()
-{
-    inputQueue.push(EventId::PRESS_RIGHT);
+    std::cout << int(eventId) << std::endl;
 }
 
 void GameEngine::update()
@@ -79,7 +64,7 @@ void GameEngine::update()
     };
 
     player->update(&update_context);
-    
+
     prevUpdateMs = curr_game_time;
 }
 

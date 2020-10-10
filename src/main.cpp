@@ -49,7 +49,9 @@ int main(int argc, char* args[])
     // Main loop
     while (!quit)
     {
-        // Handle events on queue
+        // Handle events on queue.
+        // This is where we translate SDL_Events into input events
+        // that our engine understands.
         while (SDL_PollEvent(&next_event) != 0)
         {
             // User requests quit
@@ -58,28 +60,59 @@ int main(int argc, char* args[])
                 quit = true;
             }
             // User presses a key
-            else if (next_event.type == SDL_KEYDOWN)
+            else if (next_event.type == SDL_KEYDOWN && !next_event.key.repeat)
             {
                 switch(next_event.key.keysym.sym)
                 {
                     case SDLK_UP:
                     {
-                        gameEngine.inputUpPressed();
+                        gameEngine.giveInput(EventId::PRESS_UP);
                         break;
                     }
                     case SDLK_DOWN:
                     {
-                        gameEngine.inputDownPressed();
+                        gameEngine.giveInput(EventId::PRESS_DOWN);
                         break;
                     }
                     case SDLK_LEFT:
                     {
-                        gameEngine.inputLeftPressed();
+                        gameEngine.giveInput(EventId::PRESS_LEFT);
                         break;
                     }
                     case SDLK_RIGHT:
                     {
-                        gameEngine.inputRightPressed();
+                        gameEngine.giveInput(EventId::PRESS_RIGHT);
+                        break;
+                    }
+                    default:
+                    {
+                        break;
+                    }
+                }
+            }
+            // User releases a key
+            else if (next_event.type == SDL_KEYUP)
+            {
+                switch(next_event.key.keysym.sym)
+                {
+                    case SDLK_UP:
+                    {
+                        gameEngine.giveInput(EventId::UNPRESS_UP);
+                        break;
+                    }
+                    case SDLK_DOWN:
+                    {
+                        gameEngine.giveInput(EventId::UNPRESS_DOWN);
+                        break;
+                    }
+                    case SDLK_LEFT:
+                    {
+                        gameEngine.giveInput(EventId::UNPRESS_LEFT);
+                        break;
+                    }
+                    case SDLK_RIGHT:
+                    {
+                        gameEngine.giveInput(EventId::UNPRESS_RIGHT);
                         break;
                     }
                     default:
@@ -96,37 +129,6 @@ int main(int argc, char* args[])
         SDL_RenderClear(gRenderer);
         // Draw game graphics
         gameEngine.draw(gRenderer);
-
-        // SDL_Surface* surface = IMG_Load("../graphics/sprite-front.png");
-        // if (surface == NULL)
-        // {
-        //     throw std::runtime_error(
-        //         "Couldn't load image: SDL_Error " + std::string(SDL_GetError())
-        //     );
-        // }
-        // else
-        // {
-        //     SDL_Texture* texture = SDL_CreateTextureFromSurface(
-        //         gRenderer,
-        //         surface
-        //     );
-            
-        //     if (texture == NULL)
-        //     {
-        //         throw std::runtime_error(
-        //             "Couldn't create texture: SDL_Error " + std::string(SDL_GetError())
-        //         );
-        //     }
-
-        //     // Free surface (no longer needed)
-        //     SDL_FreeSurface(surface);
-        //     SDL_RenderCopy(gRenderer, texture, NULL, NULL);
-        //     SDL_DestroyTexture(texture);
-        // }
-
-        // TextureCache textureCache(ROOT_PATH / "graphics", gRenderer);
-        // SDL_RenderCopy(gRenderer, textureCache.getTexture(TextureId::SPRITE_FRONT), NULL, NULL);
-
         // Update window
         SDL_RenderPresent(gRenderer);
 

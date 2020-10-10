@@ -32,14 +32,13 @@ public:
     // TODO: INCREASE TILE WIDTH TO 64X64? (BETTER RESOLUTION)
     const int TILE_SIZE_PX = 32;
     
+    // Handle player input
+    void giveInput(EventId eventId);
+    // Update game state
     void update();
+    // Draw game to provided Renderer
     void draw(SDL_Renderer* renderer);
     
-    /* Input handlers */
-    void inputUpPressed();
-    void inputDownPressed();
-    void inputLeftPressed();
-    void inputRightPressed();
 
 private:
     // TODO: PROBABLY NEED A THREAD-SAFE QUEUE

@@ -9,8 +9,8 @@ Spritesheet::Spritesheet(
     this->textureId = textureId;
     frameDurationsMs = frameDurations;
     shouldLoop = loop;
-
     numFrames = frameDurationsMs.size();
+
     // Get size of full sheet
     int sheet_width, sheet_height;
     std::tie(sheet_width, sheet_height) = 
@@ -23,19 +23,25 @@ Spritesheet::Spritesheet(
     {
         totalRuntimeMs += frame_duration;
     }
+
+    isPlaying = false;
+    hasPlayed = false;
+    currFrameIndex = 0;
+    timeOnCurrFrameMs = 0;
 }
 
 void Spritesheet::start() 
 {
+    std::cout << "Got call to start(). isPlaying = " << isPlaying << std::endl;
     if (isPlaying) 
     {
-        throw new std::runtime_error(
+        throw std::runtime_error(
             "Animation already playing"
         );
     } 
     else if (hasPlayed && !shouldLoop) 
     {
-        throw new std::runtime_error(
+        throw std::runtime_error(
             "Animation has already played and does not loop--call reset()"
         );
     } 
@@ -49,7 +55,7 @@ void Spritesheet::stop()
 {
     if (!isPlaying) 
     {
-        throw new std::runtime_error(
+        throw std::runtime_error(
             "Animation isn't playing, therefore cannot be stopped"
         );
     }
@@ -100,7 +106,7 @@ void Spritesheet::incrementFrame()
 {
     if (!isPlaying) 
     {
-        throw new std::runtime_error(
+        throw std::runtime_error(
             "Animation is not playing"
         );
     }
@@ -128,7 +134,7 @@ SDL_Rect Spritesheet::getCurrentFrameSrc()
 {
     if (!isPlaying) 
     {
-        throw new std::runtime_error(
+        throw std::runtime_error(
             "Animation is not playing"
         );
     }
@@ -160,7 +166,7 @@ int Spritesheet::getFramesLeft()
 {
     if (!isPlaying) 
     {
-        throw new std::runtime_error(
+        throw std::runtime_error(
             "Animation is not playing"
         );
     }
