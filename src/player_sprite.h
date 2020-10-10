@@ -6,6 +6,8 @@
 #include <iostream>
 #include "sprite.h"
 #include "spritesheet.h"
+#include "sprite_model.h"
+
 
 class PlayerSprite : public Sprite 
 {
@@ -30,7 +32,11 @@ public:
 private:
     SDL_Texture* spriteTexture;
     int textureWidth, textureHeight;
+    std::shared_ptr<SpriteModel> spriteModel;
     std::shared_ptr<Spritesheet> walkDownSpritesheet;
+    std::shared_ptr<Spritesheet> walkUpSpritesheet;
+    std::shared_ptr<Spritesheet> walkLeftSpritesheet;
+    std::shared_ptr<Spritesheet> walkRightSpritesheet;
 };
 
 #endif

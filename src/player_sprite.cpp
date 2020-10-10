@@ -15,12 +15,38 @@ PlayerSprite::PlayerSprite(
         TextureId::SPRITE_FRONT
     );
 
+    walkUpSpritesheet = std::make_shared<Spritesheet>(
+        gameContext->textureCache.get(),
+        TextureId::SPRITE_WALK_UP,
+        std::vector<int>({200, 200, 200, 200}),
+        true
+    );
     walkDownSpritesheet = std::make_shared<Spritesheet>(
         gameContext->textureCache.get(),
         TextureId::SPRITE_WALK_DOWN,
         std::vector<int>({200, 200, 200, 200}),
         true
     );
+    walkLeftSpritesheet = std::make_shared<Spritesheet>(
+        gameContext->textureCache.get(),
+        TextureId::SPRITE_WALK_LEFT,
+        std::vector<int>({200, 200, 200, 200}),
+        true
+    );
+    walkRightSpritesheet = std::make_shared<Spritesheet>(
+        gameContext->textureCache.get(),
+        TextureId::SPRITE_WALK_RIGHT,
+        std::vector<int>({200, 200, 200, 200}),
+        true
+    );
+    spriteModel = std::make_shared<SpriteModel>(
+        TextureId::SPRITE_WALK_UP,
+        walkUpSpritesheet,
+        walkDownSpritesheet,
+        walkLeftSpritesheet,
+        walkRightSpritesheet
+    );
+
     walkDownSpritesheet->start();
 }
 

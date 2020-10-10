@@ -24,9 +24,21 @@ std::string getFilename(TextureId id)
         {
             return "stone-tile.png";
         }
+        case TextureId::SPRITE_WALK_UP:
+        {
+            return "sprite-walk-up.png";
+        }
         case TextureId::SPRITE_WALK_DOWN:
         {
             return "sprite-walk-down.png";
+        }
+        case TextureId::SPRITE_WALK_LEFT:
+        {
+            return "sprite-walk-left.png";
+        }
+        case TextureId::SPRITE_WALK_RIGHT:
+        {
+            return "sprite-walk-right.png";
         }
         default:
         {
