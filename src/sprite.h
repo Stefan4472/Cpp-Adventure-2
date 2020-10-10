@@ -22,6 +22,7 @@ public:
         double worldY
     );
     
+    // TODO: DIFFERENTIATE BETWEEN WORLD COORDINATES AND DRAW COORDINATES
     // World coordinates
     double worldX, worldY;
     // Tile coordinates

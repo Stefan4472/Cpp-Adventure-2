@@ -9,6 +9,7 @@
 #include "sprite_model.h"
 #include "walk_direction.h"
 #include "input_event.h"
+#include "input_handler.h"
 
 
 class PlayerSprite : public Sprite 
@@ -21,19 +22,21 @@ public:
         double worldY
     );
     
+    // How long it takes to walk the distance of one tile
+    const int TILE_WALK_TIME_MS = 300;
+
     void giveInput(EventId eventId);
-    
-    // Move by one tile
-    void moveUp();
-    void moveDown();
-    void moveLeft();
-    void moveRight();
-    void updateCoords();
+
+    // void updateCoords();
     
     void update(UpdateContext* updateContext);
     void draw(SDL_Renderer* renderer);
 
 private:
+    InputHandler inputHandler;
+    // Number of pixels walked per millisecond
+    double walkPxPerMs;
+
     SDL_Texture* spriteTexture;
     int textureWidth, textureHeight;
     std::shared_ptr<SpriteModel> spriteModel;
@@ -43,9 +46,10 @@ private:
     std::shared_ptr<Spritesheet> walkRightSpritesheet;
 
     // Direction currently being walked in
-    WalkDirection walkDirection = WalkDirection::NONE;
-    // How long does it take to walk the distance of one tile?
-    const int TILE_WALK_TIME_MS = 800;
+    WalkDirection currWalkCommand;
+    double goalWorldX, goalWorldY;
+
+    void updateWalkCommand();
 };
 
 #endif

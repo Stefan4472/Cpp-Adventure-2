@@ -47,62 +47,98 @@ PlayerSprite::PlayerSprite(
         walkRightSpritesheet
     );
 
+    walkPxPerMs = gameContext->tileSizePx * 1.0 / TILE_WALK_TIME_MS;
+    currWalkCommand = WalkDirection::NONE;
+    goalWorldX = worldX;
+    goalWorldY = worldY;
+
+    // Start walking animation (testing purposes)
     walkDownSpritesheet->start();
 }
 
 void PlayerSprite::giveInput(EventId eventId)
 {
-
+    inputHandler.giveInput(eventId);
 }
 
-void PlayerSprite::moveUp()
-{
-    if (tileY > 1)
-    {
-        tileY -= 1;
-        updateCoords();
-    }
-}
-
-void PlayerSprite::moveDown()
-{
-    if (tileY < gameContext->map->numRows)
-    {
-        tileY += 1;
-        updateCoords();
-    }
-}
-
-void PlayerSprite::moveLeft()
-{
-    if (tileX > 0)
-    {
-        tileX -= 1;
-        updateCoords();
-    }
-}
-
-void PlayerSprite::moveRight()
-{
-    if (tileX < gameContext->map->numCols - 1)
-    {
-        tileX += 1;
-        updateCoords();
-    }
-}
-
-void PlayerSprite::updateCoords()
-{
-    worldX = tileX * gameContext->tileSizePx;
-    worldY = tileY * gameContext->tileSizePx;
-    // std::cout << worldX << ", " << worldY << std::endl;
-}
+// void PlayerSprite::updateCoords()
+// {
+//     worldX = tileX * gameContext->tileSizePx;
+//     worldY = tileY * gameContext->tileSizePx;
+//     // std::cout << worldX << ", " << worldY << std::endl;
+// }
 
 void PlayerSprite::update(UpdateContext* updateContext)
 {
     walkDownSpritesheet->update(
         updateContext->msSincePrevUpdate
     );
+
+    // No current movement input: see if there's a new one
+    if (currWalkCommand == WalkDirection::NONE)
+    {
+        updateWalkCommand();
+    }
+
+    switch (currWalkCommand)
+    {
+        case WalkDirection::NONE:
+        {
+            break;
+        }
+        case WalkDirection::UP:
+        {
+            double px_to_move = 
+                walkPxPerMs * updateContext->msSincePrevUpdate;
+            worldY -= px_to_move;
+            // Check for completion (and fix possible overshoot)
+            if (worldY <= goalWorldY)
+            {
+                worldY = goalWorldY;
+                updateWalkCommand();
+            }
+            break;
+        }
+        case WalkDirection::DOWN:
+        {
+            double px_to_move = 
+                walkPxPerMs * updateContext->msSincePrevUpdate;
+            worldY += px_to_move;
+            // Check for completion (and fix possible overshoot)
+            if (worldY >= goalWorldY)
+            {
+                worldY = goalWorldY;
+                updateWalkCommand();
+            }
+            break;
+        }
+        case WalkDirection::LEFT:
+        {
+            double px_to_move = 
+                walkPxPerMs * updateContext->msSincePrevUpdate;
+            worldX -= px_to_move;
+            // Check for completion (and fix possible overshoot)
+            if (worldX <= goalWorldX)
+            {
+                worldX = goalWorldX;
+                updateWalkCommand();
+            }
+            break;
+        }
+        case WalkDirection::RIGHT:
+        {
+            double px_to_move = 
+                walkPxPerMs * updateContext->msSincePrevUpdate;
+            worldX += px_to_move;
+            // Check for completion (and fix possible overshoot)
+            if (worldX >= goalWorldX)
+            {
+                worldX = goalWorldX;
+                updateWalkCommand();
+            }
+            break;
+        }
+    }
 }
 
 void PlayerSprite::draw(SDL_Renderer* renderer)
@@ -126,5 +162,40 @@ void PlayerSprite::draw(SDL_Renderer* renderer)
         &src_rect,
         &dest_rect
     );
+}
 
+void PlayerSprite::updateWalkCommand()
+{
+    currWalkCommand = inputHandler.getNextWalkCommand();
+    switch (currWalkCommand)
+    {
+        case WalkDirection::NONE:
+        {
+            break;
+        }
+        case WalkDirection::UP:
+        {
+            goalWorldX = worldX;
+            goalWorldY = worldY - gameContext->tileSizePx;
+            break;
+        }
+        case WalkDirection::DOWN:
+        {
+            goalWorldX = worldX;
+            goalWorldY = worldY + gameContext->tileSizePx;
+            break;
+        }
+        case WalkDirection::LEFT:
+        {
+            goalWorldX = worldX - gameContext->tileSizePx;
+            goalWorldY = worldY;
+            break;
+        }
+        case WalkDirection::RIGHT:
+        {
+            goalWorldX = worldX + gameContext->tileSizePx;
+            goalWorldY = worldY;
+            break;
+        }    
+    }
 }

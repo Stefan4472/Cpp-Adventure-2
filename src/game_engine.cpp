@@ -38,7 +38,7 @@ GameEngine::GameEngine(
 
 void GameEngine::giveInput(EventId eventId)
 {
-    std::cout << int(eventId) << std::endl;
+    inputQueue.push(eventId);
 }
 
 void GameEngine::update()
@@ -70,33 +70,8 @@ void GameEngine::update()
 
 void GameEngine::handleInput(EventId inputId)
 {
-    switch (inputId)
-    {
-        case EventId::PRESS_UP:
-        {
-            player->moveUp();
-            break;
-        }
-        case EventId::PRESS_DOWN:
-        {
-            player->moveDown();
-            break;
-        }
-        case EventId::PRESS_LEFT:
-        {
-            player->moveLeft();
-            break;
-        }
-        case EventId::PRESS_RIGHT:
-        {
-            player->moveRight();
-            break;
-        }
-        default:
-        {
-            throw std::invalid_argument("Unsupported EventId");
-        }
-    }
+    // Pass input to the Player
+    player->giveInput(inputId);
 }
 
 void GameEngine::draw(SDL_Renderer* renderer)
