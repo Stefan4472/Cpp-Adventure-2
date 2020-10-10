@@ -13,17 +13,15 @@
 class Map
 {
 public:
-    Map(std::vector<std::vector<TileType>> mapTiles);
+    Map(std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles);
 
     static Map fromFile(boost::filesystem::path filePath);
-    // Tile map  TODO: MAKE CONST?
-    std::vector<std::vector<TileType>> mapTiles;
-    int numRows, numCols;
-
-    std::vector<std::vector<std::shared_ptr<Tile>>> _mapTiles;
 
     // Return size of world (x, y)
     std::pair<int, int> getSizePx();
+
+    // Return whether the provided tile coordinate is valid
+    bool isTileWithinMap(int tileX, int tileY);
 
     void drawTiles(
         GameRenderer* gameRenderer,
@@ -31,7 +29,13 @@ public:
     );
 
 private:
-    static bool areTilesValid(std::vector<std::vector<TileType>> mapTiles);
+    int numRows, numCols;
+    std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles;
+
+    static bool areTilesValid(
+        std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles
+    );
+
     // Convert integer read from map file to a `TileType` instance.
     static TileType resolveTileType(int tileId);
 };

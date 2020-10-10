@@ -6,3 +6,8 @@ Tile::Tile(TileType tileType, double worldX, double worldY)
     this->worldX = worldX;
     this->worldY = worldY;
 }
+
+TileType Tile::getTileType()
+{
+    return tileType;
+}

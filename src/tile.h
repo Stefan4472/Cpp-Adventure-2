@@ -9,6 +9,8 @@ class Tile
 {
 public:
     Tile(TileType tileType, double worldX, double worldY);
+    TileType getTileType();
+    
     virtual void update(UpdateContext* updateContext) = 0;
     virtual void draw(GameRenderer* gameRenderer) = 0;
 

@@ -17,12 +17,7 @@ GameContext::GameContext(
 
 bool GameContext::isTileWalkable(int tileX, int tileY)
 {
-    // TODO: DOUBLE-CHECK BOUNDS
-    return
-        tileX >= 0 &&
-        tileX < map->numCols &&
-        tileY >= 0 &&
-        tileY < map->numRows;
+    return map->isTileWithinMap(tileX, tileY);
 }
 
 std::pair<int, int> GameContext::resolveTile(double worldX, double worldY)

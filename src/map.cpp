@@ -1,6 +1,6 @@
 #include "map.h"
 
-Map::Map(std::vector<std::vector<TileType>> mapTiles)
+Map::Map(std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles)
 {
     if (!areTilesValid(mapTiles))
     {
@@ -20,30 +20,29 @@ Map Map::fromFile(boost::filesystem::path filePath)
         throw std::runtime_error("Couldn't open map file");
     }
     
-    std::vector<std::vector<TileType>> map_tiles;
-    std::vector<TileType> next_map_row;
+    std::vector<std::vector<std::shared_ptr<Tile>>> map_tiles;
     std::string next_line;
-
-    std::vector<std::vector<std::shared_ptr<Tile>>> _map_tiles;
+    int curr_row = 0;
+    int curr_col = 0;
 
     while (std::getline(map_file, next_line))
     {
         int next_val;
         std::stringstream str_stream(next_line);
-        next_map_row.clear();
-        _map_tiles.push_back(std::vector<std::shared_ptr<Tile>>());
+        map_tiles.push_back(std::vector<std::shared_ptr<Tile>>());
      
         // Get each integer
         while (str_stream >> next_val)
         {
-            next_map_row.push_back(resolveTileType(next_val));
-            _map_tiles.back().push_back(TileFactory::createTile(
+            curr_col++;
+            map_tiles.back().push_back(TileFactory::createTile(
                 resolveTileType(next_val),
-                0,
-                0
+                curr_col * TextureCache::TILE_SIZE_PX,
+                curr_row * TextureCache::TILE_SIZE_PX
             ));
         }
-        map_tiles.push_back(next_map_row);
+        curr_row++;
+        curr_col = 0;
     }
 
     map_file.close();
@@ -58,14 +57,23 @@ std::pair<int, int> Map::getSizePx()
     );
 }
 
+bool Map::isTileWithinMap(int tileX, int tileY)
+{
+    return
+        tileX >= 0 &&
+        tileX < numCols &&
+        tileY >= 0 &&
+        tileY < numRows;
+}
+
 void Map::drawTiles(
         GameRenderer* gameRenderer,
         SDL_Rect& visibleWorld
 ) {
     int tiles_w = visibleWorld.w / TextureCache::TILE_SIZE_PX + 1;
     int tiles_h = visibleWorld.h / TextureCache::TILE_SIZE_PX + 1;
-    int start_tile_x = visibleWorld.x / TextureCache::TILE_SIZE_PX;
-    int start_tile_y = visibleWorld.y / TextureCache::TILE_SIZE_PX;
+    int start_tile_x = visibleWorld.x / TextureCache::TILE_SIZE_PX - 1;
+    int start_tile_y = visibleWorld.y / TextureCache::TILE_SIZE_PX - 1;
     int offset_x = visibleWorld.x % TextureCache::TILE_SIZE_PX;
     int offset_y = visibleWorld.y % TextureCache::TILE_SIZE_PX;
     
@@ -83,19 +91,21 @@ void Map::drawTiles(
                 continue;
             }
 
-            TileType tile = mapTiles[tile_y][tile_x];
+            mapTiles[tile_y][tile_x]->draw(gameRenderer);
+            // TileType tile = mapTiles[tile_y][tile_x]->getTileType();
             
-            gameRenderer->drawToWorld(
-                getTileTextureId(tile),
-                visibleWorld.x - offset_x + j * TextureCache::TILE_SIZE_PX,
-                visibleWorld.y - offset_y + i * TextureCache::TILE_SIZE_PX
-            );
+            // gameRenderer->drawToWorld(
+            //     getTileTextureId(tile),
+            //     visibleWorld.x - offset_x + j * TextureCache::TILE_SIZE_PX,
+            //     visibleWorld.y - offset_y + i * TextureCache::TILE_SIZE_PX
+            // );
         }
     }
 }
 
-bool Map::areTilesValid(std::vector<std::vector<TileType>> mapTiles)
-{
+bool Map::areTilesValid(
+        std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles
+) {
     // Make sure `mapTiles` is non-empty
     if (mapTiles.empty())
     {
@@ -108,7 +118,7 @@ bool Map::areTilesValid(std::vector<std::vector<TileType>> mapTiles)
 
     // Make sure each row has the same number of elements 
     int num_cols = mapTiles[0].size();
-    for (std::vector<TileType> tile_row : mapTiles)
+    for (std::vector<std::shared_ptr<Tile>> tile_row : mapTiles)
     {
         if (tile_row.size() != num_cols)
         {
