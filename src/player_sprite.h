@@ -23,7 +23,7 @@ public:
     );
     
     // How long it takes to walk the distance of one tile
-    const int TILE_WALK_TIME_MS = 300;
+    const int TILE_WALK_TIME_MS = 400;
 
     void giveInput(EventId eventId);
 

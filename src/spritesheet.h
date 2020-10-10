@@ -15,7 +15,8 @@ public:
             TextureCache* textureCache,
             TextureId textureId,
             std::vector<int> frameDurations, 
-            bool loop
+            bool loop = false,
+            int startFrame = 0
     );
 
     /*
@@ -56,6 +57,8 @@ private:
     TextureId textureId;
     // Number of frames in the animation
     int numFrames;
+    // Index of the frame that the animation starts on
+    int startFrame;
     // Dimensions of each frame (px)
     int frameW, frameH;
     // Duration (ms) to show each frame.

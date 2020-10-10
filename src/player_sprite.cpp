@@ -14,29 +14,30 @@ PlayerSprite::PlayerSprite(
     std::tie(textureWidth, textureHeight) = gameContext->textureCache->getDimensions(
         TextureId::SPRITE_FRONT
     );
-
+    // TODO: START ON FRAME 1?
+    // WE WANT THE ANIMATION TO START ON FRAME 1, BUT TO LOOP ON FRAME 0.
     walkUpSpritesheet = std::make_shared<Spritesheet>(
         gameContext->textureCache.get(),
         TextureId::SPRITE_WALK_UP,
-        std::vector<int>({75, 75, 75, 75}),
+        std::vector<int>({100, 100, 100, 100}),
         true
     );
     walkDownSpritesheet = std::make_shared<Spritesheet>(
         gameContext->textureCache.get(),
         TextureId::SPRITE_WALK_DOWN,
-        std::vector<int>({75, 75, 75, 75}),
+        std::vector<int>({100, 100, 100, 100}),
         true
     );
     walkLeftSpritesheet = std::make_shared<Spritesheet>(
         gameContext->textureCache.get(),
         TextureId::SPRITE_WALK_LEFT,
-        std::vector<int>({75, 75, 75, 75}),
+        std::vector<int>({100, 100, 100, 100}),
         true
     );
     walkRightSpritesheet = std::make_shared<Spritesheet>(
         gameContext->textureCache.get(),
         TextureId::SPRITE_WALK_RIGHT,
-        std::vector<int>({75, 75, 75, 75}),
+        std::vector<int>({100, 100, 100, 100}),
         true
     );
     spriteModel = std::make_shared<SpriteModel>(
@@ -51,9 +52,6 @@ PlayerSprite::PlayerSprite(
     currWalkCommand = WalkDirection::NONE;
     goalWorldX = worldX;
     goalWorldY = worldY;
-
-    // Start walking animation (testing purposes)
-    walkDownSpritesheet->start();
 }
 
 void PlayerSprite::giveInput(EventId eventId)
@@ -135,6 +133,8 @@ void PlayerSprite::update(UpdateContext* updateContext)
             break;
         }
     }
+
+    spriteModel->update(updateContext);
 }
 
 void PlayerSprite::draw(SDL_Renderer* renderer)
@@ -168,10 +168,13 @@ void PlayerSprite::updateWalkCommand()
     {
         case WalkDirection::NONE:
         {
+            std::cout << "Stopped walking" << std::endl;
+            spriteModel->stopMoving();
             break;
         }
         case WalkDirection::UP:
         {
+            std::cout << "Walk up" << std::endl;
             goalWorldX = worldX;
             goalWorldY = worldY - gameContext->tileSizePx;
             spriteModel->moveUp();
@@ -179,6 +182,7 @@ void PlayerSprite::updateWalkCommand()
         }
         case WalkDirection::DOWN:
         {
+            std::cout << "Walk down" << std::endl;
             goalWorldX = worldX;
             goalWorldY = worldY + gameContext->tileSizePx;
             spriteModel->moveDown();
@@ -186,6 +190,7 @@ void PlayerSprite::updateWalkCommand()
         }
         case WalkDirection::LEFT:
         {
+            std::cout << "Walk left" << std::endl;
             goalWorldX = worldX - gameContext->tileSizePx;
             goalWorldY = worldY;
             spriteModel->moveLeft();
@@ -193,6 +198,7 @@ void PlayerSprite::updateWalkCommand()
         }
         case WalkDirection::RIGHT:
         {
+            std::cout << "Walk right" << std::endl;
             goalWorldX = worldX + gameContext->tileSizePx;
             goalWorldY = worldY;
             spriteModel->moveRight();

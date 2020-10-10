@@ -38,32 +38,60 @@ void SpriteModel::moveRight()
     walkRightSheet->start();
 }
 
+void SpriteModel::stopMoving()
+{
+    resetAnyPlaying();
+}
+
+void SpriteModel::update(UpdateContext* updateContext)
+{
+    if (walkUpSheet->getIsPlaying())
+    {
+        walkUpSheet->update(updateContext->msSincePrevUpdate);
+    }
+    else if (walkDownSheet->getIsPlaying())
+    {
+        walkDownSheet->update(updateContext->msSincePrevUpdate);
+    }
+    else if (walkLeftSheet->getIsPlaying())
+    {
+        walkLeftSheet->update(updateContext->msSincePrevUpdate);
+    }
+    else if (walkRightSheet->getIsPlaying())
+    {
+        walkRightSheet->update(updateContext->msSincePrevUpdate);
+    }
+}
 
 std::pair<TextureId, SDL_Rect> SpriteModel::getDrawInfo(TextureCache* textureCache)
 {
     if (walkUpSheet->getIsPlaying())
     {
+        std::cout << "WalkUp" << std::endl;
         return std::make_pair(
             walkUpSheet->getTextureID(),
             walkUpSheet->getCurrentFrameSrc()
         );
     }
-    if (walkDownSheet->getIsPlaying())
+    else if (walkDownSheet->getIsPlaying())
     {
+        std::cout << "WalkDown" << std::endl;
         return std::make_pair(
             walkDownSheet->getTextureID(),
             walkDownSheet->getCurrentFrameSrc()
         );
     }
-    if (walkLeftSheet->getIsPlaying())
+    else if (walkLeftSheet->getIsPlaying())
     {
+        std::cout << "WalkLeft" << std::endl;
         return std::make_pair(
             walkLeftSheet->getTextureID(),
             walkLeftSheet->getCurrentFrameSrc()
         );
     }
-    if (walkRightSheet->getIsPlaying())
+    else if (walkRightSheet->getIsPlaying())
     {
+        std::cout << "WalkRight" << std::endl;
         return std::make_pair(
             walkRightSheet->getTextureID(),
             walkRightSheet->getCurrentFrameSrc()

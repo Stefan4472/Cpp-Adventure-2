@@ -4,11 +4,13 @@ Spritesheet::Spritesheet(
         TextureCache* textureCache,
         TextureId textureId,
         std::vector<int> frameDurations, 
-        bool loop
+        bool loop,
+        int startFrame
 ) {
     this->textureId = textureId;
     frameDurationsMs = frameDurations;
     shouldLoop = loop;
+    this->startFrame = startFrame;
     numFrames = frameDurationsMs.size();
 
     // Get size of full sheet
@@ -26,7 +28,7 @@ Spritesheet::Spritesheet(
 
     isPlaying = false;
     hasPlayed = false;
-    currFrameIndex = 0;
+    currFrameIndex = startFrame;
     timeOnCurrFrameMs = 0;
 }
 
@@ -63,7 +65,7 @@ void Spritesheet::stop()
 
 void Spritesheet::reset() 
 {
-    currFrameIndex = 0;
+    currFrameIndex = startFrame;
     timeOnCurrFrameMs = 0;
     hasPlayed = false;
     isPlaying = false;

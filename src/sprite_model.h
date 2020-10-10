@@ -4,6 +4,7 @@
 #include <memory>
 #include "spritesheet.h"
 #include "texture_cache.h"
+#include "update_context.h"
 
 
 class SpriteModel
@@ -23,6 +24,9 @@ public:
     void moveDown();
     void moveLeft();
     void moveRight();
+    void stopMoving();
+
+    void update(UpdateContext* updateContext);
 
     std::pair<TextureId, SDL_Rect> getDrawInfo(
             TextureCache* textureCache
