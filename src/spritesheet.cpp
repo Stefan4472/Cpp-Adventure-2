@@ -32,7 +32,6 @@ Spritesheet::Spritesheet(
 
 void Spritesheet::start() 
 {
-    std::cout << "Got call to start(). isPlaying = " << isPlaying << std::endl;
     if (isPlaying) 
     {
         throw std::runtime_error(

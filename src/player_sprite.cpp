@@ -18,25 +18,25 @@ PlayerSprite::PlayerSprite(
     walkUpSpritesheet = std::make_shared<Spritesheet>(
         gameContext->textureCache.get(),
         TextureId::SPRITE_WALK_UP,
-        std::vector<int>({200, 200, 200, 200}),
+        std::vector<int>({75, 75, 75, 75}),
         true
     );
     walkDownSpritesheet = std::make_shared<Spritesheet>(
         gameContext->textureCache.get(),
         TextureId::SPRITE_WALK_DOWN,
-        std::vector<int>({200, 200, 200, 200}),
+        std::vector<int>({75, 75, 75, 75}),
         true
     );
     walkLeftSpritesheet = std::make_shared<Spritesheet>(
         gameContext->textureCache.get(),
         TextureId::SPRITE_WALK_LEFT,
-        std::vector<int>({200, 200, 200, 200}),
+        std::vector<int>({75, 75, 75, 75}),
         true
     );
     walkRightSpritesheet = std::make_shared<Spritesheet>(
         gameContext->textureCache.get(),
         TextureId::SPRITE_WALK_RIGHT,
-        std::vector<int>({200, 200, 200, 200}),
+        std::vector<int>({75, 75, 75, 75}),
         true
     );
     spriteModel = std::make_shared<SpriteModel>(
@@ -174,24 +174,28 @@ void PlayerSprite::updateWalkCommand()
         {
             goalWorldX = worldX;
             goalWorldY = worldY - gameContext->tileSizePx;
+            spriteModel->moveUp();
             break;
         }
         case WalkDirection::DOWN:
         {
             goalWorldX = worldX;
             goalWorldY = worldY + gameContext->tileSizePx;
+            spriteModel->moveDown();
             break;
         }
         case WalkDirection::LEFT:
         {
             goalWorldX = worldX - gameContext->tileSizePx;
             goalWorldY = worldY;
+            spriteModel->moveLeft();
             break;
         }
         case WalkDirection::RIGHT:
         {
             goalWorldX = worldX + gameContext->tileSizePx;
             goalWorldY = worldY;
+            spriteModel->moveRight();
             break;
         }    
     }
