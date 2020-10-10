@@ -9,11 +9,29 @@ std::shared_ptr<Tile> TileFactory::createTile(
     switch (tileType)
     {
         case TileType::GRASS:
-        case TileType::SAND:
-        case TileType::DIRT:
-        case TileType::STONE:
         {
             return std::make_shared<GrassTile>(
+                worldX, 
+                worldY
+            );
+        }
+        case TileType::SAND:
+        {
+            return std::make_shared<SandTile>(
+                worldX, 
+                worldY
+            );
+        }
+        case TileType::DIRT:
+        {
+            return std::make_shared<DirtTile>(
+                worldX, 
+                worldY
+            );
+        }
+        case TileType::STONE:
+        {
+            return std::make_shared<StoneTile>(
                 worldX, 
                 worldY
             );

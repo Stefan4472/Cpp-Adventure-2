@@ -67,7 +67,6 @@ std::pair<TextureId, SDL_Rect> SpriteModel::getDrawInfo(TextureCache* textureCac
 {
     if (walkUpSheet->getIsPlaying())
     {
-        std::cout << "WalkUp" << std::endl;
         return std::make_pair(
             walkUpSheet->getTextureID(),
             walkUpSheet->getCurrentFrameSrc()
@@ -75,7 +74,6 @@ std::pair<TextureId, SDL_Rect> SpriteModel::getDrawInfo(TextureCache* textureCac
     }
     else if (walkDownSheet->getIsPlaying())
     {
-        std::cout << "WalkDown" << std::endl;
         return std::make_pair(
             walkDownSheet->getTextureID(),
             walkDownSheet->getCurrentFrameSrc()
@@ -83,7 +81,6 @@ std::pair<TextureId, SDL_Rect> SpriteModel::getDrawInfo(TextureCache* textureCac
     }
     else if (walkLeftSheet->getIsPlaying())
     {
-        std::cout << "WalkLeft" << std::endl;
         return std::make_pair(
             walkLeftSheet->getTextureID(),
             walkLeftSheet->getCurrentFrameSrc()
@@ -91,7 +88,6 @@ std::pair<TextureId, SDL_Rect> SpriteModel::getDrawInfo(TextureCache* textureCac
     }
     else if (walkRightSheet->getIsPlaying())
     {
-        std::cout << "WalkRight" << std::endl;
         return std::make_pair(
             walkRightSheet->getTextureID(),
             walkRightSheet->getCurrentFrameSrc()

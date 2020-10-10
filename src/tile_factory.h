@@ -5,7 +5,9 @@
 #include "tile_type.h"
 #include "tile.h"
 #include "grass_tile.h"
-
+#include "sand_tile.h"
+#include "dirt_tile.h"
+#include "stone_tile.h"
 
 class TileFactory
 {

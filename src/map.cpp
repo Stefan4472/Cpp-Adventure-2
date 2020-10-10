@@ -34,12 +34,12 @@ Map Map::fromFile(boost::filesystem::path filePath)
         // Get each integer
         while (str_stream >> next_val)
         {
-            curr_col++;
             map_tiles.back().push_back(TileFactory::createTile(
                 resolveTileType(next_val),
                 curr_col * TextureCache::TILE_SIZE_PX,
                 curr_row * TextureCache::TILE_SIZE_PX
             ));
+            curr_col++;
         }
         curr_row++;
         curr_col = 0;
@@ -70,12 +70,13 @@ void Map::drawTiles(
         GameRenderer* gameRenderer,
         SDL_Rect& visibleWorld
 ) {
-    int tiles_w = visibleWorld.w / TextureCache::TILE_SIZE_PX + 1;
-    int tiles_h = visibleWorld.h / TextureCache::TILE_SIZE_PX + 1;
+    // Calculate number of tiles needed to fill the screen.
+    // Add two in each dimension to ensure the screen is always covered.
+    int tiles_w = visibleWorld.w / TextureCache::TILE_SIZE_PX + 2;
+    int tiles_h = visibleWorld.h / TextureCache::TILE_SIZE_PX + 2;
+    
     int start_tile_x = visibleWorld.x / TextureCache::TILE_SIZE_PX - 1;
     int start_tile_y = visibleWorld.y / TextureCache::TILE_SIZE_PX - 1;
-    int offset_x = visibleWorld.x % TextureCache::TILE_SIZE_PX;
-    int offset_y = visibleWorld.y % TextureCache::TILE_SIZE_PX;
     
     // Draw tiles
     for (int i = 0; i < tiles_h; i++)
@@ -86,19 +87,12 @@ void Map::drawTiles(
             int tile_y = start_tile_y + i;
 
             // Skip if out of range (special case)
-            if (tile_x < 0 || tile_x >= numCols || tile_y < 0 || tile_y >= numRows)
+            if (!isTileWithinMap(tile_x, tile_y))
             {
                 continue;
             }
 
             mapTiles[tile_y][tile_x]->draw(gameRenderer);
-            // TileType tile = mapTiles[tile_y][tile_x]->getTileType();
-            
-            // gameRenderer->drawToWorld(
-            //     getTileTextureId(tile),
-            //     visibleWorld.x - offset_x + j * TextureCache::TILE_SIZE_PX,
-            //     visibleWorld.y - offset_y + i * TextureCache::TILE_SIZE_PX
-            // );
         }
     }
 }
