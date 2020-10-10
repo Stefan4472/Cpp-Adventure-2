@@ -54,14 +54,12 @@ void Map::drawTiles(
         GameRenderer* gameRenderer,
         SDL_Rect& visibleWorld
 ) {
-    std::cout << "clip: " << visibleWorld.x << ", " << visibleWorld.y << ", " << visibleWorld.w << ", " << visibleWorld.h << std::endl;
     int tiles_w = visibleWorld.w / TextureCache::TILE_SIZE_PX + 1;
     int tiles_h = visibleWorld.h / TextureCache::TILE_SIZE_PX + 1;
     int start_tile_x = visibleWorld.x / TextureCache::TILE_SIZE_PX;
     int start_tile_y = visibleWorld.y / TextureCache::TILE_SIZE_PX;
     int offset_x = visibleWorld.x % TextureCache::TILE_SIZE_PX;
     int offset_y = visibleWorld.y % TextureCache::TILE_SIZE_PX;
-    std::cout << "draw " << tiles_w << ", " << tiles_h << ", start " << start_tile_x << ", " << start_tile_y << std::endl;
     
     // Draw tiles
     for (int i = 0; i < tiles_h; i++)

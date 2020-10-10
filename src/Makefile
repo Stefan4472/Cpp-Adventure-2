@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = texture_id.cpp texture_cache.cpp tile_type.cpp map.cpp sprite.cpp spritesheet.cpp sprite_model.cpp input_handler.cpp game_renderer.cpp player_sprite.cpp game_context.cpp game_engine.cpp main.cpp
+OBJS = texture_id.cpp texture_cache.cpp tile_type.cpp map.cpp sprite.cpp spritesheet.cpp sprite_model.cpp input_handler.cpp game_renderer.cpp player_sprite.cpp game_context.cpp game_engine.cpp tile.cpp main.cpp
 
 #OBJ_NAME specifies the name of our exectuable
 OBJ_NAME = run
