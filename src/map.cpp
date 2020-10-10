@@ -42,20 +42,47 @@ Map Map::fromFile(boost::filesystem::path filePath)
     return Map(map_tiles);
 }
 
-void Map::draw(
+std::pair<int, int> Map::getSizePx()
+{
+    return std::make_pair(
+        numCols * TextureCache::TILE_SIZE_PX,
+        numRows * TextureCache::TILE_SIZE_PX
+    );
+}
+
+void Map::drawTiles(
         GameRenderer* gameRenderer,
         SDL_Rect& visibleWorld
 ) {
+    std::cout << "clip: " << visibleWorld.x << ", " << visibleWorld.y << ", " << visibleWorld.w << ", " << visibleWorld.h << std::endl;
+    int tiles_w = visibleWorld.w / TextureCache::TILE_SIZE_PX + 1;
+    int tiles_h = visibleWorld.h / TextureCache::TILE_SIZE_PX + 1;
+    int start_tile_x = visibleWorld.x / TextureCache::TILE_SIZE_PX;
+    int start_tile_y = visibleWorld.y / TextureCache::TILE_SIZE_PX;
+    int offset_x = visibleWorld.x % TextureCache::TILE_SIZE_PX;
+    int offset_y = visibleWorld.y % TextureCache::TILE_SIZE_PX;
+    std::cout << "draw " << tiles_w << ", " << tiles_h << ", start " << start_tile_x << ", " << start_tile_y << std::endl;
+    
     // Draw tiles
-    for (int i = 0; i < numRows; i++)
+    for (int i = 0; i < tiles_h; i++)
     {
-        for (int j = 0; j < numCols; j++)
+        for (int j = 0; j < tiles_w; j++)
         {
-            // Look up the TextureId for this tile
+            int tile_x = start_tile_x + j;
+            int tile_y = start_tile_y + i;
+
+            // Skip if out of range (special case)
+            if (tile_x < 0 || tile_x >= numCols || tile_y < 0 || tile_y >= numRows)
+            {
+                continue;
+            }
+
+            TileType tile = mapTiles[tile_y][tile_x];
+            
             gameRenderer->drawToWorld(
-                getTileTextureId(mapTiles[i][j]),
-                j * TextureCache::TILE_SIZE_PX,
-                i * TextureCache::TILE_SIZE_PX
+                getTileTextureId(tile),
+                visibleWorld.x - offset_x + j * TextureCache::TILE_SIZE_PX,
+                visibleWorld.y - offset_y + i * TextureCache::TILE_SIZE_PX
             );
         }
     }

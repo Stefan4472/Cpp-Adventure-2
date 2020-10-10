@@ -82,14 +82,47 @@ void GameEngine::handleInput(EventId inputId)
 
 void GameEngine::draw(SDL_Renderer* renderer)
 {
+    int world_width, world_height;
+    std::tie(world_width, world_height) = 
+        map->getSizePx();
+
+    // Center viewable area on player
+    double top_left_wx = 
+        player->worldX - gameContext->screenWidth / 2;
+    double top_left_wy = 
+        player->worldY - gameContext->screenHeight / 2;
+    
+    // Set x- and y- so that we don't go past the edge of the world
+    if (top_left_wx < 0.0)
+    {
+        top_left_wx = 0.0;
+    }
+    else if (top_left_wx + gameContext->screenWidth > world_width)
+    {
+        top_left_wx = world_width - gameContext->screenWidth;
+    }
+    if (top_left_wy < 0.0)
+    {
+        top_left_wy = 0.0;
+    }
+    else if (top_left_wy + gameContext->screenHeight > world_height)
+    {
+        top_left_wy = world_height - gameContext->screenHeight;
+    }
+
     SDL_Rect visible_bounds = {
-        0,
-        0,
+        static_cast<int>(top_left_wx),
+        static_cast<int>(top_left_wy),
         gameContext->screenWidth,
         gameContext->screenHeight    
     };
 
-    map->draw(
+    gameRenderer->setTopLeftCoord(
+        top_left_wx, 
+        top_left_wy
+    );
+
+    map->drawTiles(
         gameRenderer.get(),
         visible_bounds
     );

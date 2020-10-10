@@ -19,7 +19,10 @@ public:
     std::vector<std::vector<TileType>> mapTiles;
     int numRows, numCols;
 
-    void draw(
+    // Return size of world (x, y)
+    std::pair<int, int> getSizePx();
+
+    void drawTiles(
         GameRenderer* gameRenderer,
         SDL_Rect& visibleWorld
     );
