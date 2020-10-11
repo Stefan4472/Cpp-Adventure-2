@@ -17,12 +17,13 @@
 #include "engine_interface.h"
 #include "update_context.h"
 #include "game_renderer.h"
+#include "interact_interface.h"
 
 // TODO: REMOVE
 #include "pickaxe_item.h"
 
 
-class GameEngine : public EngineInterface
+class GameEngine : public EngineInterface, public InteractInterface
 {
 public:
     // TODO: GAMEENGINE SHOULDN'T DEAL WITH THE RENDERER AT ALL
@@ -48,6 +49,12 @@ public:
     std::pair<int, int> resolveTile(
         double worldX, 
         double worldY
+    );
+
+    // `InteractInterface` methods
+    void destroyObject(
+        int tileX,
+        int tileY
     );
 
     // Update game state

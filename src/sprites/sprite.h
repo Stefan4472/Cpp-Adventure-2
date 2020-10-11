@@ -22,7 +22,11 @@ public:
     std::pair<double, double> getWorldCoords();
 
     /* Abstract methods */
-    virtual void respondToInteract(Sprite* owner, Item* withItem);
+    virtual void respondToInteract(
+        InteractInterface* interactInterface,
+        Sprite* owner, 
+        Item* withItem
+    );
     // Update
     virtual void update(UpdateContext* updateContext) = 0;
     // Draw self onto provided renderer

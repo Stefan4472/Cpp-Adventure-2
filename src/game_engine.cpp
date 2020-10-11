@@ -101,6 +101,13 @@ std::pair<int, int> GameEngine::resolveTile(
     }
 }
 
+void GameEngine::destroyObject(
+        int tileX,
+        int tileY
+) {
+    std::cout << "Destroying object at " << tileX << ", " << tileY << std::endl;
+}
+
 void GameEngine::update()
 {
     uint32_t curr_game_time = SDL_GetTicks();
@@ -162,6 +169,7 @@ void GameEngine::handleInteract(InteractRequest& iRequest)
         //.....
         std::cout << "Interacting with object " << interacted_object << std::endl;
         interacted_object->respondToInteract(
+            this,
             iRequest.sprite,
             iRequest.item
         );
@@ -175,6 +183,7 @@ void GameEngine::handleInteract(InteractRequest& iRequest)
         //.....
         std::cout << "Interacting with tile " << interacted_tile << std::endl;
         interacted_tile->respondToInteract(
+            this,
             iRequest.sprite,
             iRequest.item
         );

@@ -17,7 +17,10 @@ ObjectType MapObject::getTileType()
     return objectType;
 }
 
-void MapObject::respondToInteract(Sprite* owner, Item* withItem)
-{
+void MapObject::respondToInteract(
+        InteractInterface* interactInterface,
+        Sprite* owner, 
+        Item* withItem
+) {
     std::cout << "MapObject responding" << std::endl;
 }

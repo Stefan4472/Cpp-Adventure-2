@@ -12,7 +12,10 @@ TileType Tile::getTileType()
     return tileType;
 }
 
-void Tile::respondToInteract(Sprite* owner, Item* withItem)
-{
+void Tile::respondToInteract(
+        InteractInterface* interactInterface, 
+        Sprite* owner, 
+        Item* withItem
+) {
     std::cout << "Tile responding" << std::endl;
 }
