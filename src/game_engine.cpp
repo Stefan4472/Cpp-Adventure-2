@@ -31,7 +31,8 @@ GameEngine::GameEngine(
         gameHeight,
         TextureCache::TILE_SIZE_PX,
         textureCache,
-        map
+        map,
+        this
     );
 
     SDL_Rect player_start_tile = {
@@ -51,6 +52,28 @@ void GameEngine::giveInput(EventId eventId)
 {
     inputQueue.push(eventId);
 }
+
+bool GameEngine::isTileWithinMap(
+    int tileX, 
+    int tileY
+) {
+    return map->isTileWithinMap(tileX, tileY);
+}
+
+bool GameEngine::isTileWalkable(
+    int tileX,
+    int tileY
+) {
+    return map->isTileWalkable(tileX, tileY);
+}
+
+std::pair<int, int> GameEngine::resolveTile(
+    double worldX, 
+    double worldY
+) {
+    return map->resolveTile(worldX, worldY);
+}
+
 
 void GameEngine::update()
 {

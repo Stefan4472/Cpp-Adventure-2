@@ -28,9 +28,16 @@ public:
 
     // Return whether the provided tile coordinate is valid
     bool isTileWithinMap(int tileX, int tileY);
-
+    // Return whether a sprite could walk on the specified tile
+    bool isTileWalkable(int tileX, int tileY);
+    // Convert world coordinates to tile coordinates.
+    // Throws runtime_error if coordinates are outside of world.
+    std::pair<int, int> resolveTile(double worldX, double worldY);
+    // Return object at the specified tile coordinates.
+    // May return an emtpy (NULL) pointer if there is no object
+    // at those coordinates.
     std::shared_ptr<MapObject> getObjectAtTile(int tileX, int tileY);
-    
+
     void drawTiles(
         GameRenderer* gameRenderer,
         SDL_Rect& visibleWorld

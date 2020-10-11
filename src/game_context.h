@@ -4,6 +4,8 @@
 #include <memory>
 #include "texture_cache.h"
 #include "map.h"
+#include "engine_interface.h"
+
 
 class GameContext
 {
@@ -13,13 +15,16 @@ public:
     int tileSizePx;
     std::shared_ptr<TextureCache> textureCache;
     std::shared_ptr<Map> map;
+    // TODO: MAKE CONST
+    EngineInterface* engineInterface;
 
     GameContext(
         int screenWidth,
         int screenHeight,
         int tileSizePx,
         std::shared_ptr<TextureCache> textureCache,
-        std::shared_ptr<Map> map
+        std::shared_ptr<Map> map,
+        EngineInterface* engineInterface
     );
 
     // Check the Map to see if the tile with the given coordinates

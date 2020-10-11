@@ -7,19 +7,18 @@
 #include <queue>
 #include <iostream>
 #include "input_event.h"
-
-#include "texture_id.h"
 #include "texture_cache.h"
 #include "map.h"
 #include "tile_type.h"
 #include "game_context.h"
 #include "sprite.h"
 #include "player_sprite.h"
+#include "engine_interface.h"
 #include "update_context.h"
 #include "game_renderer.h"
 
 
-class GameEngine
+class GameEngine : public EngineInterface
 {
 public:
     // TODO: GAMEENGINE SHOULDN'T DEAL WITH THE RENDERER AT ALL
@@ -32,6 +31,21 @@ public:
     
     // Handle player input
     void giveInput(EventId eventId);
+    
+    // `EngineInterface` methods
+    bool isTileWithinMap(
+        int tileX, 
+        int tileY
+    );
+    bool isTileWalkable(
+        int tileX,
+        int tileY
+    );
+    std::pair<int, int> resolveTile(
+        double worldX, 
+        double worldY
+    );
+
     // Update game state
     void update();
     // Draw game to provided Renderer

@@ -5,7 +5,8 @@ GameContext::GameContext(
         int screenHeight,
         int tileSizePx,
         std::shared_ptr<TextureCache> textureCache,
-        std::shared_ptr<Map> map
+        std::shared_ptr<Map> map,
+        EngineInterface* engineInterface
 )
 {
     this->screenWidth = screenWidth;
@@ -13,6 +14,7 @@ GameContext::GameContext(
     this->tileSizePx = tileSizePx;
     this->textureCache = textureCache;
     this->map = map;
+    this->engineInterface = engineInterface;
 }
 
 bool GameContext::isTileWalkable(int tileX, int tileY)

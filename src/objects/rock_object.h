@@ -6,10 +6,14 @@
 class RockObject : public MapObject
 {
 public:
-    RockObject(double worldX, double worldY);
+    RockObject(SDL_Rect& baseTile);
     bool getIsWalkable();
     void update(UpdateContext* updateContext);
     void draw(GameRenderer* gameRenderer);
+
+private:
+    // Draw coordinates, derived from world coordinates
+    double drawWorldX, drawWorldY;
 };
 
 #endif

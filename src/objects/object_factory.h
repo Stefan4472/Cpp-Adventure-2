@@ -12,8 +12,7 @@ class ObjectFactory
 public:
     static std::shared_ptr<MapObject> createObject(
         ObjectType objectType, 
-        double worldX, 
-        double worldY
+        SDL_Rect& baseTile
     );
 };
 

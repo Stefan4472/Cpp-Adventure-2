@@ -47,6 +47,33 @@ bool Map::isTileWithinMap(int tileX, int tileY)
         tileY < numRows;
 }
 
+bool Map::isTileWalkable(int tileX, int tileY)
+{
+    // Check bounds
+    if (!isTileWithinMap(tileX, tileY))
+    {
+        return false;
+    }
+    // Get object (if any) on desired tile
+    std::shared_ptr<MapObject> object_on_tile =
+        getObjectAtTile(tileX, tileY);
+    // Check if object exists and isn't walkable
+    if (object_on_tile && !object_on_tile->getIsWalkable())
+    {
+        return false;
+    }
+    // Otherwise, we're good!
+    return true;
+}
+
+std::pair<int, int> Map::resolveTile(double worldX, double worldY)
+{
+    return std::make_pair(
+        static_cast<int>(worldX) / TextureCache::TILE_SIZE_PX,
+        static_cast<int>(worldY) / TextureCache::TILE_SIZE_PX
+    );
+}
+
 std::shared_ptr<MapObject> Map::getObjectAtTile(int tileX, int tileY)
 {
     if (isTileWithinMap(tileX, tileY))
@@ -199,11 +226,16 @@ std::vector<std::vector<std::shared_ptr<MapObject>>> Map::loadObjects(
         {
             if (next_val)
             {
-                std::cout << "Got a " << next_val << std::endl;
+                SDL_Rect base_tile = {
+                    curr_col * TextureCache::TILE_SIZE_PX,
+                    curr_row * TextureCache::TILE_SIZE_PX,
+                    TextureCache::TILE_SIZE_PX,
+                    TextureCache::TILE_SIZE_PX
+                };
+
                 map_objects.back().push_back(ObjectFactory::createObject(
                     resolveObjectType(next_val),
-                    curr_col * TextureCache::TILE_SIZE_PX,
-                    curr_row * TextureCache::TILE_SIZE_PX
+                    base_tile
                 ));
             }
             else

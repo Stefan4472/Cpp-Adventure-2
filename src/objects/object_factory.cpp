@@ -2,16 +2,14 @@
 
 std::shared_ptr<MapObject> ObjectFactory::createObject(
         ObjectType objectType, 
-        double worldX, 
-        double worldY
+        SDL_Rect& baseTile
 ) {
     switch (objectType)
     {
         case ObjectType::ROCK:
         {
             return std::make_shared<RockObject>(
-                worldX, 
-                worldY
+                baseTile
             );
         }
         default:
