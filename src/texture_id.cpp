@@ -40,6 +40,10 @@ std::string getFilename(TextureId id)
         {
             return "sprite-walk-right.png";
         }
+        case TextureId::ROCK_OBJECT:
+        {
+            return "rock.png";
+        }
         default:
         {
             throw std::invalid_argument("Unsupported TextureId");

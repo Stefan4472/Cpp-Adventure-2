@@ -90,7 +90,7 @@ void Map::drawObjects(
     int start_tile_x = visibleWorld.x / TextureCache::TILE_SIZE_PX - 1;
     int start_tile_y = visibleWorld.y / TextureCache::TILE_SIZE_PX - 1;
     
-    // Draw tiles
+    // Draw objects
     for (int i = 0; i < tiles_h; i++)
     {
         for (int j = 0; j < tiles_w; j++)
@@ -105,12 +105,12 @@ void Map::drawObjects(
                 continue;
             }
             // Skip if null
-            if (!mapTiles[tile_y][tile_x])
+            if (!mapObjects[tile_y][tile_x])
             {
                 continue;
             }
 
-            mapTiles[tile_y][tile_x]->draw(gameRenderer);
+            mapObjects[tile_y][tile_x]->draw(gameRenderer);
         }
     }
 }
@@ -182,10 +182,25 @@ std::vector<std::vector<std::shared_ptr<MapObject>>> Map::loadObjects(
         // Get each integer
         while (str_stream >> next_val)
         {
-            // Fill with NULL for now
-            map_objects.back().push_back(std::shared_ptr<MapObject>());
+            if (next_val)
+            {
+                std::cout << "Got a " << next_val << std::endl;
+                map_objects.back().push_back(ObjectFactory::createObject(
+                    resolveObjectType(next_val),
+                    curr_col * TextureCache::TILE_SIZE_PX,
+                    curr_row * TextureCache::TILE_SIZE_PX
+                ));
+            }
+            else
+            {
+                // Push empty pointer
+                map_objects.back().push_back(
+                    std::shared_ptr<MapObject>()
+                );
+            }
             curr_col++;
         }
+
         curr_row++;
         curr_col = 0;
     }
@@ -270,6 +285,24 @@ TileType Map::resolveTileType(int tileId)
         {
             throw std::invalid_argument(
                 std::string("Unsupported tile ID ") + std::to_string(tileId)
+            );
+        }
+    }
+}
+
+ObjectType Map::resolveObjectType(int objectId)
+{
+    switch (objectId)
+    {
+        case 1:
+        {
+            return ObjectType::ROCK;
+        }
+        default:
+        {
+            throw std::invalid_argument(
+                std::string("Unsupported object ID ") + 
+                std::to_string(objectId)
             );
         }
     }

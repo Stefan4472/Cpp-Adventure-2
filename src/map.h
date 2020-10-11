@@ -5,9 +5,8 @@
 #include <vector>
 #include <sstream>
 #include <stdexcept>
-#include "tile_type.h"
 #include "tile_factory.h"
-#include "map_object.h"
+#include "object_factory.h"
 #include "game_renderer.h"
 
 
@@ -64,6 +63,8 @@ private:
 
     // Convert integer read from map file to a `TileType` instance.
     static TileType resolveTileType(int tileId);
+    // Convert integer read from map file to an `ObjectType` instance.
+    static ObjectType resolveObjectType(int objectId);
 };
 
 #endif
