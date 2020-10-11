@@ -103,10 +103,20 @@ std::pair<int, int> GameEngine::resolveTile(
 
 void GameEngine::update()
 {
+    uint32_t curr_game_time = SDL_GetTicks();
+    uint32_t ms_since_prev = curr_game_time - prevUpdateMs;
+    std::list<InteractRequest> req_interactions;
+
+    UpdateContext update_context = {
+        curr_game_time,
+        ms_since_prev,
+        &req_interactions
+    };
+
     while (!inputQueue.empty())
     {
         EventId next_input = inputQueue.front();
-        handleInput(next_input);
+        handleInput(next_input, &update_context);
         inputQueue.pop();
     }
 
@@ -115,23 +125,22 @@ void GameEngine::update()
         prevUpdateMs = SDL_GetTicks();
     }
 
-    uint32_t curr_game_time = SDL_GetTicks();
-    uint32_t ms_since_prev = curr_game_time - prevUpdateMs;
-
-    UpdateContext update_context = {
-        curr_game_time,
-        ms_since_prev
-    };
-
     player->update(&update_context);
 
+    // Go through queue of requested interactions
+    for (InteractRequest irequest : req_interactions)
+    {
+        std::cout << irequest.sprite << ": " << irequest.item << 
+            " at " << irequest.tileX << ", " << irequest.tileY << std::endl;
+    }
+    
     prevUpdateMs = curr_game_time;
 }
 
-void GameEngine::handleInput(EventId inputId)
+void GameEngine::handleInput(EventId inputId, UpdateContext* updateContext)
 {
     // Pass input to the Player
-    player->giveInput(inputId);
+    player->giveInput(inputId, updateContext);
 }
 
 void GameEngine::draw(SDL_Renderer* renderer)

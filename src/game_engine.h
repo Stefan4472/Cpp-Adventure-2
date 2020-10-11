@@ -5,6 +5,7 @@
 #include <boost/filesystem.hpp>
 #include <memory>
 #include <queue>
+#include <list>
 #include <iostream>
 #include "input_event.h"
 #include "texture_cache.h"
@@ -67,7 +68,10 @@ private:
 
     uint32_t prevUpdateMs;
 
-    void handleInput(EventId inputId);
+    void handleInput(
+        EventId inputId, 
+        UpdateContext* updateContext
+    );
 };
 
 #endif

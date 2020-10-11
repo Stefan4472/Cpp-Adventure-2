@@ -3,6 +3,7 @@
 
 #include "texture_id.h"
 #include "item_type.h"
+#include "interact_type.h"
 
 
 class Item
@@ -10,6 +11,7 @@ class Item
 public:
     Item(ItemType itemType);
     virtual TextureId getTextureId() = 0;
+    virtual InteractType getInteractType() = 0;
 
 private:
     ItemType itemType;

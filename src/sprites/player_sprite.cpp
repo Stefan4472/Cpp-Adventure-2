@@ -52,15 +52,36 @@ PlayerSprite::PlayerSprite(
     goalWorldY = worldY;
 }
 
-void PlayerSprite::giveInput(EventId eventId)
+void PlayerSprite::giveInput(EventId eventId, UpdateContext* updateContext)
 {
     if (eventId == EventId::PRESS_ACTION)
     {
-        std::cout << "should execute action!" << std::endl;
+        executeAction(updateContext);
     }
     else
     {
         inputHandler.giveInput(eventId);
+    }
+}
+
+void PlayerSprite::executeAction(UpdateContext* updateContext)
+{
+    // TODO: "Punch" if no inHandItem?
+    if (inHandItem)
+    {
+        // Get current tile
+        int curr_tile_x, curr_tile_y;
+        std::tie(curr_tile_x, curr_tile_y) = 
+            gameContext->engine->resolveTile(worldX, worldY);
+
+        // Determine the tile to interact with
+        // TODO: DETERMINE BASED ON CURRENT DIRECTION. FOR DEVELOPMENT, FOR NOW, WE WILL ALWAYS JUST DO THE TILE BELOW US
+        updateContext->requestInteract(
+            this,
+            inHandItem.get(),
+            curr_tile_x,
+            curr_tile_y + 1
+        );
     }
 }
 

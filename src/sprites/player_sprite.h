@@ -28,8 +28,9 @@ public:
     // TODO: MAKE PRIVATE. CURRENTLY PUBLIC FOR TESTING/DEV
     std::shared_ptr<Item> inHandItem;
 
-    void giveInput(EventId eventId);
-
+    void giveInput(EventId eventId, UpdateContext* updateContext);
+    // Responds to "action" button pressed
+    void executeAction(UpdateContext* updateContext);
     void update(UpdateContext* updateContext);
     void draw(GameRenderer* renderer);
 
