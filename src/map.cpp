@@ -47,6 +47,21 @@ bool Map::isTileWithinMap(int tileX, int tileY)
         tileY < numRows;
 }
 
+std::shared_ptr<MapObject> Map::getObjectAtTile(int tileX, int tileY)
+{
+    if (isTileWithinMap(tileX, tileY))
+    {
+        return mapObjects[tileY][tileX];
+    }
+    else
+    {
+        throw std::invalid_argument(
+            "Tile coordinates out of bounds"
+        );
+    }
+
+}
+
 void Map::drawTiles(
         GameRenderer* gameRenderer,
         SDL_Rect& visibleWorld

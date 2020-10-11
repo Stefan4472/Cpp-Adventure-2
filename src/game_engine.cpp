@@ -34,11 +34,16 @@ GameEngine::GameEngine(
         map
     );
 
+    SDL_Rect player_start_tile = {
+        320, 
+        256, 
+        TextureCache::TILE_SIZE_PX, 
+        TextureCache::TILE_SIZE_PX
+    };
+
     player = std::make_shared<PlayerSprite>(
         gameContext, 
-        SpriteType::PLAYER, 
-        320, 
-        256
+        player_start_tile
     );
 }
 
@@ -83,14 +88,16 @@ void GameEngine::handleInput(EventId inputId)
 void GameEngine::draw(SDL_Renderer* renderer)
 {
     int world_width, world_height;
-    std::tie(world_width, world_height) = 
-        map->getSizePx();
+    std::tie(world_width, world_height) = map->getSizePx();
+
+    double player_x, player_y;
+    std::tie(player_x, player_y) = player->getWorldCoords();
 
     // Center viewable area on player
     double top_left_wx = 
-        player->worldX - gameContext->screenWidth / 2;
+        player_x - gameContext->screenWidth / 2;
     double top_left_wy = 
-        player->worldY - gameContext->screenHeight / 2;
+        player_y - gameContext->screenHeight / 2;
     
     // Set x- and y- so that we don't go past the edge of the world
     if (top_left_wx < 0.0)
@@ -131,7 +138,7 @@ void GameEngine::draw(SDL_Renderer* renderer)
         gameRenderer.get(),
         visible_bounds    
     );
-    
+
     // Draw player
     player->draw(gameRenderer.get());
 }

@@ -7,6 +7,7 @@ class RockObject : public MapObject
 {
 public:
     RockObject(double worldX, double worldY);
+    bool getIsWalkable();
     void update(UpdateContext* updateContext);
     void draw(GameRenderer* gameRenderer);
 };

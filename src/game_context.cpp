@@ -17,7 +17,21 @@ GameContext::GameContext(
 
 bool GameContext::isTileWalkable(int tileX, int tileY)
 {
-    return map->isTileWithinMap(tileX, tileY);
+    // Check bounds
+    if (!map->isTileWithinMap(tileX, tileY))
+    {
+        return false;
+    }
+    // Get object (if any) on desired tile
+    std::shared_ptr<MapObject> object_on_tile =
+        map->getObjectAtTile(tileX, tileY);
+    // Check if object exists and isn't walkable
+    if (object_on_tile && !object_on_tile->getIsWalkable())
+    {
+        return false;
+    }
+    // Otherwise, we're good!
+    return true;
 }
 
 std::pair<int, int> GameContext::resolveTile(double worldX, double worldY)

@@ -13,6 +13,8 @@
 class Map
 {
 public:
+    // TODO: ADD SPRITES TO MAP. DEFINED IN 'SPRITES.TXT' AND INITIALIZED
+    // BASED ON TILE. THEN STORED IN A LIST OR HASHMAP.
     Map(
         std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles,
         std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects
@@ -27,6 +29,8 @@ public:
     // Return whether the provided tile coordinate is valid
     bool isTileWithinMap(int tileX, int tileY);
 
+    std::shared_ptr<MapObject> getObjectAtTile(int tileX, int tileY);
+    
     void drawTiles(
         GameRenderer* gameRenderer,
         SDL_Rect& visibleWorld

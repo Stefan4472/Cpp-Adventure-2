@@ -2,10 +2,8 @@
 
 PlayerSprite::PlayerSprite(
         std::shared_ptr<GameContext> gameContext, 
-        SpriteType spriteType, 
-        double worldX, 
-        double worldY
-) : Sprite(gameContext, SpriteType::PLAYER, worldX, worldY)
+        SDL_Rect& baseTile
+) : Sprite(gameContext, SpriteType::PLAYER, baseTile.x + baseTile.w / 2, baseTile.y + baseTile.h - 1)
 {
     spriteTexture = gameContext->textureCache->getTexture(
         TextureId::SPRITE_FRONT
@@ -145,31 +143,22 @@ void PlayerSprite::draw(GameRenderer* renderer)
     std::tie(texture_id, src_rect) = 
         spriteModel->getDrawInfo(gameContext->textureCache.get());
 
-    // Create destination rectangle. Draw to correct world coordinates
-    // SDL_Rect dest_rect = {
-    //     static_cast<int>(worldX),
-    //     static_cast<int>(worldY - src_rect.h),
-    //     src_rect.w,
-    //     src_rect.h
-    // };
-
     renderer->drawToWorld(
         texture_id,
         src_rect,
-        worldX,
+        worldX - src_rect.w / 2,
         worldY - src_rect.h
     );
-    // SDL_RenderCopy(
-    //     renderer,
-    //     gameContext->textureCache->getTexture(texture_id),
-    //     &src_rect,
-    //     &dest_rect
-    // );
 }
 
 void PlayerSprite::updateWalkCommand()
 {
     currWalkCommand = inputHandler.getNextWalkCommand();
+    
+    int curr_tile_x, curr_tile_y;
+    std::tie(curr_tile_x, curr_tile_y) = 
+        gameContext->resolveTile(worldX, worldY);
+
     switch (currWalkCommand)
     {
         case WalkDirection::NONE:
@@ -179,31 +168,42 @@ void PlayerSprite::updateWalkCommand()
         }
         case WalkDirection::UP:
         {
-            goalWorldX = worldX;
-            goalWorldY = worldY - gameContext->tileSizePx;
-            spriteModel->moveUp();
+            if (gameContext->isTileWalkable(curr_tile_x, curr_tile_y - 1))
+            {
+                goalWorldX = worldX;
+                goalWorldY = worldY - gameContext->tileSizePx;
+                spriteModel->moveUp();
+            }
             break;
         }
         case WalkDirection::DOWN:
         {
-            goalWorldX = worldX;
-            goalWorldY = worldY + gameContext->tileSizePx;
-            spriteModel->moveDown();
+            if (gameContext->isTileWalkable(curr_tile_x, curr_tile_y + 1))
+            {
+                goalWorldX = worldX;
+                goalWorldY = worldY + gameContext->tileSizePx;
+                spriteModel->moveDown();
+            }
             break;
         }
         case WalkDirection::LEFT:
         {
-            goalWorldX = worldX - gameContext->tileSizePx;
-            goalWorldY = worldY;
-            spriteModel->moveLeft();
+            if (gameContext->isTileWalkable(curr_tile_x - 1, curr_tile_y))
+            {
+                goalWorldX = worldX - gameContext->tileSizePx;
+                goalWorldY = worldY;
+                spriteModel->moveLeft();
+            }
             break;
         }
         case WalkDirection::RIGHT:
         {
-            // TODO: ONLY SET GOAL IF THE TILE NEXT TO US IS WALKABLE
-            goalWorldX = worldX + gameContext->tileSizePx;
-            goalWorldY = worldY;
-            spriteModel->moveRight();
+            if (gameContext->isTileWalkable(curr_tile_x + 1, curr_tile_y))
+            {
+                goalWorldX = worldX + gameContext->tileSizePx;
+                goalWorldY = worldY;
+                spriteModel->moveRight();
+            }
             break;
         }    
     }

@@ -12,6 +12,7 @@ public:
     MapObject(ObjectType objectType, double worldX, double worldY);
     ObjectType getTileType();
     
+    virtual bool getIsWalkable() = 0;
     virtual void update(UpdateContext* updateContext) = 0;
     virtual void draw(GameRenderer* gameRenderer) = 0;
 

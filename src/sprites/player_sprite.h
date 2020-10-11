@@ -17,9 +17,7 @@ class PlayerSprite : public Sprite
 public:
     PlayerSprite(
         std::shared_ptr<GameContext> gameContext, 
-        SpriteType spriteType, 
-        double worldX, 
-        double worldY
+        SDL_Rect& baseTile
     );
     
     // How long it takes to walk the distance of one tile

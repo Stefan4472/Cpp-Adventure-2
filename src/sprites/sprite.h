@@ -14,21 +14,13 @@ class Sprite
 public:
     Sprite(
         std::shared_ptr<GameContext> gameContext, 
-        SpriteType spriteType
-    );
-    Sprite(
-        std::shared_ptr<GameContext> gameContext, 
         SpriteType spriteType, 
         double worldX, 
         double worldY
     );
     
-    // TODO: DIFFERENTIATE BETWEEN WORLD COORDINATES AND DRAW COORDINATES
-    // World coordinates
-    double worldX, worldY;
-    // Tile coordinates
-    int tileX, tileY;
-    
+    std::pair<double, double> getWorldCoords();
+
     /* Abstract methods */
     // Update
     virtual void update(UpdateContext* updateContext) = 0;
@@ -38,6 +30,9 @@ public:
 protected:
     std::shared_ptr<GameContext> gameContext;
     SpriteType spriteType;
+    // TODO: DIFFERENTIATE BETWEEN WORLD COORDINATES AND DRAW COORDINATES
+    // World coordinates
+    double worldX, worldY;
 };
 
 #endif

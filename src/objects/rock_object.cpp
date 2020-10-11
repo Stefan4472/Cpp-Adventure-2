@@ -6,6 +6,11 @@ RockObject::RockObject(double worldX, double worldY)
 
 }
 
+bool RockObject::getIsWalkable()
+{
+    return false;
+}
+
 void RockObject::update(UpdateContext* updateContext)
 {
     
