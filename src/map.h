@@ -7,15 +7,20 @@
 #include <stdexcept>
 #include "tile_type.h"
 #include "tile_factory.h"
+#include "map_object.h"
 #include "game_renderer.h"
 
 
 class Map
 {
 public:
-    Map(std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles);
+    Map(
+        std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles,
+        std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects
+    );
 
-    static Map fromFile(boost::filesystem::path filePath);
+    // Load map stored at the specified directory
+    static Map loadMap(boost::filesystem::path dirPath);
 
     // Return size of world (x, y)
     std::pair<int, int> getSizePx();
@@ -31,9 +36,20 @@ public:
 private:
     int numRows, numCols;
     std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles;
+    std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects;
 
-    static bool areTilesValid(
-        std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles
+    static std::vector<std::vector<std::shared_ptr<Tile>>> loadTiles(
+        boost::filesystem::path tilesPath
+    );
+
+    static std::vector<std::vector<std::shared_ptr<MapObject>>> loadObjects(
+        boost::filesystem::path objectsPath
+    );
+
+    // Throws runtime_error
+    static void checkMapValidity(
+        std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles,
+        std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects
     );
 
     // Convert integer read from map file to a `TileType` instance.

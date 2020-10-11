@@ -6,9 +6,9 @@ GameEngine::GameEngine(
         int gameWidth,
         int gameHeight
 ) {
-    std::cout << "Init GameEngine with width,height " << gameWidth << ", " << gameHeight << std::endl;
+    std::cout << "Init GameEngine at " << rootPath << " with width,height " << gameWidth << ", " << gameHeight << std::endl;
     auto graphics_path = rootPath / "graphics";
-    auto map_path = rootPath / "map.txt";
+    auto map_path = rootPath / "map";
 
     textureCache = std::make_shared<TextureCache>(
         graphics_path,
@@ -23,7 +23,7 @@ GameEngine::GameEngine(
     );
 
     map = std::make_shared<Map>(
-        Map::fromFile(map_path)
+        Map::loadMap(map_path)
     );
 
     gameContext = std::make_shared<GameContext>(

@@ -1,52 +1,33 @@
 #include "map.h"
 
-Map::Map(std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles)
-{
-    if (!areTilesValid(mapTiles))
-    {
-        throw std::invalid_argument("Map tiles are invalid");
-    }
+Map::Map(
+        std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles,
+        std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects
+) {
+    checkMapValidity(mapTiles, mapObjects);
     this->mapTiles = mapTiles;
+    this->mapObjects = mapObjects;
     numRows = this->mapTiles.size();
     numCols = this->mapTiles[0].size();
 }
 
 // Static method
-Map Map::fromFile(boost::filesystem::path filePath)
+Map Map::loadMap(boost::filesystem::path dirPath)
 {
-    std::ifstream map_file(filePath.string());
-    if (!map_file.is_open())
+    if (!boost::filesystem::is_directory(dirPath))
     {
-        throw std::runtime_error("Couldn't open map file");
-    }
-    
-    std::vector<std::vector<std::shared_ptr<Tile>>> map_tiles;
-    std::string next_line;
-    int curr_row = 0;
-    int curr_col = 0;
-
-    while (std::getline(map_file, next_line))
-    {
-        int next_val;
-        std::stringstream str_stream(next_line);
-        map_tiles.push_back(std::vector<std::shared_ptr<Tile>>());
-     
-        // Get each integer
-        while (str_stream >> next_val)
-        {
-            map_tiles.back().push_back(TileFactory::createTile(
-                resolveTileType(next_val),
-                curr_col * TextureCache::TILE_SIZE_PX,
-                curr_row * TextureCache::TILE_SIZE_PX
-            ));
-            curr_col++;
-        }
-        curr_row++;
-        curr_col = 0;
+        throw std::invalid_argument(
+            "The provided path is not a directory"
+        );
     }
 
-    map_file.close();
-    return Map(map_tiles);
+    auto map_tiles = loadTiles(dirPath / "tiles.txt");
+    auto map_objects = loadObjects(dirPath / "objects.txt");
+
+    return Map(
+        map_tiles, 
+        map_objects
+    );
 }
 
 std::pair<int, int> Map::getSizePx()
@@ -97,30 +78,135 @@ void Map::drawTiles(
     }
 }
 
-bool Map::areTilesValid(
-        std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles
+std::vector<std::vector<std::shared_ptr<Tile>>> Map::loadTiles(
+        boost::filesystem::path tilesPath
+) {
+    std::ifstream tiles_file(tilesPath.string());
+    if (!tiles_file.is_open())
+    {
+        throw std::runtime_error(
+            std::string("Couldn't open map tiles file '") +
+            tilesPath.string() + "')"
+        );
+    }
+    
+    std::vector<std::vector<std::shared_ptr<Tile>>> map_tiles;
+    std::string next_line;
+    int curr_row = 0;
+    int curr_col = 0;
+
+    while (std::getline(tiles_file, next_line))
+    {
+        int next_val;
+        std::stringstream str_stream(next_line);
+        map_tiles.push_back(std::vector<std::shared_ptr<Tile>>());
+     
+        // Get each integer
+        while (str_stream >> next_val)
+        {
+            map_tiles.back().push_back(TileFactory::createTile(
+                resolveTileType(next_val),
+                curr_col * TextureCache::TILE_SIZE_PX,
+                curr_row * TextureCache::TILE_SIZE_PX
+            ));
+            curr_col++;
+        }
+        curr_row++;
+        curr_col = 0;
+    }
+
+    tiles_file.close();
+    return map_tiles;
+}
+
+std::vector<std::vector<std::shared_ptr<MapObject>>> Map::loadObjects(
+    boost::filesystem::path objectsPath
+) {
+    std::ifstream objects_file(objectsPath.string());
+    if (!objects_file.is_open())
+    {
+        throw std::runtime_error(
+            std::string("Couldn't open map objects file '") +
+            objectsPath.string() + "')"
+        );
+    }
+    
+    std::vector<std::vector<std::shared_ptr<MapObject>>> map_objects;
+    std::string next_line;
+    int curr_row = 0;
+    int curr_col = 0;
+
+    while (std::getline(objects_file, next_line))
+    {
+        int next_val;
+        std::stringstream str_stream(next_line);
+        map_objects.push_back(std::vector<std::shared_ptr<MapObject>>());
+     
+        // Get each integer
+        while (str_stream >> next_val)
+        {
+            // Fill with NULL for now
+            map_objects.back().push_back(std::shared_ptr<MapObject>());
+            curr_col++;
+        }
+        curr_row++;
+        curr_col = 0;
+    }
+
+    objects_file.close();
+    return map_objects;
+}
+
+void Map::checkMapValidity(
+        std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles,
+        std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects
 ) {
     // Make sure `mapTiles` is non-empty
     if (mapTiles.empty())
     {
-        return false;
+        throw std::invalid_argument(
+            "The provided `mapTiles` is empty"
+        );
     }
     if (mapTiles[0].empty())
     {
-        return false;
+        throw std::invalid_argument(
+            "The provided `mapTiles` first row is empty"
+        );
     }
 
     // Make sure each row has the same number of elements 
     int num_cols = mapTiles[0].size();
+    int curr_row = 0;
     for (std::vector<std::shared_ptr<Tile>> tile_row : mapTiles)
     {
         if (tile_row.size() != num_cols)
         {
-            return false;
+            throw std::invalid_argument(
+                std::string("Non-uniform number of columns in row ") +
+                std::to_string(curr_row)
+            );
         }
+        curr_row++;
     }
 
-    return true;
+    // Make sure `mapObjects` is the same size as `mapTiles`
+    if (mapObjects.size() != mapTiles.size())
+    {
+        throw std::invalid_argument(
+            "`mapObjects` does not have the same number of rows as `mapTiles`"
+        );
+    }
+    for (int i = 0; i < mapTiles.size(); i++)
+    {
+        if (mapTiles[i].size() != mapObjects[i].size())
+        {
+            throw std::invalid_argument(
+                std::string("`mapObjects` does not have the same number of columns as `mapTiles` (row ") +
+                std::to_string(curr_row) + ")"
+            );
+        }
+    }
 }
 
 TileType Map::resolveTileType(int tileId)
