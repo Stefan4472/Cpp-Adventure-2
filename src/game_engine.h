@@ -17,6 +17,9 @@
 #include "update_context.h"
 #include "game_renderer.h"
 
+// TODO: REMOVE
+#include "pickaxe_item.h"
+
 
 class GameEngine : public EngineInterface
 {

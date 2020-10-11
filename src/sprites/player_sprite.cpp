@@ -54,7 +54,14 @@ PlayerSprite::PlayerSprite(
 
 void PlayerSprite::giveInput(EventId eventId)
 {
-    inputHandler.giveInput(eventId);
+    if (eventId == EventId::PRESS_ACTION)
+    {
+        std::cout << "should execute action!" << std::endl;
+    }
+    else
+    {
+        inputHandler.giveInput(eventId);
+    }
 }
 
 void PlayerSprite::update(UpdateContext* updateContext)
@@ -142,6 +149,17 @@ void PlayerSprite::draw(GameRenderer* renderer)
         worldX - src_rect.w / 2,
         worldY - src_rect.h
     );
+
+    // Draw in-hand item
+    // (currently at some rough approximation of "in-hand")
+    if (inHandItem)
+    {
+        renderer->drawToWorld(
+            inHandItem->getTextureId(),
+            worldX + src_rect.w / 2 - 10,
+            worldY - src_rect.h / 2 - 10
+        );
+    }
 }
 
 void PlayerSprite::updateWalkCommand()

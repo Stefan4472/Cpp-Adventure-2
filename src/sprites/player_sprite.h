@@ -10,6 +10,7 @@
 #include "walk_direction.h"
 #include "input_event.h"
 #include "input_handler.h"
+#include "item.h"
 
 
 class PlayerSprite : public Sprite 
@@ -22,6 +23,10 @@ public:
     
     // How long it takes to walk the distance of one tile
     const int TILE_WALK_TIME_MS = 400;
+
+    // Item in hand (may be NULL)
+    // TODO: MAKE PRIVATE. CURRENTLY PUBLIC FOR TESTING/DEV
+    std::shared_ptr<Item> inHandItem;
 
     void giveInput(EventId eventId);
 
@@ -40,6 +45,7 @@ private:
     std::shared_ptr<Spritesheet> walkUpSpritesheet;
     std::shared_ptr<Spritesheet> walkLeftSpritesheet;
     std::shared_ptr<Spritesheet> walkRightSpritesheet;
+
 
     // Direction currently being walked in
     WalkDirection currWalkCommand;

@@ -84,6 +84,11 @@ int main(int argc, char* args[])
                         gameEngine.giveInput(EventId::PRESS_RIGHT);
                         break;
                     }
+                    case SDLK_SPACE:
+                    {
+                        gameEngine.giveInput(EventId::PRESS_ACTION);
+                        break;
+                    }
                     default:
                     {
                         break;

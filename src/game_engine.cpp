@@ -50,6 +50,7 @@ GameEngine::GameEngine(
         gameContext, 
         player_start_tile
     );
+    player->inHandItem = std::make_shared<PickaxeItem>();
 }
 
 void GameEngine::giveInput(EventId eventId)
