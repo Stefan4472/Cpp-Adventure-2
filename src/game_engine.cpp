@@ -132,8 +132,9 @@ void GameEngine::update()
     {
         std::cout << irequest.sprite << ": " << irequest.item << 
             " at " << irequest.tileX << ", " << irequest.tileY << std::endl;
+        handleInteract(irequest);
     }
-    
+
     prevUpdateMs = curr_game_time;
 }
 
@@ -141,6 +142,45 @@ void GameEngine::handleInput(EventId inputId, UpdateContext* updateContext)
 {
     // Pass input to the Player
     player->giveInput(inputId, updateContext);
+}
+
+void GameEngine::handleInteract(InteractRequest& iRequest)
+{
+    // Check first if Sprite is at tile, then if object, then tile itself
+
+    // std::shared_ptr<Sprite> interacted_sprite =
+    //     map->getSpriteAtTile(iRequest.tileX, iRequest.tileY);
+    // if (interacted_sprite)
+    // {
+    //     //.....
+    // }
+
+    std::shared_ptr<MapObject> interacted_object =
+        map->getObjectAtTile(iRequest.tileX, iRequest.tileY);
+    if (interacted_object)
+    {
+        //.....
+        std::cout << "Interacting with object " << interacted_object << std::endl;
+        interacted_object->respondToInteract(
+            iRequest.sprite,
+            iRequest.item
+        );
+        return;
+    }
+
+    std::shared_ptr<Tile> interacted_tile =
+        map->getTile(iRequest.tileX, iRequest.tileY);
+    if (interacted_tile)
+    {
+        //.....
+        std::cout << "Interacting with tile " << interacted_tile << std::endl;
+        interacted_tile->respondToInteract(
+            iRequest.sprite,
+            iRequest.item
+        );
+        return;
+    }
+
 }
 
 void GameEngine::draw(SDL_Renderer* renderer)

@@ -72,6 +72,10 @@ private:
         EventId inputId, 
         UpdateContext* updateContext
     );
+
+    void handleInteract(
+        InteractRequest& interactRequest
+    );
 };
 
 #endif

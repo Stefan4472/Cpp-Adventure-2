@@ -5,6 +5,8 @@
 #include "update_context.h"
 #include "game_renderer.h"
 #include "game_context.h"
+#include "sprite.h"
+#include "item.h"
 
 
 class MapObject
@@ -20,6 +22,7 @@ public:
     ObjectType getTileType();
     
     virtual bool getIsWalkable() = 0;
+    virtual void respondToInteract(Sprite* owner, Item* withItem);
     virtual void update(UpdateContext* updateContext) = 0;
     virtual void draw(GameRenderer* gameRenderer) = 0;
 

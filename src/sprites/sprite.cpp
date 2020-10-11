@@ -20,3 +20,9 @@ std::pair<double, double> Sprite::getWorldCoords()
     );
 }
 
+void Sprite::respondToInteract(Sprite* owner, Item* withItem)
+{
+    std::cout << "Sprite responding" << std::endl;
+}
+
+

@@ -55,6 +55,20 @@ std::pair<int, int> Map::resolveTile(double worldX, double worldY)
     );
 }
 
+std::shared_ptr<Tile> Map::getTile(int tileX, int tileY)
+{
+    if (isTileWithinMap(tileX, tileY))
+    {
+        return mapTiles[tileY][tileX];
+    }
+    else
+    {
+        throw std::invalid_argument(
+            "Tile coordinates out of bounds"
+        );
+    }
+}
+
 std::shared_ptr<MapObject> Map::getObjectAtTile(int tileX, int tileY)
 {
     if (isTileWithinMap(tileX, tileY))
@@ -67,8 +81,14 @@ std::shared_ptr<MapObject> Map::getObjectAtTile(int tileX, int tileY)
             "Tile coordinates out of bounds"
         );
     }
-
 }
+
+std::shared_ptr<Sprite> Map::getSpriteAtTile(int tileX, int tileY)
+{
+    // TODO: IMPLEMENT
+    return std::shared_ptr<Sprite>();
+}
+
 
 void Map::drawTiles(
         GameRenderer* gameRenderer,

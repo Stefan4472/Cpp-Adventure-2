@@ -7,7 +7,7 @@
 #include "update_context.h"
 #include "game_renderer.h"
 #include "sprite_type.h"
-
+#include "item.h"
 
 class Sprite
 {
@@ -22,6 +22,7 @@ public:
     std::pair<double, double> getWorldCoords();
 
     /* Abstract methods */
+    virtual void respondToInteract(Sprite* owner, Item* withItem);
     // Update
     virtual void update(UpdateContext* updateContext) = 0;
     // Draw self onto provided renderer

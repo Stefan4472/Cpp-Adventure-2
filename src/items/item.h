@@ -10,6 +10,7 @@ class Item
 {
 public:
     Item(ItemType itemType);
+    ItemType getItemType();
     virtual TextureId getTextureId() = 0;
     virtual InteractType getInteractType() = 0;
 

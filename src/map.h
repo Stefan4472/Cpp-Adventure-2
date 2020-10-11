@@ -9,6 +9,7 @@
 #include "object_factory.h"
 #include "game_renderer.h"
 #include "game_context.h"
+#include "sprite.h"
 
 
 class Map
@@ -31,10 +32,14 @@ public:
     // Convert world coordinates to tile coordinates.
     // Throws runtime_error if coordinates are outside of world.
     std::pair<int, int> resolveTile(double worldX, double worldY);
+    // Return Tile at specified coordinates
+    std::shared_ptr<Tile> getTile(int tileX, int tileY);
     // Return object at the specified tile coordinates.
     // May return an emtpy (NULL) pointer if there is no object
     // at those coordinates.
     std::shared_ptr<MapObject> getObjectAtTile(int tileX, int tileY);
+    // TODO
+    std::shared_ptr<Sprite> getSpriteAtTile(int tileX, int tileY);
 
     void drawTiles(
         GameRenderer* gameRenderer,
