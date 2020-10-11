@@ -1,5 +1,6 @@
 #ifndef _UPDATE_CONTEXT_H
 #define _UPDATE_CONTEXT_H
+#include <stdint.h>
 
 struct UpdateContext
 {

@@ -18,6 +18,7 @@ PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 include_directories(
     src 
     src/tiles
+    src/objects
     ${Boost_INCLUDE_DIR} 
     ${SDL2_INCLUDE_DIR}
     ${SDL2IMAGE_INCLUDE_DIRS}

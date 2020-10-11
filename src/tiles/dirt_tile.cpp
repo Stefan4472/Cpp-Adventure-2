@@ -8,7 +8,7 @@ DirtTile::DirtTile(double worldX, double worldY)
 
 void DirtTile::update(UpdateContext* updateContext)
 {
-
+    
 }
 
 void DirtTile::draw(GameRenderer* gameRenderer)
