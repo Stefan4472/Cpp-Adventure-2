@@ -15,7 +15,8 @@ enum class TextureId
     SPRITE_WALK_DOWN,
     SPRITE_WALK_LEFT,
     SPRITE_WALK_RIGHT,
-    ROCK_OBJECT
+    ROCK_OBJECT,
+    PICKAXE_ITEM
 };
 
 std::string getFilename(TextureId id);
