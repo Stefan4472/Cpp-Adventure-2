@@ -6,7 +6,7 @@
 class RockObject : public MapObject
 {
 public:
-    RockObject(SDL_Rect& baseTile);
+    RockObject(GameContext* gameContext, SDL_Rect& baseTile);
     bool getIsWalkable();
     void update(UpdateContext* updateContext);
     void draw(GameRenderer* gameRenderer);

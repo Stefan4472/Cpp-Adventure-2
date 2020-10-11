@@ -8,6 +8,7 @@
 #include "tile_factory.h"
 #include "object_factory.h"
 #include "game_renderer.h"
+#include "game_context.h"
 
 
 class Map
@@ -19,9 +20,6 @@ public:
         std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles,
         std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects
     );
-
-    // Load map stored at the specified directory
-    static Map loadMap(boost::filesystem::path dirPath);
 
     // Return size of world (x, y)
     std::pair<int, int> getSizePx();
@@ -49,12 +47,19 @@ public:
         SDL_Rect& visibleWorld
     );
 
+    // Load map stored at the specified directory
+    static Map loadMap(
+        GameContext* gameContext,
+        boost::filesystem::path dirPath
+    );
+
 private:
     int numRows, numCols;
     std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles;
     std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects;
 
     static std::vector<std::vector<std::shared_ptr<Tile>>> loadTiles(
+        GameContext* gameContext,
         boost::filesystem::path tilesPath
     );
 
@@ -63,6 +68,7 @@ private:
     // GRASS, IT MIGHT WANT TO USE A DIFFERENT TEXTURE THAN IF IT IS ON 
     // SAND. WE MAY ALSO WANT TO KNOW OTHER INFO, E.G., IS IT IN SNOW?
     static std::vector<std::vector<std::shared_ptr<MapObject>>> loadObjects(
+        GameContext* gameContext,
         boost::filesystem::path objectsPath
     );
 

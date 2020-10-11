@@ -22,18 +22,22 @@ GameEngine::GameEngine(
         gameHeight
     );
 
-    map = std::make_shared<Map>(
-        Map::loadMap(map_path)
-    );
-
     gameContext = std::make_shared<GameContext>(
         gameWidth,
         gameHeight,
         TextureCache::TILE_SIZE_PX,
         textureCache,
-        map,
         this
     );
+
+    // TODO/NOTE: WARNING: THE CONTEXT IS NOT FULLY FINISHED AT THIS POINT
+    // (BECAUSE THE MAP HAS NOT BEEN INITIALIZED). THIS IS A CHICKEN-AND-EGG
+    // PROBLEM, BASICALLY. LEAVING IT FOR NOW.
+    map = std::make_shared<Map>(Map::loadMap(
+        gameContext.get(), 
+        map_path
+    ));
+
 
     SDL_Rect player_start_tile = {
         320, 
@@ -57,23 +61,44 @@ bool GameEngine::isTileWithinMap(
     int tileX, 
     int tileY
 ) {
-    return map->isTileWithinMap(tileX, tileY);
+    if (map)
+    {
+        return map->isTileWithinMap(tileX, tileY);
+    }
+    else
+    {
+        std::cout << "WARN: GameEngine method called before Map finished initialized" << std::endl;
+    }
+    
 }
 
 bool GameEngine::isTileWalkable(
     int tileX,
     int tileY
 ) {
-    return map->isTileWalkable(tileX, tileY);
+    if (map)
+    {
+        return map->isTileWalkable(tileX, tileY);
+    }
+    else
+    {
+        std::cout << "WARN: GameEngine method called before Map finished initialized" << std::endl;
+    }
 }
 
 std::pair<int, int> GameEngine::resolveTile(
     double worldX, 
     double worldY
 ) {
-    return map->resolveTile(worldX, worldY);
+    if (map)
+    {
+        return map->resolveTile(worldX, worldY);
+    }
+    else
+    {
+        std::cout << "WARN: GameEngine method called before Map finished initialized" << std::endl;
+    }
 }
-
 
 void GameEngine::update()
 {

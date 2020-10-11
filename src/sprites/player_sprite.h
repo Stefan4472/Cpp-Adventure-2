@@ -25,8 +25,6 @@ public:
 
     void giveInput(EventId eventId);
 
-    // void updateCoords();
-    
     void update(UpdateContext* updateContext);
     void draw(GameRenderer* renderer);
 

@@ -1,6 +1,7 @@
 #include "object_factory.h"
 
 std::shared_ptr<MapObject> ObjectFactory::createObject(
+        GameContext* gameContext, 
         ObjectType objectType, 
         SDL_Rect& baseTile
 ) {
@@ -9,6 +10,7 @@ std::shared_ptr<MapObject> ObjectFactory::createObject(
         case ObjectType::ROCK:
         {
             return std::make_shared<RockObject>(
+                gameContext,
                 baseTile
             );
         }

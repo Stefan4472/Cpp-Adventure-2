@@ -15,6 +15,7 @@ having direct access to code that includes them.
 */
 class EngineInterface
 {
+public:
     // Return whether the provided tile coordinate is valid
     virtual bool isTileWithinMap(
         int tileX, 

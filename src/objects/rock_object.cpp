@@ -1,12 +1,14 @@
 #include "rock_object.h"
 
-RockObject::RockObject(SDL_Rect& baseTile) 
-    : MapObject(ObjectType::ROCK, baseTile.x + baseTile.w / 2, baseTile.y + baseTile.h / 2)
+RockObject::RockObject(GameContext* gameContext, SDL_Rect& baseTile) 
+    : MapObject(gameContext, ObjectType::ROCK, baseTile.x + baseTile.w / 2, baseTile.y + baseTile.h / 2)
 {
-    // TODO: NEED TO GET TEXTURE DIMENSIONS
+    // Set our draw coordinates to center the image in the tile.
     int texture_width, texture_height;
-    // std::tie(texture_width, texture_height) = 
-    // drawWorldX = worldX 
+    std::tie(texture_width, texture_height) = 
+        gameContext->textureCache->getDimensions(TextureId::ROCK_OBJECT);
+    drawWorldX = worldX - texture_width / 2;
+    drawWorldY = worldY - texture_height / 2; 
 }
 
 bool RockObject::getIsWalkable()
@@ -23,7 +25,7 @@ void RockObject::draw(GameRenderer* gameRenderer)
 {
     gameRenderer->drawToWorld(
         TextureId::ROCK_OBJECT,
-        worldX,
-        worldY
+        drawWorldX,
+        drawWorldY
     );
 }

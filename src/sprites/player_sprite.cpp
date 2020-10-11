@@ -57,13 +57,6 @@ void PlayerSprite::giveInput(EventId eventId)
     inputHandler.giveInput(eventId);
 }
 
-// void PlayerSprite::updateCoords()
-// {
-//     worldX = tileX * gameContext->tileSizePx;
-//     worldY = tileY * gameContext->tileSizePx;
-//     // std::cout << worldX << ", " << worldY << std::endl;
-// }
-
 void PlayerSprite::update(UpdateContext* updateContext)
 {
     // No current movement input: see if there's a new one
@@ -157,7 +150,7 @@ void PlayerSprite::updateWalkCommand()
     
     int curr_tile_x, curr_tile_y;
     std::tie(curr_tile_x, curr_tile_y) = 
-        gameContext->resolveTile(worldX, worldY);
+        gameContext->engine->resolveTile(worldX, worldY);
 
     switch (currWalkCommand)
     {
@@ -168,7 +161,7 @@ void PlayerSprite::updateWalkCommand()
         }
         case WalkDirection::UP:
         {
-            if (gameContext->isTileWalkable(curr_tile_x, curr_tile_y - 1))
+            if (gameContext->engine->isTileWalkable(curr_tile_x, curr_tile_y - 1))
             {
                 goalWorldX = worldX;
                 goalWorldY = worldY - gameContext->tileSizePx;
@@ -178,7 +171,7 @@ void PlayerSprite::updateWalkCommand()
         }
         case WalkDirection::DOWN:
         {
-            if (gameContext->isTileWalkable(curr_tile_x, curr_tile_y + 1))
+            if (gameContext->engine->isTileWalkable(curr_tile_x, curr_tile_y + 1))
             {
                 goalWorldX = worldX;
                 goalWorldY = worldY + gameContext->tileSizePx;
@@ -188,7 +181,7 @@ void PlayerSprite::updateWalkCommand()
         }
         case WalkDirection::LEFT:
         {
-            if (gameContext->isTileWalkable(curr_tile_x - 1, curr_tile_y))
+            if (gameContext->engine->isTileWalkable(curr_tile_x - 1, curr_tile_y))
             {
                 goalWorldX = worldX - gameContext->tileSizePx;
                 goalWorldY = worldY;
@@ -198,7 +191,7 @@ void PlayerSprite::updateWalkCommand()
         }
         case WalkDirection::RIGHT:
         {
-            if (gameContext->isTileWalkable(curr_tile_x + 1, curr_tile_y))
+            if (gameContext->engine->isTileWalkable(curr_tile_x + 1, curr_tile_y))
             {
                 goalWorldX = worldX + gameContext->tileSizePx;
                 goalWorldY = worldY;

@@ -11,25 +11,6 @@ Map::Map(
     numCols = this->mapTiles[0].size();
 }
 
-// Static method
-Map Map::loadMap(boost::filesystem::path dirPath)
-{
-    if (!boost::filesystem::is_directory(dirPath))
-    {
-        throw std::invalid_argument(
-            "The provided path is not a directory"
-        );
-    }
-
-    auto map_tiles = loadTiles(dirPath / "tiles.txt");
-    auto map_objects = loadObjects(dirPath / "objects.txt");
-
-    return Map(
-        map_tiles, 
-        map_objects
-    );
-}
-
 std::pair<int, int> Map::getSizePx()
 {
     return std::make_pair(
@@ -157,7 +138,35 @@ void Map::drawObjects(
     }
 }
 
+// Static method
+Map Map::loadMap(
+        GameContext* gameContext,
+        boost::filesystem::path dirPath
+) {
+    if (!boost::filesystem::is_directory(dirPath))
+    {
+        throw std::invalid_argument(
+            "The provided path is not a directory"
+        );
+    }
+
+    auto map_tiles = loadTiles(
+        gameContext, 
+        dirPath / "tiles.txt"
+    );
+    auto map_objects = loadObjects(
+        gameContext, 
+        dirPath / "objects.txt"
+    );
+
+    return Map(
+        map_tiles, 
+        map_objects
+    );
+}
+
 std::vector<std::vector<std::shared_ptr<Tile>>> Map::loadTiles(
+        GameContext* gameContext,
         boost::filesystem::path tilesPath
 ) {
     std::ifstream tiles_file(tilesPath.string());
@@ -199,7 +208,8 @@ std::vector<std::vector<std::shared_ptr<Tile>>> Map::loadTiles(
 }
 
 std::vector<std::vector<std::shared_ptr<MapObject>>> Map::loadObjects(
-    boost::filesystem::path objectsPath
+        GameContext* gameContext,
+        boost::filesystem::path objectsPath
 ) {
     std::ifstream objects_file(objectsPath.string());
     if (!objects_file.is_open())
@@ -234,6 +244,7 @@ std::vector<std::vector<std::shared_ptr<MapObject>>> Map::loadObjects(
                 };
 
                 map_objects.back().push_back(ObjectFactory::createObject(
+                    gameContext,
                     resolveObjectType(next_val),
                     base_tile
                 ));
