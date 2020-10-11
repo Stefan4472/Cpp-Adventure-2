@@ -8,6 +8,13 @@ class RockObject : public MapObject
 public:
     RockObject(GameContext* gameContext, SDL_Rect& baseTile);
     bool getIsWalkable();
+    
+    void respondToInteract(
+        InteractInterface* interactInterface,
+        Sprite* owner, 
+        Item* withItem
+    );
+    
     void update(UpdateContext* updateContext);
     void draw(GameRenderer* gameRenderer);
 

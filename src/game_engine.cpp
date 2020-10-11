@@ -153,6 +153,11 @@ void GameEngine::handleInput(EventId inputId, UpdateContext* updateContext)
 
 void GameEngine::handleInteract(InteractRequest& iRequest)
 {
+    // Ignore out-of-bounds requests
+    if (!map->isTileWithinMap(iRequest.tileX, iRequest.tileY))
+    {
+        return;
+    }
     // Check first if Sprite is at tile, then if object, then tile itself
 
     // std::shared_ptr<Sprite> interacted_sprite =
@@ -173,6 +178,10 @@ void GameEngine::handleInteract(InteractRequest& iRequest)
             iRequest.sprite,
             iRequest.item
         );
+        if (interacted_object->getRemoveFromGame())
+        {
+            map->removeObjectAtTile(iRequest.tileX, iRequest.tileY);
+        }
         return;
     }
 

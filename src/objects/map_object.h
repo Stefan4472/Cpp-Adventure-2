@@ -21,6 +21,7 @@ public:
     );
 
     ObjectType getTileType();
+    bool getRemoveFromGame();
     
     virtual bool getIsWalkable() = 0;
     virtual void respondToInteract(
@@ -35,6 +36,7 @@ protected:
     GameContext* gameContext;
     ObjectType objectType;
     double worldX, worldY;
+    bool removeFromGame;
 };
 
 #endif

@@ -8,6 +8,7 @@
 #include "game_renderer.h"
 #include "sprite_type.h"
 #include "item.h"
+#include "interact_interface.h"
 
 class Sprite
 {

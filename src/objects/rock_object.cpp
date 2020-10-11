@@ -16,6 +16,28 @@ bool RockObject::getIsWalkable()
     return false;
 }
 
+void RockObject::respondToInteract(
+        InteractInterface* interactInterface,
+        Sprite* owner, 
+        Item* withItem
+) {
+    // Destroy ourselves instantly if interacted with Pickaxe
+    if (withItem->getItemType() == ItemType::PICKAXE)
+    {
+        removeFromGame = true;
+        // TODO: NOTE: THIS WOULD DELETE OURSELVES... NOT A GOOD IDEA
+        // int tile_x, tile_y;
+        // std::tie(tile_x, tile_y) = gameContext->engine->resolveTile(
+        //     worldX,
+        //     worldY
+        // );
+        // interactInterface->destroyObject(
+        //     tile_x,
+        //     tile_y
+        // );
+    }
+}
+
 void RockObject::update(UpdateContext* updateContext)
 {
     

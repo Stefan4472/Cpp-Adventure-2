@@ -18,6 +18,7 @@ public:
     //     TileType newTileType
     // ) = 0;
 
+    // TODO: ACTUALLY... I THINK THIS IS A BAD IDEA. IF YOU DESTROYED YOURSELF, THERE WOULD BE A SEGFAULT
     virtual void destroyObject(
         int tileX,
         int tileY

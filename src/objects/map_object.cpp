@@ -10,11 +10,17 @@ MapObject::MapObject(
     this->objectType = objectType;
     this->worldX = worldX;
     this->worldY = worldY;
+    removeFromGame = false;
 }
 
 ObjectType MapObject::getTileType()
 {
     return objectType;
+}
+
+bool MapObject::getRemoveFromGame()
+{
+    return removeFromGame;
 }
 
 void MapObject::respondToInteract(

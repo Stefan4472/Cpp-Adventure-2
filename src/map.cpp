@@ -89,6 +89,22 @@ std::shared_ptr<Sprite> Map::getSpriteAtTile(int tileX, int tileY)
     return std::shared_ptr<Sprite>();
 }
 
+void Map::removeObjectAtTile(
+        int tileX,
+        int tileY
+) {
+    // TODO: MAKE SURE THERE ARE NO MEMORY LEAKS
+    if (isTileWithinMap(tileX, tileY))
+    {
+        mapObjects[tileY][tileX].reset();
+    }
+    else
+    {
+        throw std::invalid_argument(
+            "Tile coordinates out of bounds"
+        );
+    }
+}
 
 void Map::drawTiles(
         GameRenderer* gameRenderer,
