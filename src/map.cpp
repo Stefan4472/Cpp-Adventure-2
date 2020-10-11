@@ -78,6 +78,43 @@ void Map::drawTiles(
     }
 }
 
+void Map::drawObjects(
+        GameRenderer* gameRenderer,
+        SDL_Rect& visibleWorld
+) {
+    // Calculate number of tiles needed to fill the screen.
+    // Add two in each dimension to ensure the screen is always covered.
+    int tiles_w = visibleWorld.w / TextureCache::TILE_SIZE_PX + 2;
+    int tiles_h = visibleWorld.h / TextureCache::TILE_SIZE_PX + 2;
+    
+    int start_tile_x = visibleWorld.x / TextureCache::TILE_SIZE_PX - 1;
+    int start_tile_y = visibleWorld.y / TextureCache::TILE_SIZE_PX - 1;
+    
+    // Draw tiles
+    for (int i = 0; i < tiles_h; i++)
+    {
+        for (int j = 0; j < tiles_w; j++)
+        {
+            int tile_x = start_tile_x + j;
+            int tile_y = start_tile_y + i;
+
+            // Skip if out of range (special case, occurs close to
+            // map bounds)
+            if (!isTileWithinMap(tile_x, tile_y))
+            {
+                continue;
+            }
+            // Skip if null
+            if (!mapTiles[tile_y][tile_x])
+            {
+                continue;
+            }
+
+            mapTiles[tile_y][tile_x]->draw(gameRenderer);
+        }
+    }
+}
+
 std::vector<std::vector<std::shared_ptr<Tile>>> Map::loadTiles(
         boost::filesystem::path tilesPath
 ) {

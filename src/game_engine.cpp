@@ -127,6 +127,11 @@ void GameEngine::draw(SDL_Renderer* renderer)
         visible_bounds
     );
     
+    map->drawObjects(
+        gameRenderer.get(),
+        visible_bounds    
+    );
+    
     // Draw player
     player->draw(gameRenderer.get());
 }
