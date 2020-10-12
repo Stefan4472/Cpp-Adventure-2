@@ -14,7 +14,8 @@ public:
         std::list<InteractRequest>& interactions,
         std::list<CreateObjectRequest>& createObjectRequests,
         std::list<DestroyObjectRequest>& destroyObjectRequests,
-        std::list<ReplaceTileRequest>& replaceTileRequests
+        std::list<ReplaceTileRequest>& replaceTileRequests,
+        std::list<CreateDropRequest>& createDropRequests
     );
 
     // TODO: MAKE PRIVATE
@@ -45,12 +46,19 @@ public:
         int tileY
     );
 
+    void requestCreateDrop(
+        ItemType itemType,
+        int quantity,
+        int tileX, 
+        int tileY
+    );
 
 private:
     std::list<InteractRequest>* interactions;
     std::list<CreateObjectRequest>* createObjectRequests;
     std::list<DestroyObjectRequest>* destroyObjectRequests;
     std::list<ReplaceTileRequest>* replaceTileRequests;
+    std::list<CreateDropRequest>* createDropRequests;
 };
 
 #endif

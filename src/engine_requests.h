@@ -17,7 +17,8 @@ struct InteractRequest
 {
     Sprite* sprite;
     Item* item;
-    int tileX, tileY;
+    int tileX;
+    int tileY;
 };
 
 // struct CreateSpriteRequest
@@ -36,25 +37,29 @@ struct InteractRequest
 struct CreateObjectRequest
 {
     ObjectType objectType;
-    int tileX, tileY;
+    int tileX;
+    int tileY;
 };
 
 struct DestroyObjectRequest
 {
-    int tileX, tileY;
+    int tileX;
+    int tileY;
 };
 
 struct ReplaceTileRequest
 {
     TileType tileType;
-    int tileX, tileY;
+    int tileX;
+    int tileY;
 };
 
 struct CreateDropRequest
 {
     ItemType itemType;
-    int tileX, tileY;
     int quantity;
+    int tileX;
+    int tileY;
 };
 
 #endif

@@ -6,7 +6,8 @@ UpdateContext::UpdateContext(
         std::list<InteractRequest>& interactions,
         std::list<CreateObjectRequest>& createObjectRequests,
         std::list<DestroyObjectRequest>& destroyObjectRequests,
-        std::list<ReplaceTileRequest>& replaceTileRequests
+        std::list<ReplaceTileRequest>& replaceTileRequests,
+        std::list<CreateDropRequest>& createDropRequests
 ) {
     this->gameRuntimeMs = gameRuntimeMs;
     this->msSincePrevUpdate = msSincePrevUpdate;
@@ -14,6 +15,7 @@ UpdateContext::UpdateContext(
     this->createObjectRequests = &createObjectRequests;
     this->destroyObjectRequests = &destroyObjectRequests;
     this->replaceTileRequests = &replaceTileRequests;
+    this->createDropRequests = &createDropRequests;
 }
 
 void UpdateContext::requestInteract(
@@ -59,6 +61,20 @@ void UpdateContext::requestReplaceTile(
 ) {
     replaceTileRequests->push_back(ReplaceTileRequest{
         tileType,
+        tileX,
+        tileY
+    });
+}
+
+void UpdateContext::requestCreateDrop(
+        ItemType itemType,
+        int quantity,
+        int tileX, 
+        int tileY
+) {
+    createDropRequests->push_back(CreateDropRequest{
+        itemType,
+        quantity,
         tileX,
         tileY
     });

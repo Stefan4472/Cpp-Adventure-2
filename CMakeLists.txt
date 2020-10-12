@@ -21,6 +21,7 @@ include_directories(
     src/objects
     src/sprites
     src/items
+    src/drops
     ${Boost_INCLUDE_DIR} 
     ${SDL2_INCLUDE_DIR}
     ${SDL2IMAGE_INCLUDE_DIRS}

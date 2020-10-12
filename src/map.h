@@ -10,7 +10,10 @@
 #include "game_renderer.h"
 #include "game_context.h"
 #include "sprite.h"
+#include "drop.h"
 
+// TODO: REMOVE
+#include "gravel_item.h"
 
 class Map
 {
@@ -62,7 +65,7 @@ public:
     );
     // TODO
     std::shared_ptr<Sprite> getSpriteAtTile(
-        int tileX, 
+        int tileX,
         int tileY
     );
     bool canCreateObjectAtTile(
@@ -81,6 +84,11 @@ public:
     );
     void replaceTile(
         TileType newTileType,
+        int tileX,
+        int tileY
+    );
+    void createDropAtTile(
+        std::shared_ptr<Item> itemToDrop,
         int tileX,
         int tileY
     );
@@ -107,6 +115,7 @@ private:
     GameContext* gameContext;
     std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles;
     std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects;
+    std::vector<std::vector<std::shared_ptr<Drop>>> drops;
 
     static std::vector<std::vector<std::shared_ptr<Tile>>> loadTiles(
         GameContext* gameContext,

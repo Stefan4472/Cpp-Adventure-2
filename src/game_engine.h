@@ -20,6 +20,7 @@
 
 // TODO: REMOVE
 #include "pickaxe_item.h"
+#include "gravel_item.h"
 
 
 class GameEngine : public EngineInterface

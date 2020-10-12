@@ -11,6 +11,13 @@ Map::Map(
     this->mapObjects = mapObjects;
     numRows = this->mapTiles.size();
     numCols = this->mapTiles[0].size();
+
+    // Create empty `drops` array
+    // TODO: READ IN FROM MAP
+    drops = std::vector<std::vector<std::shared_ptr<Drop>>>(
+        numRows,
+        std::vector<std::shared_ptr<Drop>>(numCols)
+    );
 }
 
 std::pair<int, int> Map::getSizePx()
@@ -51,7 +58,6 @@ bool Map::isTileWalkable(int tileX, int tileY)
 
 std::pair<int, int> Map::resolveTile(double worldX, double worldY)
 {
-    
     return std::make_pair(
         static_cast<int>(worldX) / TextureCache::TILE_SIZE_PX,
         static_cast<int>(worldY) / TextureCache::TILE_SIZE_PX
@@ -182,6 +188,30 @@ void Map::replaceTile(
     }
 }
 
+void Map::createDropAtTile(
+        std::shared_ptr<Item> itemToDrop,
+        int tileX,
+        int tileY
+) {
+    // TODO: CHECK IF ALREADY EXISTS HERE?
+    if (isTileWithinMap(tileX, tileY))
+    {
+        drops[tileY][tileX].reset();
+        drops[tileY][tileX] = std::make_shared<Drop>(
+            gameContext,
+            itemToDrop,
+            calcTileCoords(tileX, tileY)
+        );
+    }
+    else
+    {
+        throw std::invalid_argument(
+            "Tile coordinates out of bounds"
+        );
+    }
+
+}
+    
 void Map::drawTiles(
         GameRenderer* gameRenderer,
         SDL_Rect& visibleWorld
@@ -225,7 +255,7 @@ void Map::drawObjects(
     int start_tile_x = visibleWorld.x / TextureCache::TILE_SIZE_PX - 1;
     int start_tile_y = visibleWorld.y / TextureCache::TILE_SIZE_PX - 1;
     
-    // Draw objects
+    // Draw objects (and Drops)
     for (int i = 0; i < tiles_h; i++)
     {
         for (int j = 0; j < tiles_w; j++)
@@ -239,13 +269,16 @@ void Map::drawObjects(
             {
                 continue;
             }
-            // Skip if null
-            if (!mapObjects[tile_y][tile_x])
+            // Draw MapObject at tile, if one exists
+            if (mapObjects[tile_y][tile_x])
             {
-                continue;
+                mapObjects[tile_y][tile_x]->draw(gameRenderer);
             }
-
-            mapObjects[tile_y][tile_x]->draw(gameRenderer);
+            // Draw Drop at tile, if one exists
+            if (drops[tile_y][tile_x])
+            {
+                drops[tile_y][tile_x]->draw(gameRenderer);
+            }
         }
     }
 }

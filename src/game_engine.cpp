@@ -109,6 +109,7 @@ void GameEngine::update()
     std::list<CreateObjectRequest> req_created_objects;
     std::list<DestroyObjectRequest> req_destroyed_objects;
     std::list<ReplaceTileRequest> req_replaced_tiles;
+    std::list<CreateDropRequest> req_created_drops;
 
     UpdateContext update_context = {
         curr_game_time,
@@ -116,7 +117,8 @@ void GameEngine::update()
         req_interactions,
         req_created_objects,
         req_destroyed_objects,
-        req_replaced_tiles
+        req_replaced_tiles,
+        req_created_drops
     };
 
     while (!inputQueue.empty())
@@ -169,6 +171,17 @@ void GameEngine::update()
             replace_request.tileType,
             replace_request.tileX,
             replace_request.tileY
+        );
+    }
+    for (CreateDropRequest drop_request : req_created_drops)
+    {
+        std::cout << "Creating drop" << std::endl;
+        // TODO: NEED ITEMFACTORY... CURRENTLY WILL ALWAYS DROP GRAVEL
+        auto dropped_item = std::make_shared<GravelItem>();
+        map->createDropAtTile(
+            dropped_item,
+            drop_request.tileX,
+            drop_request.tileY
         );
     }
     prevUpdateMs = curr_game_time;

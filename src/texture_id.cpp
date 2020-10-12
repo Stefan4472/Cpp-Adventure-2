@@ -50,7 +50,7 @@ std::string getFilename(TextureId id)
         }
         case TextureId::GRAVEL_ITEM:
         {
-            return "gravel-item.png";
+            return "gravel.png";
         }
         default:
         {

@@ -13,7 +13,7 @@ void StoneTile::respondToInteract(
         Sprite* owner, 
         Item* withItem
 ) {
-
+    
 }
 
 void StoneTile::update(UpdateContext& updateContext)
