@@ -5,7 +5,6 @@
 #include "update_context.h"
 #include "game_renderer.h"
 #include "sprite.h"
-#include "interact_interface.h"
 
 
 class Tile
@@ -15,7 +14,7 @@ public:
     TileType getTileType();
     
     virtual void respondToInteract(
-        InteractInterface* interactInterface, 
+        UpdateContext& updateContext,
         Sprite* owner, 
         Item* withItem
     );

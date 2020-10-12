@@ -17,13 +17,12 @@
 #include "engine_interface.h"
 #include "update_context.h"
 #include "game_renderer.h"
-#include "interact_interface.h"
 
 // TODO: REMOVE
 #include "pickaxe_item.h"
 
 
-class GameEngine : public EngineInterface, public InteractInterface
+class GameEngine : public EngineInterface
 {
 public:
     // TODO: GAMEENGINE SHOULDN'T DEAL WITH THE RENDERER AT ALL
@@ -51,12 +50,6 @@ public:
         double worldY
     );
 
-    // `InteractInterface` methods
-    void destroyObject(
-        int tileX,
-        int tileY
-    );
-
     // Update game state
     void update();
     // Draw game to provided Renderer
@@ -80,8 +73,9 @@ private:
         UpdateContext* updateContext
     );
 
-    void handleInteract(
-        InteractRequest& interactRequest
+    void executeInteraction(
+        InteractRequest& interactRequest,
+        UpdateContext& updateContext
     );
 };
 

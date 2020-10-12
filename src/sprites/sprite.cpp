@@ -21,7 +21,7 @@ std::pair<double, double> Sprite::getWorldCoords()
 }
 
 void Sprite::respondToInteract(
-        InteractInterface* interactInterface,
+        UpdateContext& updateContext,
         Sprite* owner, 
         Item* withItem
 ) {

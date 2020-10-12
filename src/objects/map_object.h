@@ -5,7 +5,6 @@
 #include "update_context.h"
 #include "game_renderer.h"
 #include "game_context.h"
-#include "interact_interface.h"
 #include "sprite.h"
 #include "item.h"
 
@@ -25,7 +24,7 @@ public:
 
     virtual bool getIsWalkable() = 0;
     virtual void respondToInteract(
-        InteractInterface* interactInterface,
+        UpdateContext& updateContext,
         Sprite* owner, 
         Item* withItem
     );

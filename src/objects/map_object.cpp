@@ -24,7 +24,7 @@ bool MapObject::getRemoveFromGame()
 }
 
 void MapObject::respondToInteract(
-        InteractInterface* interactInterface,
+        UpdateContext& updateContext,
         Sprite* owner, 
         Item* withItem
 ) {

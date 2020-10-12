@@ -101,13 +101,6 @@ std::pair<int, int> GameEngine::resolveTile(
     }
 }
 
-void GameEngine::destroyObject(
-        int tileX,
-        int tileY
-) {
-    std::cout << "Destroying object at " << tileX << ", " << tileY << std::endl;
-}
-
 void GameEngine::update()
 {
     uint32_t curr_game_time = SDL_GetTicks();
@@ -136,6 +129,7 @@ void GameEngine::update()
         prevUpdateMs = SDL_GetTicks();
     }
 
+    // TODO: ACTUALLY PASS BY REFERENCE (&)
     player->update(&update_context);
 
     // Go through queue of requested interactions
@@ -143,9 +137,18 @@ void GameEngine::update()
     {
         std::cout << irequest.sprite << ": " << irequest.item << 
             " at " << irequest.tileX << ", " << irequest.tileY << std::endl;
-        handleInteract(irequest);
+        executeInteraction(irequest, update_context);
     }
 
+    // Finally, fulfill all requests
+    for (DestroyObjectRequest destroy_request : req_destroyed_objects)
+    {
+        std::cout << "Request to destroy object" << std::endl;
+        map->removeObjectAtTile(
+            destroy_request.tileX,
+            destroy_request.tileY
+        );
+    }
     prevUpdateMs = curr_game_time;
 }
 
@@ -155,8 +158,10 @@ void GameEngine::handleInput(EventId inputId, UpdateContext* updateContext)
     player->giveInput(inputId, updateContext);
 }
 
-void GameEngine::handleInteract(InteractRequest& iRequest)
-{
+void GameEngine::executeInteraction(
+        InteractRequest& iRequest,
+        UpdateContext& updateContext
+) {
     // Ignore out-of-bounds requests
     if (!map->isTileWithinMap(iRequest.tileX, iRequest.tileY))
     {
@@ -179,7 +184,7 @@ void GameEngine::handleInteract(InteractRequest& iRequest)
         std::cout << "Interacting with object " << interacted_object << std::endl;
         // Notify target
         interacted_object->respondToInteract(
-            this,
+            updateContext,
             iRequest.sprite,
             iRequest.item
         );
@@ -187,10 +192,10 @@ void GameEngine::handleInteract(InteractRequest& iRequest)
         iRequest.item->onFinishedInteract(
             interacted_object->getObjectType()
         );
-        if (interacted_object->getRemoveFromGame())
-        {
-            map->removeObjectAtTile(iRequest.tileX, iRequest.tileY);
-        }
+        // if (interacted_object->getRemoveFromGame())
+        // {
+        //     map->removeObjectAtTile(iRequest.tileX, iRequest.tileY);
+        // }
         return;
     }
 
@@ -201,7 +206,7 @@ void GameEngine::handleInteract(InteractRequest& iRequest)
         //.....
         std::cout << "Interacting with tile " << interacted_tile << std::endl;
         interacted_tile->respondToInteract(
-            this,
+            updateContext,
             iRequest.sprite,
             iRequest.item
         );

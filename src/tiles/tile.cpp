@@ -13,7 +13,7 @@ TileType Tile::getTileType()
 }
 
 void Tile::respondToInteract(
-        InteractInterface* interactInterface, 
+        UpdateContext& updateContext,
         Sprite* owner, 
         Item* withItem
 ) {

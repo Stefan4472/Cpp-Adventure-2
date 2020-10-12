@@ -10,7 +10,7 @@ public:
     bool getIsWalkable();
     
     void respondToInteract(
-        InteractInterface* interactInterface,
+        UpdateContext& updateContext,
         Sprite* owner, 
         Item* withItem
     );
