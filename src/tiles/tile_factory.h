@@ -13,9 +13,9 @@ class TileFactory
 {
 public:
     static std::shared_ptr<Tile> createTile(
+        GameContext* gameContext,
         TileType tileType, 
-        double worldX, 
-        double worldY
+        SDL_Rect worldCoords
     );
 };
 

@@ -1,12 +1,22 @@
 #include "stone_tile.h"
 
-StoneTile::StoneTile(double worldX, double worldY) 
-    : Tile(TileType::STONE, worldX, worldY)
+StoneTile::StoneTile(
+        GameContext* gameContext, 
+        SDL_Rect worldCoords
+) : Tile(gameContext, TileType::STONE, worldCoords)
 {
 
 }
 
-void StoneTile::update(UpdateContext* updateContext)
+void StoneTile::respondToInteract(
+        UpdateContext& updateContext,
+        Sprite* owner, 
+        Item* withItem
+) {
+
+}
+
+void StoneTile::update(UpdateContext& updateContext)
 {
 
 }
@@ -15,7 +25,7 @@ void StoneTile::draw(GameRenderer* gameRenderer)
 {
     gameRenderer->drawToWorld(
         TextureId::STONE_TILE,
-        worldX,
-        worldY
+        worldCoords.x,
+        worldCoords.y
     );
 }

@@ -6,8 +6,19 @@
 class DirtTile : public Tile
 {
 public:
-    DirtTile(double worldX, double worldY);
-    void update(UpdateContext* updateContext);
+    DirtTile(
+        GameContext* gameContext, 
+        SDL_Rect worldCoords
+    );
+
+    void respondToInteract(
+        UpdateContext& updateContext,
+        Sprite* owner, 
+        Item* withItem
+    );
+
+    void update(UpdateContext& updateContext);
+    
     void draw(GameRenderer* gameRenderer);
 };
 

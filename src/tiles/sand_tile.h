@@ -6,8 +6,19 @@
 class SandTile : public Tile
 {
 public:
-    SandTile(double worldX, double worldY);
-    void update(UpdateContext* updateContext);
+    SandTile(
+        GameContext* gameContext, 
+        SDL_Rect worldCoords
+    );
+
+    void respondToInteract(
+        UpdateContext& updateContext,
+        Sprite* owner, 
+        Item* withItem
+    );
+
+    void update(UpdateContext& updateContext);
+    
     void draw(GameRenderer* gameRenderer);
 };
 

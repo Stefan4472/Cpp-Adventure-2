@@ -170,9 +170,9 @@ void Map::replaceTile(
 
         SDL_Rect tile_coords = calcTileCoords(tileX, tileY);
         mapTiles[tileY][tileX] = TileFactory::createTile(
+            gameContext,
             newTileType,
-            tile_coords.x,
-            tile_coords.y
+            tile_coords
         );
     }
     else
@@ -306,10 +306,17 @@ std::vector<std::vector<std::shared_ptr<Tile>>> Map::loadTiles(
         // Get each integer
         while (str_stream >> next_val)
         {
-            map_tiles.back().push_back(TileFactory::createTile(
-                resolveTileType(next_val),
+            SDL_Rect tile_coords = {
                 curr_col * TextureCache::TILE_SIZE_PX,
-                curr_row * TextureCache::TILE_SIZE_PX
+                curr_row * TextureCache::TILE_SIZE_PX,
+                TextureCache::TILE_SIZE_PX,
+                TextureCache::TILE_SIZE_PX
+            };
+
+            map_tiles.back().push_back(TileFactory::createTile(
+                gameContext,
+                resolveTileType(next_val),
+                tile_coords
             ));
             curr_col++;
         }

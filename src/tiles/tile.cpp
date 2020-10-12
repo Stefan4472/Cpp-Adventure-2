@@ -1,21 +1,16 @@
 #include "tile.h"
 
-Tile::Tile(TileType tileType, double worldX, double worldY)
-{
+Tile::Tile(
+        GameContext* gameContext, 
+        TileType tileType, 
+        SDL_Rect worldCoords
+) {
+    this->gameContext = gameContext;
     this->tileType = tileType;
-    this->worldX = worldX;
-    this->worldY = worldY;
+    this->worldCoords = worldCoords;
 }
 
 TileType Tile::getTileType()
 {
     return tileType;
-}
-
-void Tile::respondToInteract(
-        UpdateContext& updateContext,
-        Sprite* owner, 
-        Item* withItem
-) {
-    std::cout << "Tile responding" << std::endl;
 }

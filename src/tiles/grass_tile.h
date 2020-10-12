@@ -7,13 +7,19 @@
 class GrassTile : public Tile
 {
 public:
-    GrassTile(double worldX, double worldY);
+    GrassTile(
+        GameContext* gameContext, 
+        SDL_Rect worldCoords
+    );
+
     void respondToInteract(
         UpdateContext& updateContext,
         Sprite* owner, 
         Item* withItem
     );
-    void update(UpdateContext* updateContext);
+
+    void update(UpdateContext& updateContext);
+
     void draw(GameRenderer* gameRenderer);
 };
 

@@ -1,12 +1,22 @@
 #include "sand_tile.h"
 
-SandTile::SandTile(double worldX, double worldY) 
-    : Tile(TileType::SAND, worldX, worldY)
+SandTile::SandTile(
+        GameContext* gameContext, 
+        SDL_Rect worldCoords
+) : Tile(gameContext, TileType::SAND, worldCoords)
 {
 
 }
 
-void SandTile::update(UpdateContext* updateContext)
+void SandTile::respondToInteract(
+        UpdateContext& updateContext,
+        Sprite* owner, 
+        Item* withItem
+) {
+
+}
+
+void SandTile::update(UpdateContext& updateContext)
 {
 
 }
@@ -15,7 +25,7 @@ void SandTile::draw(GameRenderer* gameRenderer)
 {
     gameRenderer->drawToWorld(
         TextureId::SAND_TILE,
-        worldX,
-        worldY
+        worldCoords.x,
+        worldCoords.y
     );
 }

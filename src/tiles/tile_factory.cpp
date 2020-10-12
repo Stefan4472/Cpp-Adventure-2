@@ -1,9 +1,9 @@
 #include "tile_factory.h"
 
 std::shared_ptr<Tile> TileFactory::createTile(
+        GameContext* gameContext,
         TileType tileType, 
-        double worldX, 
-        double worldY
+        SDL_Rect worldCoords
 ) {
     // TODO: FOR NOW JUST TESTING OUT WITH GRASS TILE
     switch (tileType)
@@ -11,29 +11,29 @@ std::shared_ptr<Tile> TileFactory::createTile(
         case TileType::GRASS:
         {
             return std::make_shared<GrassTile>(
-                worldX, 
-                worldY
+                gameContext,
+                worldCoords
             );
         }
         case TileType::SAND:
         {
             return std::make_shared<SandTile>(
-                worldX, 
-                worldY
+                gameContext,
+                worldCoords
             );
         }
         case TileType::DIRT:
         {
             return std::make_shared<DirtTile>(
-                worldX, 
-                worldY
+                gameContext,
+                worldCoords
             );
         }
         case TileType::STONE:
         {
             return std::make_shared<StoneTile>(
-                worldX, 
-                worldY
+                gameContext,
+                worldCoords
             );
         }
         default:

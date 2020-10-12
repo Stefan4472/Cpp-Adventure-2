@@ -6,8 +6,19 @@
 class StoneTile : public Tile
 {
 public:
-    StoneTile(double worldX, double worldY);
-    void update(UpdateContext* updateContext);
+    StoneTile(
+        GameContext* gameContext, 
+        SDL_Rect worldCoords
+    );
+
+    void respondToInteract(
+        UpdateContext& updateContext,
+        Sprite* owner, 
+        Item* withItem
+    );
+
+    void update(UpdateContext& updateContext);
+
     void draw(GameRenderer* gameRenderer);
 };
 
