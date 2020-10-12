@@ -15,7 +15,21 @@ public:
     Item(ItemType itemType);
     ItemType getItemType();
     virtual TextureId getTextureId() = 0;
-    virtual InteractType getInteractType() = 0;
+    
+    // virtual bool wasConsumed();  TODO?
+
+    // TODO: PROPERTIES SHOULD REALLY BE SET AS VARIABLES, NOT AS FUNCTIONS
+
+    // Is this item placeable?
+    // As in, does an interact cause a new Tile or
+    // MapObject to be placed?
+    virtual bool isPlaceableAsTile() = 0;
+    virtual bool isPlaceableAsObject() = 0;
+    // By default, throw std::runtime_error() unless overloaded.
+    // Call the corresponding `isPlaceable()` method before using.
+    virtual TileType getTilePlaced();
+    virtual ObjectType getObjectPlaced();
+
     // Called after successful interact.
     // By default does nothing.
     virtual void onFinishedInteract(TileType);

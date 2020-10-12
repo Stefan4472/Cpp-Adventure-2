@@ -10,7 +10,8 @@ class PickaxeItem : public Item
 public:
     PickaxeItem();
     TextureId getTextureId();
-    InteractType getInteractType();
+    bool isPlaceableAsTile();
+    bool isPlaceableAsObject();
     void onFinishedInteract(ObjectType objectType);
 };
 

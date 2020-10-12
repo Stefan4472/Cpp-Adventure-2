@@ -10,10 +10,21 @@ TextureId GravelItem::getTextureId()
     return TextureId::GRAVEL_ITEM;
 }
 
-InteractType GravelItem::getInteractType()
+bool GravelItem::isPlaceableAsTile()
 {
-    return InteractType::OBJECT_ONLY;
+    return true;
 }
+
+bool GravelItem::isPlaceableAsObject()
+{
+    return false;
+}
+
+TileType GravelItem::getTilePlaced()
+{
+    return TileType::STONE;
+}
+
 
 void GravelItem::onFinishedInteract(ObjectType objectType)
 {

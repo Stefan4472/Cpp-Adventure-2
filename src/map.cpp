@@ -111,33 +111,32 @@ std::shared_ptr<Sprite> Map::getSpriteAtTile(int tileX, int tileY)
     return std::shared_ptr<Sprite>();
 }
 
+bool Map::canCreateObjectAtTile(
+        int tileX,
+        int tileY
+) {
+    // Make sure tile is within bounds, and no object is currently there
+    return isTileWithinMap(tileX, tileY) && !mapObjects[tileY][tileX];
+}
+
 void Map::createObjectAtTile(
         ObjectType objectType,
         int tileX,
         int tileY
 ) {
-    // TODO: CHECK IF OBJECT ALREADY EXISTS THERE?
-    if (isTileWithinMap(tileX, tileY))
+    if (canCreateObjectAtTile(tileX, tileY))
     {
-        if (mapObjects[tileY][tileX])
-        {
-            throw std::runtime_error(
-                "There is already an object at that tile"
-            );
-        }
-        else
-        {
-            mapObjects[tileY][tileX] = ObjectFactory::createObject(
-                gameContext,
-                objectType,
-                calcTileCoords(tileX, tileY)
-            );
-        }
+        mapObjects[tileY][tileX] = ObjectFactory::createObject(
+            gameContext,
+            objectType,
+            calcTileCoords(tileX, tileY)
+        );
     }
     else
     {
         throw std::invalid_argument(
-            "Tile coordinates out of bounds"
+            "Can't put an object there: either the tile coordinates are "
+            "out of bounds, or there is already an object there"
         );
     }
 }

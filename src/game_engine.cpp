@@ -145,11 +145,16 @@ void GameEngine::update()
     /* Finally, fulfill all requests */
     for (CreateObjectRequest create_request : req_created_objects)
     {
-        map->createObjectAtTile(
-            create_request.objectType,
-            create_request.tileX,
-            create_request.tileY
-        );
+        // TODO: HOW TO REPORT TO THE ITEM/OWNER THAT IT WAS SUCCESSFULLY
+        // PLACED, THUS CONSUMING IT?
+        if (map->canCreateObjectAtTile(create_request.tileX, create_request.tileY))
+        {
+            map->createObjectAtTile(
+                create_request.objectType,
+                create_request.tileX,
+                create_request.tileY
+            );
+        }
     }
     for (DestroyObjectRequest destroy_request : req_destroyed_objects)
     {
@@ -179,13 +184,47 @@ void GameEngine::executeInteraction(
         InteractRequest& iRequest,
         UpdateContext& updateContext
 ) {
+    /*
+    The Interaction is handled in the following priority:
+    1. Check if the request places a MapObject
+    2. Check if the request places a Tile
+    3. Check if the request has hit a Sprite
+    4. Check if the request has hit a MapObject
+    5. Check if the request has hit a Tile
+
+    Function exits as soon as one of these conditions has been
+    met and applied.
+    */
+
     // Ignore out-of-bounds requests
     if (!map->isTileWithinMap(iRequest.tileX, iRequest.tileY))
     {
         return;
     }
-    // Check first if Sprite is at tile, then if object, then tile itself
 
+    // Check if the interaction creates+places a MapObject
+    if (iRequest.item->isPlaceableAsObject())
+    {
+        updateContext.requestCreateObject(
+            iRequest.item->getObjectPlaced(),
+            iRequest.tileX,
+            iRequest.tileY
+        );
+        return;
+    }
+
+    // Check if the interaction places a Tile
+    if (iRequest.item->isPlaceableAsTile())
+    {
+        updateContext.requestReplaceTile(
+            iRequest.item->getTilePlaced(),
+            iRequest.tileX,
+            iRequest.tileY
+        );
+        return;
+    }
+
+    // Check if the interaction has hit a Sprite (TODO)
     // std::shared_ptr<Sprite> interacted_sprite =
     //     map->getSpriteAtTile(iRequest.tileX, iRequest.tileY);
     // if (interacted_sprite)
@@ -193,6 +232,7 @@ void GameEngine::executeInteraction(
     //     //.....
     // }
 
+    // Check if the interaction has hit a MapObject
     std::shared_ptr<MapObject> interacted_object =
         map->getObjectAtTile(iRequest.tileX, iRequest.tileY);
     if (interacted_object)
@@ -216,6 +256,7 @@ void GameEngine::executeInteraction(
         return;
     }
 
+    // Check if the interaction has hit a Tile
     std::shared_ptr<Tile> interacted_tile =
         map->getTile(iRequest.tileX, iRequest.tileY);
     if (interacted_tile)

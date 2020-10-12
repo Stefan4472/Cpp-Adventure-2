@@ -10,9 +10,14 @@ TextureId PickaxeItem::getTextureId()
     return TextureId::PICKAXE_ITEM;
 }
 
-InteractType PickaxeItem::getInteractType()
+bool PickaxeItem::isPlaceableAsTile()
 {
-    return InteractType::OBJECT_ONLY;
+    return false;
+}
+
+bool PickaxeItem::isPlaceableAsObject()
+{
+    return false;
 }
 
 void PickaxeItem::onFinishedInteract(ObjectType objectType)

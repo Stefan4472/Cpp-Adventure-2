@@ -65,7 +65,11 @@ public:
         int tileX, 
         int tileY
     );
-    // NOTE: tile must be empty
+    bool canCreateObjectAtTile(
+        int tileX,
+        int tileY
+    );
+    // NOTE: tile must be empty--call `canCreateObjectAtTile()` first
     void createObjectAtTile(
         ObjectType objectType,
         int tileX,

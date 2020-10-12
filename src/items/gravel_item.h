@@ -3,12 +3,15 @@
 
 #include "item.h"
 
+// Placing this (for now) creates a StoneTile.
 class GravelItem : public Item
 {
 public:
     GravelItem();
     TextureId getTextureId();
-    InteractType getInteractType();
+    bool isPlaceableAsTile();
+    bool isPlaceableAsObject();
+    TileType getTilePlaced();
     void onFinishedInteract(ObjectType objectType);
 };
 
