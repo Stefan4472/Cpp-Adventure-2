@@ -13,7 +13,7 @@ public:
     static std::shared_ptr<MapObject> createObject(
         GameContext* gameContext, 
         ObjectType objectType, 
-        SDL_Rect baseTile
+        SDL_Rect worldCoords
     );
 };
 

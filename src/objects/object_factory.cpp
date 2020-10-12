@@ -3,7 +3,7 @@
 std::shared_ptr<MapObject> ObjectFactory::createObject(
         GameContext* gameContext, 
         ObjectType objectType, 
-        SDL_Rect baseTile
+        SDL_Rect worldCoords
 ) {
     switch (objectType)
     {
@@ -11,7 +11,7 @@ std::shared_ptr<MapObject> ObjectFactory::createObject(
         {
             return std::make_shared<RockObject>(
                 gameContext,
-                baseTile
+                worldCoords
             );
         }
         default:

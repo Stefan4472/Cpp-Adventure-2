@@ -15,27 +15,27 @@ public:
     MapObject(
         GameContext* gameContext,
         ObjectType objectType, 
-        double worldX, 
-        double worldY
+        SDL_Rect worldCoords
     );
 
     ObjectType getObjectType();
-    bool getRemoveFromGame();
-
+    
     virtual bool getIsWalkable() = 0;
+    
     virtual void respondToInteract(
         UpdateContext& updateContext,
         Sprite* owner, 
         Item* withItem
-    );
-    virtual void update(UpdateContext* updateContext) = 0;
+    ) = 0;
+    
+    virtual void update(UpdateContext& updateContext) = 0;
+    
     virtual void draw(GameRenderer* gameRenderer) = 0;
 
 protected:
     GameContext* gameContext;
     ObjectType objectType;
-    double worldX, worldY;
-    bool removeFromGame;
+    SDL_Rect worldCoords;
 };
 
 #endif

@@ -3,30 +3,14 @@
 MapObject::MapObject(
         GameContext* gameContext,
         ObjectType objectType, 
-        double worldX, 
-        double worldY
+        SDL_Rect worldCoords
 ) {
     this->gameContext = gameContext;
     this->objectType = objectType;
-    this->worldX = worldX;
-    this->worldY = worldY;
-    removeFromGame = false;
+    this->worldCoords = worldCoords;
 }
 
 ObjectType MapObject::getObjectType()
 {
     return objectType;
-}
-
-bool MapObject::getRemoveFromGame()
-{
-    return removeFromGame;
-}
-
-void MapObject::respondToInteract(
-        UpdateContext& updateContext,
-        Sprite* owner, 
-        Item* withItem
-) {
-    std::cout << "MapObject responding" << std::endl;
 }

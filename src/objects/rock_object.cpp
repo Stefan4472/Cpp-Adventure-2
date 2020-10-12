@@ -1,14 +1,16 @@
 #include "rock_object.h"
 
-RockObject::RockObject(GameContext* gameContext, SDL_Rect& baseTile) 
-    : MapObject(gameContext, ObjectType::ROCK, baseTile.x + baseTile.w / 2, baseTile.y + baseTile.h / 2)
+RockObject::RockObject(
+        GameContext* gameContext, 
+        SDL_Rect worldCoords
+) : MapObject(gameContext, ObjectType::ROCK, worldCoords)
 {
     // Set our draw coordinates to center the image in the tile.
     int texture_width, texture_height;
     std::tie(texture_width, texture_height) = 
         gameContext->textureCache->getDimensions(TextureId::ROCK_OBJECT);
-    drawWorldX = worldX - texture_width / 2;
-    drawWorldY = worldY - texture_height / 2; 
+    drawWorldX = worldCoords.x + worldCoords.w / 2 - texture_width / 2;
+    drawWorldY = worldCoords.y + worldCoords.h / 2- texture_height / 2; 
 }
 
 bool RockObject::getIsWalkable()
@@ -27,8 +29,8 @@ void RockObject::respondToInteract(
         // removeFromGame = true;
         int tile_x, tile_y;
         std::tie(tile_x, tile_y) = gameContext->engine->resolveTile(
-            worldX,
-            worldY
+            worldCoords.x,
+            worldCoords.y
         );
         updateContext.requestDestroyObject(
             tile_x,
@@ -37,7 +39,7 @@ void RockObject::respondToInteract(
     }
 }
 
-void RockObject::update(UpdateContext* updateContext)
+void RockObject::update(UpdateContext& updateContext)
 {
     
 }
