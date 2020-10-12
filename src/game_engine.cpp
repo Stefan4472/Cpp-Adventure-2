@@ -113,11 +113,15 @@ void GameEngine::update()
     uint32_t curr_game_time = SDL_GetTicks();
     uint32_t ms_since_prev = curr_game_time - prevUpdateMs;
     std::list<InteractRequest> req_interactions;
+    std::list<CreateObjectRequest> req_created_objects;
+    std::list<DestroyObjectRequest> req_destroyed_objects;
 
     UpdateContext update_context = {
         curr_game_time,
         ms_since_prev,
-        &req_interactions
+        req_interactions,
+        req_created_objects,
+        req_destroyed_objects
     };
 
     while (!inputQueue.empty())
@@ -173,10 +177,15 @@ void GameEngine::handleInteract(InteractRequest& iRequest)
     {
         //.....
         std::cout << "Interacting with object " << interacted_object << std::endl;
+        // Notify target
         interacted_object->respondToInteract(
             this,
             iRequest.sprite,
             iRequest.item
+        );
+        // Notify Item
+        iRequest.item->onFinishedInteract(
+            interacted_object->getObjectType()
         );
         if (interacted_object->getRemoveFromGame())
         {
@@ -195,6 +204,9 @@ void GameEngine::handleInteract(InteractRequest& iRequest)
             this,
             iRequest.sprite,
             iRequest.item
+        );
+        iRequest.item->onFinishedInteract(
+            interacted_tile->getTileType()
         );
         return;
     }

@@ -9,3 +9,18 @@ ItemType Item::getItemType()
 {
     return itemType;
 }
+
+void Item::onFinishedInteract(TileType)
+{
+
+}
+
+void Item::onFinishedInteract(ObjectType)
+{
+
+}
+
+void Item::onFinishedInteract(SpriteType)
+{
+
+}

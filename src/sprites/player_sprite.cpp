@@ -66,6 +66,7 @@ void PlayerSprite::giveInput(EventId eventId, UpdateContext* updateContext)
 
 void PlayerSprite::executeAction(UpdateContext* updateContext)
 {
+    std::cout << "Player should execute action" << std::endl;
     // TODO: "Punch" if no inHandItem?
     if (inHandItem)
     {

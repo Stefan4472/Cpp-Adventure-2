@@ -13,7 +13,7 @@ MapObject::MapObject(
     removeFromGame = false;
 }
 
-ObjectType MapObject::getTileType()
+ObjectType MapObject::getObjectType()
 {
     return objectType;
 }

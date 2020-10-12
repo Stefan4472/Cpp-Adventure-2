@@ -20,9 +20,9 @@ public:
         double worldY
     );
 
-    ObjectType getTileType();
+    ObjectType getObjectType();
     bool getRemoveFromGame();
-    
+
     virtual bool getIsWalkable() = 0;
     virtual void respondToInteract(
         InteractInterface* interactInterface,

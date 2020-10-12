@@ -14,3 +14,9 @@ InteractType PickaxeItem::getInteractType()
 {
     return InteractType::OBJECT_ONLY;
 }
+
+void PickaxeItem::onFinishedInteract(ObjectType objectType)
+{
+    std::cout << "Just finished interact with " << 
+        static_cast<int>(objectType) << std::endl;
+}
