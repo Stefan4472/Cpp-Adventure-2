@@ -3,7 +3,7 @@
 std::shared_ptr<MapObject> ObjectFactory::createObject(
         GameContext* gameContext, 
         ObjectType objectType, 
-        SDL_Rect& baseTile
+        SDL_Rect baseTile
 ) {
     switch (objectType)
     {

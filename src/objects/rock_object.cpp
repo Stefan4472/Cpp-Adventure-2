@@ -24,7 +24,7 @@ void RockObject::respondToInteract(
     // Destroy instantly if interacted with Pickaxe
     if (withItem->getItemType() == ItemType::PICKAXE)
     {
-        removeFromGame = true;
+        // removeFromGame = true;
         int tile_x, tile_y;
         std::tie(tile_x, tile_y) = gameContext->engine->resolveTile(
             worldX,

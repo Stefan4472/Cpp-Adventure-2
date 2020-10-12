@@ -108,13 +108,15 @@ void GameEngine::update()
     std::list<InteractRequest> req_interactions;
     std::list<CreateObjectRequest> req_created_objects;
     std::list<DestroyObjectRequest> req_destroyed_objects;
+    std::list<ReplaceTileRequest> req_replaced_tiles;
 
     UpdateContext update_context = {
         curr_game_time,
         ms_since_prev,
         req_interactions,
         req_created_objects,
-        req_destroyed_objects
+        req_destroyed_objects,
+        req_replaced_tiles
     };
 
     while (!inputQueue.empty())
@@ -129,10 +131,10 @@ void GameEngine::update()
         prevUpdateMs = SDL_GetTicks();
     }
 
-    // TODO: ACTUALLY PASS BY REFERENCE (&)
+    // TODO: ACTUALLY PASS BY REFERENCE
     player->update(&update_context);
 
-    // Go through queue of requested interactions
+    // Execute all requested interactions
     for (InteractRequest irequest : req_interactions)
     {
         std::cout << irequest.sprite << ": " << irequest.item << 
@@ -140,13 +142,28 @@ void GameEngine::update()
         executeInteraction(irequest, update_context);
     }
 
-    // Finally, fulfill all requests
+    /* Finally, fulfill all requests */
+    for (CreateObjectRequest create_request : req_created_objects)
+    {
+        map->createObjectAtTile(
+            create_request.objectType,
+            create_request.tileX,
+            create_request.tileY
+        );
+    }
     for (DestroyObjectRequest destroy_request : req_destroyed_objects)
     {
-        std::cout << "Request to destroy object" << std::endl;
         map->removeObjectAtTile(
             destroy_request.tileX,
             destroy_request.tileY
+        );
+    }
+    for (ReplaceTileRequest replace_request : req_replaced_tiles)
+    {
+        map->replaceTile(
+            replace_request.tileType,
+            replace_request.tileX,
+            replace_request.tileY
         );
     }
     prevUpdateMs = curr_game_time;

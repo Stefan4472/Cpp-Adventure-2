@@ -18,6 +18,7 @@ public:
     // TODO: ADD SPRITES TO MAP. DEFINED IN 'SPRITES.TXT' AND INITIALIZED
     // BASED ON TILE. THEN STORED IN A LIST OR HASHMAP.
     Map(
+        GameContext* gameContext,
         std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles,
         std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects
     );
@@ -41,6 +42,12 @@ public:
         double worldX,
         double worldY
     );
+    // Convert tile coordinates to world coordinates.
+    // Throws runtime_error if tile coordinates are outside of world.
+    SDL_Rect calcTileCoords(
+        int tileX,
+        int tileY
+    );
     // Return Tile at specified coordinates
     std::shared_ptr<Tile> getTile(
         int tileX, 
@@ -58,8 +65,18 @@ public:
         int tileX, 
         int tileY
     );
-
+    // NOTE: tile must be empty
+    void createObjectAtTile(
+        ObjectType objectType,
+        int tileX,
+        int tileY
+    );
     void removeObjectAtTile(
+        int tileX,
+        int tileY
+    );
+    void replaceTile(
+        TileType newTileType,
         int tileX,
         int tileY
     );
@@ -83,6 +100,7 @@ public:
 
 private:
     int numRows, numCols;
+    GameContext* gameContext;
     std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles;
     std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects;
 

@@ -8,6 +8,11 @@ class GrassTile : public Tile
 {
 public:
     GrassTile(double worldX, double worldY);
+    void respondToInteract(
+        UpdateContext& updateContext,
+        Sprite* owner, 
+        Item* withItem
+    );
     void update(UpdateContext* updateContext);
     void draw(GameRenderer* gameRenderer);
 };

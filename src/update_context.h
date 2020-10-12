@@ -2,7 +2,7 @@
 #define _UPDATE_CONTEXT_H
 #include <stdint.h>
 #include <list>
-#include "interact_request.h"
+#include "engine_requests.h"
 
 
 class UpdateContext
@@ -13,8 +13,13 @@ public:
         uint32_t msSincePrevUpdate,
         std::list<InteractRequest>& interactions,
         std::list<CreateObjectRequest>& createObjectRequests,
-        std::list<DestroyObjectRequest>& destroyObjectRequests
+        std::list<DestroyObjectRequest>& destroyObjectRequests,
+        std::list<ReplaceTileRequest>& replaceTileRequests
     );
+
+    // TODO: MAKE PRIVATE
+    uint32_t gameRuntimeMs;
+    uint32_t msSincePrevUpdate;
 
     void requestInteract(
         Sprite* actor, 
@@ -34,13 +39,18 @@ public:
         int tileY
     );
 
-    uint32_t gameRuntimeMs;
-    uint32_t msSincePrevUpdate;
+    void requestReplaceTile(
+        TileType tileType,
+        int tileX,
+        int tileY
+    );
+
 
 private:
     std::list<InteractRequest>* interactions;
     std::list<CreateObjectRequest>* createObjectRequests;
     std::list<DestroyObjectRequest>* destroyObjectRequests;
+    std::list<ReplaceTileRequest>* replaceTileRequests;
 };
 
 #endif

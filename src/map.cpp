@@ -1,10 +1,12 @@
 #include "map.h"
 
 Map::Map(
+        GameContext* gameContext,
         std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles,
         std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects
 ) {
     checkMapValidity(mapTiles, mapObjects);
+    this->gameContext = gameContext;
     this->mapTiles = mapTiles;
     this->mapObjects = mapObjects;
     numRows = this->mapTiles.size();
@@ -49,10 +51,30 @@ bool Map::isTileWalkable(int tileX, int tileY)
 
 std::pair<int, int> Map::resolveTile(double worldX, double worldY)
 {
+    
     return std::make_pair(
         static_cast<int>(worldX) / TextureCache::TILE_SIZE_PX,
         static_cast<int>(worldY) / TextureCache::TILE_SIZE_PX
     );
+}
+
+SDL_Rect Map::calcTileCoords(int tileX, int tileY) 
+{
+    if (isTileWithinMap(tileX, tileY))
+    {
+        return SDL_Rect{
+            tileX * TextureCache::TILE_SIZE_PX,
+            tileY * TextureCache::TILE_SIZE_PX,
+            TextureCache::TILE_SIZE_PX,
+            TextureCache::TILE_SIZE_PX
+        };
+    }
+    else
+    {
+        throw std::invalid_argument(
+            "Tile coordinates out of bounds"
+        );
+    }
 }
 
 std::shared_ptr<Tile> Map::getTile(int tileX, int tileY)
@@ -89,6 +111,37 @@ std::shared_ptr<Sprite> Map::getSpriteAtTile(int tileX, int tileY)
     return std::shared_ptr<Sprite>();
 }
 
+void Map::createObjectAtTile(
+        ObjectType objectType,
+        int tileX,
+        int tileY
+) {
+    // TODO: CHECK IF OBJECT ALREADY EXISTS THERE?
+    if (isTileWithinMap(tileX, tileY))
+    {
+        if (mapObjects[tileY][tileX])
+        {
+            throw std::runtime_error(
+                "There is already an object at that tile"
+            );
+        }
+        else
+        {
+            mapObjects[tileY][tileX] = ObjectFactory::createObject(
+                gameContext,
+                objectType,
+                calcTileCoords(tileX, tileY)
+            );
+        }
+    }
+    else
+    {
+        throw std::invalid_argument(
+            "Tile coordinates out of bounds"
+        );
+    }
+}
+
 void Map::removeObjectAtTile(
         int tileX,
         int tileY
@@ -97,6 +150,30 @@ void Map::removeObjectAtTile(
     if (isTileWithinMap(tileX, tileY))
     {
         mapObjects[tileY][tileX].reset();
+    }
+    else
+    {
+        throw std::invalid_argument(
+            "Tile coordinates out of bounds"
+        );
+    }
+}
+
+void Map::replaceTile(
+        TileType newTileType,
+        int tileX,
+        int tileY
+) {
+    if (isTileWithinMap(tileX, tileY))
+    {
+        mapTiles[tileY][tileX].reset();
+
+        SDL_Rect tile_coords = calcTileCoords(tileX, tileY);
+        mapTiles[tileY][tileX] = TileFactory::createTile(
+            newTileType,
+            tile_coords.x,
+            tile_coords.y
+        );
     }
     else
     {
@@ -196,6 +273,7 @@ Map Map::loadMap(
     );
 
     return Map(
+        gameContext,
         map_tiles, 
         map_objects
     );

@@ -5,13 +5,15 @@ UpdateContext::UpdateContext(
         uint32_t msSincePrevUpdate,
         std::list<InteractRequest>& interactions,
         std::list<CreateObjectRequest>& createObjectRequests,
-        std::list<DestroyObjectRequest>& destroyObjectRequests
+        std::list<DestroyObjectRequest>& destroyObjectRequests,
+        std::list<ReplaceTileRequest>& replaceTileRequests
 ) {
     this->gameRuntimeMs = gameRuntimeMs;
     this->msSincePrevUpdate = msSincePrevUpdate;
     this->interactions = &interactions;
     this->createObjectRequests = &createObjectRequests;
     this->destroyObjectRequests = &destroyObjectRequests;
+    this->replaceTileRequests = &replaceTileRequests;
 }
 
 void UpdateContext::requestInteract(
@@ -45,6 +47,18 @@ void UpdateContext::requestDestroyObject(
         int tileY
 ) {
     destroyObjectRequests->push_back(DestroyObjectRequest{
+        tileX,
+        tileY
+    });
+}
+
+void UpdateContext::requestReplaceTile(
+        TileType tileType,
+        int tileX,
+        int tileY
+) {
+    replaceTileRequests->push_back(ReplaceTileRequest{
+        tileType,
         tileX,
         tileY
     });
