@@ -3,7 +3,8 @@
 
 enum class ItemType
 {
-    PICKAXE
+    PICKAXE,
+    GRAVEL
 };
 
 #endif

@@ -16,9 +16,11 @@ enum class TextureId
     SPRITE_WALK_LEFT,
     SPRITE_WALK_RIGHT,
     ROCK_OBJECT,
-    PICKAXE_ITEM
+    PICKAXE_ITEM,
+    GRAVEL_ITEM
 };
 
+// TODO: RETURN RELATIVE PATH. THAT WAY WE CAN ORGANIZE ART INTO SUB-DIRECTORIES (E.G. 'TILES', 'SPRITES', ETC.)
 std::string getFilename(TextureId id);
 
 #endif
