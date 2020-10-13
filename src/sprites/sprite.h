@@ -19,13 +19,12 @@ public:
         double worldY
     );
 
-    // Item in hand (may be NULL)
-    // TODO: MAKE PRIVATE. CURRENTLY PUBLIC FOR TESTING/DEV
-    std::shared_ptr<Item> inHandItem;
-
     std::pair<double, double> getWorldCoords();
 
-    void giveItem(std::shared_ptr<Item> item);
+    // Gives the Sprite the specified Item. Returns
+    // whether the Sprite accepted the item.
+    // TODO: MAYBE ONLY THE PLAYER SHOULD HAVE THIS?
+    virtual bool giveItem(std::shared_ptr<Item> item);
 
     /* Abstract methods */
     virtual void respondToInteract(

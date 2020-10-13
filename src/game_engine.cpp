@@ -204,6 +204,7 @@ void GameEngine::executeInteraction(
         UpdateContext& updateContext
 ) {
     /*
+    TODO: DISTINGUISH BETWEEN 'INTERACT' AND 'ACTION'---ACTUALLY TWO DIFFERENT THINGS
     The Interaction is handled in the following priority:
     1. Check if the request involves an Item (if not, try to pick up a drop)
     1. Check if the request places a MapObject
@@ -235,11 +236,14 @@ void GameEngine::executeInteraction(
         {
             std::cout << "Got drop: " << drop_at_tile << " with item " << 
                 drop_at_tile->getItem() << std::endl;
-            iRequest.sprite->inHandItem = drop_at_tile->getItem();
-            map->removeDropAtTile(
-                iRequest.tileX,
-                iRequest.tileY
-            );
+            // Attempt to give to Sprite
+            if (iRequest.sprite->giveItem(drop_at_tile->getItem()))
+            {
+                map->removeDropAtTile(
+                    iRequest.tileX,
+                    iRequest.tileY
+                );
+            }
         }
         return;
     }

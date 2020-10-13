@@ -10,6 +10,7 @@
 #include "walk_direction.h"
 #include "input_event.h"
 #include "input_handler.h"
+#include "inventory.h"
 #include "item.h"
 
 
@@ -25,7 +26,7 @@ public:
     const int TILE_WALK_TIME_MS = 400;
 
     void giveInput(EventId eventId, UpdateContext* updateContext);
-    
+    bool giveItem(std::shared_ptr<Item> item);
     // Responds to "action" button pressed
     void executeAction(UpdateContext* updateContext);
     void update(UpdateContext* updateContext);
@@ -44,6 +45,7 @@ private:
     std::shared_ptr<Spritesheet> walkLeftSpritesheet;
     std::shared_ptr<Spritesheet> walkRightSpritesheet;
 
+    Inventory inventory;
 
     // Direction currently being walked in
     WalkDirection currWalkCommand;

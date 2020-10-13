@@ -64,6 +64,19 @@ void PlayerSprite::giveInput(EventId eventId, UpdateContext* updateContext)
     }
 }
 
+bool PlayerSprite::giveItem(std::shared_ptr<Item> item)
+{
+    std::cout << "Got item " << item << std::endl;
+    if (inventory.checkIsFull())
+    {
+        return false;
+    }
+    else
+    {
+        inventory.giveItem(item);
+    }   
+}
+
 void PlayerSprite::executeAction(UpdateContext* updateContext)
 {
     std::cout << "Player should execute action" << std::endl;
@@ -80,7 +93,7 @@ void PlayerSprite::executeAction(UpdateContext* updateContext)
     // TODO: DETERMINE BASED ON CURRENT DIRECTION. FOR DEVELOPMENT, FOR NOW, WE WILL ALWAYS JUST DO THE TILE BELOW US
     updateContext->requestInteract(
         this,
-        inHandItem.get(),
+        inventory.getSelectedItem().get(),
         curr_tile_x,
         curr_tile_y + 1
     );
@@ -174,8 +187,9 @@ void PlayerSprite::draw(GameRenderer* renderer)
 
     // Draw in-hand item
     // (currently at some rough approximation of "in-hand")
-    if (inHandItem)
+    if (inventory.getSelectedItem())
     {
+        auto inHandItem = inventory.getSelectedItem();
         std::cout << "Drawing inHandItem " << inHandItem << std::endl;
         std::cout << "ItemType is " << int(inHandItem->getItemType()) << std::endl;
         std::cout << "inHandItem is now " << inHandItem << std::endl;
