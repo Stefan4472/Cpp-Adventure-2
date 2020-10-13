@@ -7,13 +7,12 @@
 #include <stdexcept>
 #include "tile_factory.h"
 #include "object_factory.h"
+#include "item_factory.h"
 #include "game_renderer.h"
 #include "game_context.h"
 #include "sprite.h"
 #include "drop.h"
 
-// TODO: REMOVE
-#include "gravel_item.h"
 
 class Map
 {
@@ -22,8 +21,9 @@ public:
     // BASED ON TILE. THEN STORED IN A LIST OR HASHMAP.
     Map(
         GameContext* gameContext,
-        std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles,
-        std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects
+        std::vector<std::vector<std::shared_ptr<Tile>>> tiles,
+        std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects,
+        std::vector<std::vector<std::shared_ptr<Drop>>> drops
     );
 
     // Return size of world (x, y)
@@ -131,16 +131,24 @@ private:
         boost::filesystem::path objectsPath
     );
 
+    static std::vector<std::vector<std::shared_ptr<Drop>>> loadDrops(
+        GameContext* gameContext,
+        boost::filesystem::path objectsPath
+    );
+
     // Throws runtime_error
     static void checkMapValidity(
-        std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles,
-        std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects
+        std::vector<std::vector<std::shared_ptr<Tile>>> tiles,
+        std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects,
+        std::vector<std::vector<std::shared_ptr<Drop>>> drops
     );
 
     // Convert integer read from map file to a `TileType` instance.
     static TileType resolveTileType(int tileId);
     // Convert integer read from map file to an `ObjectType` instance.
     static ObjectType resolveObjectType(int objectId);
+    // Convert integer read from map file to an `ItemType` instance.
+    static ItemType resolveItemType(int itemId);
 };
 
 #endif

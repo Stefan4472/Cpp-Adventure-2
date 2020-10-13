@@ -175,8 +175,6 @@ void GameEngine::update()
     }
     for (CreateDropRequest drop_request : req_created_drops)
     {
-        std::cout << "Creating drop" << std::endl;
-        // TODO: NEED ITEMFACTORY... CURRENTLY WILL ALWAYS DROP GRAVEL
         auto dropped_item = ItemFactory::createItem(
             gameContext.get(),
             drop_request.itemType

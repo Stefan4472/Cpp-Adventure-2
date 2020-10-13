@@ -2,22 +2,17 @@
 
 Map::Map(
         GameContext* gameContext,
-        std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles,
-        std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects
+        std::vector<std::vector<std::shared_ptr<Tile>>> tiles,
+        std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects,
+        std::vector<std::vector<std::shared_ptr<Drop>>> drops
 ) {
-    checkMapValidity(mapTiles, mapObjects);
+    checkMapValidity(tiles, mapObjects, drops);
     this->gameContext = gameContext;
-    this->mapTiles = mapTiles;
+    this->mapTiles = tiles;
     this->mapObjects = mapObjects;
+    this->drops = drops;
     numRows = this->mapTiles.size();
     numCols = this->mapTiles[0].size();
-
-    // Create empty `drops` array
-    // TODO: READ IN FROM MAP
-    drops = std::vector<std::vector<std::shared_ptr<Drop>>>(
-        numRows,
-        std::vector<std::shared_ptr<Drop>>(numCols)
-    );
 }
 
 std::pair<int, int> Map::getSizePx()
@@ -303,11 +298,16 @@ Map Map::loadMap(
         gameContext, 
         dirPath / "objects.txt"
     );
+    auto map_drops = loadDrops(
+        gameContext,
+        dirPath / "drops.txt"
+    );
 
     return Map(
         gameContext,
         map_tiles, 
-        map_objects
+        map_objects,
+        map_drops
     );
 }
 
@@ -420,18 +420,84 @@ std::vector<std::vector<std::shared_ptr<MapObject>>> Map::loadObjects(
     return map_objects;
 }
 
+std::vector<std::vector<std::shared_ptr<Drop>>> Map::loadDrops(
+        GameContext* gameContext,
+        boost::filesystem::path objectsPath
+) {
+    std::ifstream drops_file(objectsPath.string());
+    if (!drops_file.is_open())
+    {
+        throw std::runtime_error(
+            std::string("Couldn't open map drops file '") +
+            objectsPath.string() + "')"
+        );
+    }
+    
+    std::vector<std::vector<std::shared_ptr<Drop>>> map_drops;
+    std::string next_line;
+    int curr_row = 0;
+    int curr_col = 0;
+
+    while (std::getline(drops_file, next_line))
+    {
+        int next_val;
+        std::stringstream str_stream(next_line);
+        map_drops.push_back(std::vector<std::shared_ptr<Drop>>());
+     
+        // Get each integer
+        while (str_stream >> next_val)
+        {
+            if (next_val)
+            {
+                auto dropped_item = ItemFactory::createItem(
+                    gameContext,
+                    resolveItemType(next_val)
+                );
+            
+                SDL_Rect base_tile = {
+                    curr_col * TextureCache::TILE_SIZE_PX,
+                    curr_row * TextureCache::TILE_SIZE_PX,
+                    TextureCache::TILE_SIZE_PX,
+                    TextureCache::TILE_SIZE_PX
+                };
+
+                map_drops.back().push_back(std::make_shared<Drop>(
+                    gameContext,
+                    dropped_item,
+                    base_tile
+                ));
+            }
+            else
+            {
+                // Push empty pointer
+                map_drops.back().push_back(
+                    std::shared_ptr<Drop>()
+                );
+            }
+            curr_col++;
+        }
+
+        curr_row++;
+        curr_col = 0;
+    }
+
+    drops_file.close();
+    return map_drops;
+}
+
 void Map::checkMapValidity(
-        std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles,
-        std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects
+        std::vector<std::vector<std::shared_ptr<Tile>>> tiles,
+        std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects,
+        std::vector<std::vector<std::shared_ptr<Drop>>> drops
 ) {
     // Make sure `mapTiles` is non-empty
-    if (mapTiles.empty())
+    if (tiles.empty())
     {
         throw std::invalid_argument(
             "The provided `mapTiles` is empty"
         );
     }
-    if (mapTiles[0].empty())
+    if (tiles[0].empty())
     {
         throw std::invalid_argument(
             "The provided `mapTiles` first row is empty"
@@ -439,9 +505,9 @@ void Map::checkMapValidity(
     }
 
     // Make sure each row has the same number of elements 
-    int num_cols = mapTiles[0].size();
+    int num_cols = tiles[0].size();
     int curr_row = 0;
-    for (std::vector<std::shared_ptr<Tile>> tile_row : mapTiles)
+    for (std::vector<std::shared_ptr<Tile>> tile_row : tiles)
     {
         if (tile_row.size() != num_cols)
         {
@@ -453,19 +519,37 @@ void Map::checkMapValidity(
         curr_row++;
     }
 
-    // Make sure `mapObjects` is the same size as `mapTiles`
-    if (mapObjects.size() != mapTiles.size())
+    // Make sure `mapObjects` is the same size as `tiles`
+    if (mapObjects.size() != tiles.size())
     {
         throw std::invalid_argument(
             "`mapObjects` does not have the same number of rows as `mapTiles`"
         );
     }
-    for (int i = 0; i < mapTiles.size(); i++)
+    for (int i = 0; i < tiles.size(); i++)
     {
-        if (mapTiles[i].size() != mapObjects[i].size())
+        if (tiles[i].size() != mapObjects[i].size())
         {
             throw std::invalid_argument(
                 std::string("`mapObjects` does not have the same number of columns as `mapTiles` (row ") +
+                std::to_string(curr_row) + ")"
+            );
+        }
+    }
+
+    // Make sure `drops` is the same size as `tiles`
+    if (drops.size() != tiles.size())
+    {
+        throw std::invalid_argument(
+            "`drops` does not have the same number of rows as `mapTiles`"
+        );
+    }
+    for (int i = 0; i < tiles.size(); i++)
+    {
+        if (tiles[i].size() != drops[i].size())
+        {
+            throw std::invalid_argument(
+                std::string("`drops` does not have the same number of columns as `mapTiles` (row ") +
                 std::to_string(curr_row) + ")"
             );
         }
@@ -514,6 +598,28 @@ ObjectType Map::resolveObjectType(int objectId)
             throw std::invalid_argument(
                 std::string("Unsupported object ID ") + 
                 std::to_string(objectId)
+            );
+        }
+    }
+}
+
+ItemType Map::resolveItemType(int itemId)
+{
+    switch (itemId)
+    {
+        case 1:
+        {
+            return ItemType::PICKAXE;
+        }
+        case 2:
+        {
+            return ItemType::GRAVEL;
+        }
+        default:
+        {
+            throw std::invalid_argument(
+                std::string("Unsupported ItemID ") + 
+                std::to_string(itemId)
             );
         }
     }
