@@ -50,7 +50,12 @@ GameEngine::GameEngine(
         gameContext, 
         player_start_tile
     );
-    player->inHandItem = std::make_shared<PickaxeItem>();
+
+    // auto test_item = ItemFactory::createItem(
+    //     gameContext.get(),
+    //     ItemType::PICKAXE
+    // );
+    // player->inHandItem = test_item;
 }
 
 void GameEngine::giveInput(EventId eventId)
@@ -200,6 +205,7 @@ void GameEngine::executeInteraction(
 ) {
     /*
     The Interaction is handled in the following priority:
+    1. Check if the request involves an Item (if not, try to pick up a drop)
     1. Check if the request places a MapObject
     2. Check if the request places a Tile
     3. Check if the request has hit a Sprite
@@ -216,6 +222,27 @@ void GameEngine::executeInteraction(
         return;
     }
 
+    if (!iRequest.item)
+    {
+        std::cout << "No in-hand item: will try to pick up a drop" << std::endl;
+        std::shared_ptr<Drop> drop_at_tile = map->getDropAtTile(
+            iRequest.tileX,
+            iRequest.tileY
+        );
+        // There is a drop to pick up--give its Item to the Sprite,
+        // and remove it from the map
+        if (drop_at_tile)
+        {
+            std::cout << "Got drop: " << drop_at_tile << " with item " << 
+                drop_at_tile->getItem() << std::endl;
+            iRequest.sprite->inHandItem = drop_at_tile->getItem();
+            map->removeDropAtTile(
+                iRequest.tileX,
+                iRequest.tileY
+            );
+        }
+        return;
+    }
     // Check if the interaction creates+places a MapObject
     if (iRequest.item->isPlaceableAsObject())
     {

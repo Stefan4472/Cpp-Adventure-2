@@ -20,6 +20,19 @@ std::pair<double, double> Sprite::getWorldCoords()
     );
 }
 
+void Sprite::giveItem(std::shared_ptr<Item> item)
+{
+    std::cout << "Got item " << item << std::endl;
+    if (inHandItem)
+    {
+        throw std::runtime_error("Already has item");
+    }
+    else
+    {
+        inHandItem = item;
+    }
+}
+
 void Sprite::respondToInteract(
         UpdateContext& updateContext,
         Sprite* owner, 

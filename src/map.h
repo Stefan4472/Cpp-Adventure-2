@@ -92,6 +92,14 @@ public:
         int tileX,
         int tileY
     );
+    std::shared_ptr<Drop> getDropAtTile(
+        int tileX,
+        int tileY
+    );
+    std::shared_ptr<Drop> removeDropAtTile(
+        int tileX,
+        int tileY
+    );
 
     void drawTiles(
         GameRenderer* gameRenderer,

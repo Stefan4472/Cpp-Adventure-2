@@ -8,6 +8,10 @@ project(
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+# Add `-g` debug compilation command
+# TODO: USE `TARGET` PROPERLY
+#target_compile_options(CGame PRIVATE -g)
+set(CMAKE_CXX_FLAGS "-g")
 
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 find_package(SDL2 REQUIRED)

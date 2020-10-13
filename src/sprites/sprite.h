@@ -18,8 +18,14 @@ public:
         double worldX, 
         double worldY
     );
-    
+
+    // Item in hand (may be NULL)
+    // TODO: MAKE PRIVATE. CURRENTLY PUBLIC FOR TESTING/DEV
+    std::shared_ptr<Item> inHandItem;
+
     std::pair<double, double> getWorldCoords();
+
+    void giveItem(std::shared_ptr<Item> item);
 
     /* Abstract methods */
     virtual void respondToInteract(

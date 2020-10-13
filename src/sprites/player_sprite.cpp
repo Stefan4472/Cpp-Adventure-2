@@ -68,22 +68,22 @@ void PlayerSprite::executeAction(UpdateContext* updateContext)
 {
     std::cout << "Player should execute action" << std::endl;
     // TODO: "Punch" if no inHandItem?
-    if (inHandItem)
-    {
-        // Get current tile
-        int curr_tile_x, curr_tile_y;
-        std::tie(curr_tile_x, curr_tile_y) = 
-            gameContext->engine->resolveTile(worldX, worldY);
+    // Get current tile
+    int curr_tile_x, curr_tile_y;
+    std::tie(curr_tile_x, curr_tile_y) = 
+        gameContext->engine->resolveTile(worldX, worldY);
 
-        // Determine the tile to interact with
-        // TODO: DETERMINE BASED ON CURRENT DIRECTION. FOR DEVELOPMENT, FOR NOW, WE WILL ALWAYS JUST DO THE TILE BELOW US
-        updateContext->requestInteract(
-            this,
-            inHandItem.get(),
-            curr_tile_x,
-            curr_tile_y + 1
-        );
-    }
+    // Determine the tile to interact with.
+    // Note that this may send a `nullptr` as `Item`. This is okay.
+    // If there is no in-hand item, the user will attempt to pick
+    // up a drop.
+    // TODO: DETERMINE BASED ON CURRENT DIRECTION. FOR DEVELOPMENT, FOR NOW, WE WILL ALWAYS JUST DO THE TILE BELOW US
+    updateContext->requestInteract(
+        this,
+        inHandItem.get(),
+        curr_tile_x,
+        curr_tile_y + 1
+    );
 }
 
 void PlayerSprite::update(UpdateContext* updateContext)
@@ -176,6 +176,10 @@ void PlayerSprite::draw(GameRenderer* renderer)
     // (currently at some rough approximation of "in-hand")
     if (inHandItem)
     {
+        std::cout << "Drawing inHandItem " << inHandItem << std::endl;
+        std::cout << "ItemType is " << int(inHandItem->getItemType()) << std::endl;
+        std::cout << "inHandItem is now " << inHandItem << std::endl;
+        std::cout << "TextureId is " << int(inHandItem->getTextureId()) << std::endl;
         renderer->drawToWorld(
             inHandItem->getTextureId(),
             worldX + src_rect.w / 2 - 10,

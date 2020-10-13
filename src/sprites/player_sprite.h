@@ -24,11 +24,8 @@ public:
     // How long it takes to walk the distance of one tile
     const int TILE_WALK_TIME_MS = 400;
 
-    // Item in hand (may be NULL)
-    // TODO: MAKE PRIVATE. CURRENTLY PUBLIC FOR TESTING/DEV
-    std::shared_ptr<Item> inHandItem;
-
     void giveInput(EventId eventId, UpdateContext* updateContext);
+    
     // Responds to "action" button pressed
     void executeAction(UpdateContext* updateContext);
     void update(UpdateContext* updateContext);
