@@ -17,10 +17,7 @@
 #include "engine_interface.h"
 #include "update_context.h"
 #include "game_renderer.h"
-
-// TODO: REMOVE
-#include "pickaxe_item.h"
-#include "gravel_item.h"
+#include "item_factory.h"
 
 
 class GameEngine : public EngineInterface

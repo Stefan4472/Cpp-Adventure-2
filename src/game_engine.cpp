@@ -177,7 +177,10 @@ void GameEngine::update()
     {
         std::cout << "Creating drop" << std::endl;
         // TODO: NEED ITEMFACTORY... CURRENTLY WILL ALWAYS DROP GRAVEL
-        auto dropped_item = std::make_shared<GravelItem>();
+        auto dropped_item = ItemFactory::createItem(
+            gameContext.get(),
+            drop_request.itemType
+        );
         map->createDropAtTile(
             dropped_item,
             drop_request.tileX,
