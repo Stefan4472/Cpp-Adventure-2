@@ -12,6 +12,7 @@
 #include "input_handler.h"
 #include "inventory.h"
 #include "item.h"
+#include "model_factory.h"
 
 
 class PlayerSprite : public Sprite 
@@ -37,13 +38,7 @@ private:
     // Number of pixels walked per millisecond
     double walkPxPerMs;
 
-    SDL_Texture* spriteTexture;
-    int textureWidth, textureHeight;
     std::shared_ptr<SpriteModel> spriteModel;
-    std::shared_ptr<Spritesheet> walkDownSpritesheet;
-    std::shared_ptr<Spritesheet> walkUpSpritesheet;
-    std::shared_ptr<Spritesheet> walkLeftSpritesheet;
-    std::shared_ptr<Spritesheet> walkRightSpritesheet;
 
     Inventory inventory;
 

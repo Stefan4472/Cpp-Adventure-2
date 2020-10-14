@@ -5,48 +5,9 @@ PlayerSprite::PlayerSprite(
         SDL_Rect& baseTile
 ) : Sprite(gameContext, SpriteType::PLAYER, baseTile.x + baseTile.w / 2, baseTile.y + baseTile.h - 1)
 {
-    spriteTexture = gameContext->textureCache->getTexture(
-        TextureId::SPRITE_FRONT
-    );
-
-    std::tie(textureWidth, textureHeight) = gameContext->textureCache->getDimensions(
-        TextureId::SPRITE_FRONT
-    );
-    // TODO: START ON FRAME 1?
-    // WE WANT THE ANIMATION TO START ON FRAME 1, BUT TO LOOP ON FRAME 0.
-    walkUpSpritesheet = std::make_shared<Spritesheet>(
+    spriteModel = ModelFactory::createSpriteModel(
         gameContext->textureCache.get(),
-        TextureId::SPRITE_WALK_UP,
-        std::vector<int>({100, 100, 100, 100}),
-        true
-    );
-    walkDownSpritesheet = std::make_shared<Spritesheet>(
-        gameContext->textureCache.get(),
-        TextureId::SPRITE_WALK_DOWN,
-        std::vector<int>({100, 100, 100, 100}),
-        true
-    );
-    walkLeftSpritesheet = std::make_shared<Spritesheet>(
-        gameContext->textureCache.get(),
-        TextureId::SPRITE_WALK_LEFT,
-        std::vector<int>({100, 100, 100, 100}),
-        true
-    );
-    walkRightSpritesheet = std::make_shared<Spritesheet>(
-        gameContext->textureCache.get(),
-        TextureId::SPRITE_WALK_RIGHT,
-        std::vector<int>({100, 100, 100, 100}),
-        true
-    );
-    spriteModel = std::make_shared<SpriteModel>(
-        TextureId::SPRITE_BACK,
-        TextureId::SPRITE_FRONT,
-        TextureId::SPRITE_LEFT,
-        TextureId::SPRITE_RIGHT,
-        walkUpSpritesheet,
-        walkDownSpritesheet,
-        walkLeftSpritesheet,
-        walkRightSpritesheet
+        SpriteType::PLAYER
     );
 
     walkPxPerMs = gameContext->tileSizePx * 1.0 / TILE_WALK_TIME_MS;

@@ -23,6 +23,7 @@ include_directories(
     ../src/tiles
     ../src/objects
     ../src/sprites
+    ../src/models
     ../src/items
     ../src/drops
     ${Boost_INCLUDE_DIR} 
