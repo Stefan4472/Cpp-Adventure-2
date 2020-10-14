@@ -58,6 +58,16 @@ GameEngine::GameEngine(
     // player->inHandItem = test_item;
 }
 
+std::shared_ptr<GameContext> GameEngine::getGameContextForTesting()
+{
+    return gameContext;
+}
+
+std::shared_ptr<Map> GameEngine::getMapForTesting()
+{
+    return map;
+}
+
 void GameEngine::giveInput(EventId eventId)
 {
     inputQueue.push(eventId);

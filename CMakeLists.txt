@@ -20,7 +20,7 @@ INCLUDE(FindPkgConfig)
 PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 
 include_directories(
-    src 
+    src/engine
     src/tiles
     src/objects
     src/sprites

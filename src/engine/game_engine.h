@@ -31,6 +31,9 @@ public:
         int gameHeight
     );
     
+    std::shared_ptr<GameContext> getGameContextForTesting();
+    std::shared_ptr<Map> getMapForTesting();
+
     // Handle player input
     void giveInput(EventId eventId);
     
