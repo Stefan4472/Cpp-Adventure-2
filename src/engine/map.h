@@ -26,15 +26,17 @@ public:
         std::vector<std::vector<std::shared_ptr<Drop>>> drops
     );
 
-    // Return size of world (x, y)
+    // Return size of world (x, y) (pixels)
     std::pair<int, int> getSizePx();
 
-    // Return whether the provided tile coordinate is valid
+    // Return whether the provided tile coordinate is in the world.
     bool isTileWithinMap(
         int tileX, 
         int tileY
     );
-    // Return whether a sprite could walk on the specified tile
+    // Return whether a sprite could walk on the specified 
+    // tile coordinates. Checks both the Tile at that coordinate,
+    // as well as the MapObject (if any) at that coordinate.
     bool isTileWalkable(
         int tileX, 
         int tileY
@@ -56,6 +58,13 @@ public:
         int tileX, 
         int tileY
     );
+    // Replace the tile at (tileX, tileY) with a new 
+    // one of `newTileType`
+    void replaceTile(
+        TileType newTileType,
+        int tileX,
+        int tileY
+    );
     // Return object at the specified tile coordinates.
     // May return an emtpy (NULL) pointer if there is no object
     // at those coordinates.
@@ -63,56 +72,74 @@ public:
         int tileX, 
         int tileY
     );
-    // TODO
-    std::shared_ptr<Sprite> getSpriteAtTile(
-        int tileX,
-        int tileY
-    );
+    // Check whether a MapObject can be created at the specified
+    // tile coordinates. Makes sure that there isn't already a
+    // MapObject there. 
     bool canCreateObjectAtTile(
         int tileX,
         int tileY
     );
-    // NOTE: tile must be empty--call `canCreateObjectAtTile()` first
+    // Creates a new MapObject of `objectType` at the specified
+    // tile coordinates. Throws `std::runtime_error` if a MapObject
+    // of the specified type cannot be created at those coordinates.
+    // Call `canCreateObjectAtTile()` first.
     void createObjectAtTile(
         ObjectType objectType,
         int tileX,
         int tileY
     );
+    // Removes the MapObject (if any) at the specified tile 
+    // coordinates.
     void removeObjectAtTile(
         int tileX,
         int tileY
     );
-    void replaceTile(
-        TileType newTileType,
+    // Return the Sprite (if any) currently at the specified
+    // tile coordinates. (TODO)
+    std::shared_ptr<Sprite> getSpriteAtTile(
         int tileX,
         int tileY
     );
+    // Creates a Drop containing the provided Item at the specified
+    // tile coordinates.
+    // TODO: PROVIDE AN ALTERNATE METHOD THAT CREATES THE ITEM *AND*
+    // THE DROP
     void createDropAtTile(
         std::shared_ptr<Item> itemToDrop,
         int tileX,
         int tileY
     );
+    // Return the Drop at the specified tile coordinates. May
+    // be null.
     std::shared_ptr<Drop> getDropAtTile(
         int tileX,
         int tileY
     );
-    std::shared_ptr<Drop> removeDropAtTile(
+    // Remove the Drop (but not the Item it contains) at the
+    // specified tile coordinates.
+    void removeDropAtTile(
         int tileX,
         int tileY
     );
 
+    // Draw the tiles to the provided `GameRenderer`. 
+    // `visibleWorld` specifies the clip of world coordinates 
+    // that are on-screen.
     void drawTiles(
         GameRenderer* gameRenderer,
         SDL_Rect& visibleWorld
     );
-
+    // Draw the MapObject *and Drops* to the provided `GameRenderer`.
+    // `visibleWorld` specifies the clip of world coordinates 
+    // that are on-screen.
     // TODO: NEED TO PROPERLY LAYER OBJECTS WITH SPRITES, ITEMS, ETC.
     void drawObjects(
         GameRenderer* gameRenderer,
         SDL_Rect& visibleWorld
     );
 
-    // Load map stored at the specified directory
+    // Load map stored at the specified directory and return
+    // created `Map` instance.
     static Map loadMap(
         GameContext* gameContext,
         boost::filesystem::path dirPath
@@ -121,7 +148,7 @@ public:
 private:
     int numRows, numCols;
     GameContext* gameContext;
-    std::vector<std::vector<std::shared_ptr<Tile>>> mapTiles;
+    std::vector<std::vector<std::shared_ptr<Tile>>> tiles;
     std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects;
     std::vector<std::vector<std::shared_ptr<Drop>>> drops;
 

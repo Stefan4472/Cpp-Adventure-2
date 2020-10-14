@@ -23,7 +23,8 @@
 class GameEngine : public EngineInterface
 {
 public:
-    // TODO: GAMEENGINE SHOULDN'T DEAL WITH THE RENDERER AT ALL
+    // TODO: GAMEENGINE SHOULDN'T DEAL WITH THE RENDERER AT ALL...
+    // OR ANYTHING RELATED TO SDL
     GameEngine(
         boost::filesystem::path rootPath,
         SDL_Renderer* renderer,
@@ -37,7 +38,7 @@ public:
     // Handle player input
     void giveInput(EventId eventId);
     
-    // `EngineInterface` methods
+    /* `EngineInterface` methods */
     bool isTileWithinMap(
         int tileX, 
         int tileY

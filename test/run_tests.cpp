@@ -93,6 +93,20 @@ TEST(test, hello_world)
 
     ASSERT_EQ(ItemType::PICKAXE, item->getItemType());
     ASSERT_EQ(TextureId::PICKAXE_ITEM, item->getTextureId());
+
+    map->createDropAtTile(
+        item,
+        0,
+        0
+    );
+    map->removeDropAtTile(
+        0,
+        0
+    );
+
+    ASSERT_EQ(ItemType::PICKAXE, item->getItemType());
+    ASSERT_EQ(TextureId::PICKAXE_ITEM, item->getTextureId());
+
 }
 
 int main(int argc, char **argv) {

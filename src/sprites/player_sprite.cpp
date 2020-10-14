@@ -70,7 +70,6 @@ void PlayerSprite::giveInput(EventId eventId, UpdateContext* updateContext)
 
 bool PlayerSprite::giveItem(std::shared_ptr<Item> item)
 {
-    std::cout << "Got item " << item << std::endl;
     if (inventory.checkIsFull())
     {
         return false;
@@ -78,6 +77,7 @@ bool PlayerSprite::giveItem(std::shared_ptr<Item> item)
     else
     {
         inventory.giveItem(item);
+        return true;
     }   
 }
 

@@ -8,11 +8,11 @@ Map::Map(
 ) {
     checkMapValidity(tiles, mapObjects, drops);
     this->gameContext = gameContext;
-    this->mapTiles = tiles;
+    this->tiles = tiles;
     this->mapObjects = mapObjects;
     this->drops = drops;
-    numRows = this->mapTiles.size();
-    numCols = this->mapTiles[0].size();
+    numRows = this->tiles.size();
+    numCols = this->tiles[0].size();
 }
 
 std::pair<int, int> Map::getSizePx()
@@ -82,7 +82,35 @@ std::shared_ptr<Tile> Map::getTile(int tileX, int tileY)
 {
     if (isTileWithinMap(tileX, tileY))
     {
-        return mapTiles[tileY][tileX];
+        return tiles[tileY][tileX];
+    }
+    else
+    {
+        throw std::invalid_argument(
+            "Tile coordinates out of bounds"
+        );
+    }
+}
+
+void Map::replaceTile(
+        TileType newTileType,
+        int tileX,
+        int tileY
+) {
+    if (isTileWithinMap(tileX, tileY))
+    {
+        tiles[tileY][tileX].reset();
+
+        SDL_Rect tile_coords = calcTileCoords(
+            tileX, 
+            tileY
+        );
+
+        tiles[tileY][tileX] = TileFactory::createTile(
+            gameContext,
+            newTileType,
+            tile_coords
+        );
     }
     else
     {
@@ -106,18 +134,14 @@ std::shared_ptr<MapObject> Map::getObjectAtTile(int tileX, int tileY)
     }
 }
 
-std::shared_ptr<Sprite> Map::getSpriteAtTile(int tileX, int tileY)
-{
-    // TODO: IMPLEMENT
-    return std::shared_ptr<Sprite>();
-}
-
 bool Map::canCreateObjectAtTile(
         int tileX,
         int tileY
 ) {
     // Make sure tile is within bounds, and no object is currently there
-    return isTileWithinMap(tileX, tileY) && !mapObjects[tileY][tileX];
+    return 
+        isTileWithinMap(tileX, tileY) && 
+        !mapObjects[tileY][tileX];
 }
 
 void Map::createObjectAtTile(
@@ -159,28 +183,13 @@ void Map::removeObjectAtTile(
     }
 }
 
-void Map::replaceTile(
-        TileType newTileType,
-        int tileX,
-        int tileY
-) {
-    if (isTileWithinMap(tileX, tileY))
-    {
-        mapTiles[tileY][tileX].reset();
-
-        SDL_Rect tile_coords = calcTileCoords(tileX, tileY);
-        mapTiles[tileY][tileX] = TileFactory::createTile(
-            gameContext,
-            newTileType,
-            tile_coords
-        );
-    }
-    else
-    {
-        throw std::invalid_argument(
-            "Tile coordinates out of bounds"
-        );
-    }
+std::shared_ptr<Sprite> Map::getSpriteAtTile(int tileX, int tileY)
+{
+    // TODO: IMPLEMENT
+    throw std::runtime_error(
+        "Unimplemented"
+    );
+    // return std::shared_ptr<Sprite>();
 }
 
 void Map::createDropAtTile(
@@ -223,7 +232,7 @@ std::shared_ptr<Drop> Map::getDropAtTile(
     }
 }
 
-std::shared_ptr<Drop> Map::removeDropAtTile(
+void Map::removeDropAtTile(
         int tileX,
         int tileY
 ) {
@@ -233,8 +242,9 @@ std::shared_ptr<Drop> Map::removeDropAtTile(
         // TODO: FIGURE OUT WHY RESETTING THE `DROP` INSTANCE
         // CAUSES ITS `ITEM` INSTANCE TO SEGFAULT (CAN NO LONGER
         // ACCESS ITS ABSTRACT METHODS)
+
         // auto item = drops[tileY][tileX]->getItem();
-        // drops[tileY][tileX].reset();
+        drops[tileY][tileX].reset();
         // std::cout << "Did the reset" << std::endl;
         // std::cout << "Item now " << item << std::endl;
     }
@@ -271,7 +281,7 @@ void Map::drawTiles(
                 continue;
             }
 
-            mapTiles[tile_y][tile_x]->draw(gameRenderer);
+            tiles[tile_y][tile_x]->draw(gameRenderer);
         }
     }
 }
@@ -529,17 +539,17 @@ void Map::checkMapValidity(
         std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects,
         std::vector<std::vector<std::shared_ptr<Drop>>> drops
 ) {
-    // Make sure `mapTiles` is non-empty
+    // Make sure `tiles` is non-empty
     if (tiles.empty())
     {
         throw std::invalid_argument(
-            "The provided `mapTiles` is empty"
+            "The provided `tiles` is empty"
         );
     }
     if (tiles[0].empty())
     {
         throw std::invalid_argument(
-            "The provided `mapTiles` first row is empty"
+            "The provided `tiles` first row is empty"
         );
     }
 
@@ -562,7 +572,7 @@ void Map::checkMapValidity(
     if (mapObjects.size() != tiles.size())
     {
         throw std::invalid_argument(
-            "`mapObjects` does not have the same number of rows as `mapTiles`"
+            "`mapObjects` does not have the same number of rows as `tiles`"
         );
     }
     for (int i = 0; i < tiles.size(); i++)
@@ -570,7 +580,7 @@ void Map::checkMapValidity(
         if (tiles[i].size() != mapObjects[i].size())
         {
             throw std::invalid_argument(
-                std::string("`mapObjects` does not have the same number of columns as `mapTiles` (row ") +
+                std::string("`mapObjects` does not have the same number of columns as `tiles` (row ") +
                 std::to_string(curr_row) + ")"
             );
         }
@@ -580,7 +590,7 @@ void Map::checkMapValidity(
     if (drops.size() != tiles.size())
     {
         throw std::invalid_argument(
-            "`drops` does not have the same number of rows as `mapTiles`"
+            "`drops` does not have the same number of rows as `tiles`"
         );
     }
     for (int i = 0; i < tiles.size(); i++)
@@ -588,7 +598,7 @@ void Map::checkMapValidity(
         if (tiles[i].size() != drops[i].size())
         {
             throw std::invalid_argument(
-                std::string("`drops` does not have the same number of columns as `mapTiles` (row ") +
+                std::string("`drops` does not have the same number of columns as `tiles` (row ") +
                 std::to_string(curr_row) + ")"
             );
         }

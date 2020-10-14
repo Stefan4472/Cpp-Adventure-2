@@ -38,7 +38,7 @@ GameEngine::GameEngine(
         map_path
     ));
 
-
+    // TODO: `PLAYER` SHOULD REALLY BE STORED IN `MAP`
     SDL_Rect player_start_tile = {
         320, 
         256, 
@@ -50,12 +50,6 @@ GameEngine::GameEngine(
         gameContext, 
         player_start_tile
     );
-
-    // auto test_item = ItemFactory::createItem(
-    //     gameContext.get(),
-    //     ItemType::PICKAXE
-    // );
-    // player->inHandItem = test_item;
 }
 
 std::shared_ptr<GameContext> GameEngine::getGameContextForTesting()
@@ -85,7 +79,6 @@ bool GameEngine::isTileWithinMap(
     {
         std::cout << "WARN: GameEngine method called before Map finished initialized" << std::endl;
     }
-    
 }
 
 bool GameEngine::isTileWalkable(
@@ -249,6 +242,7 @@ void GameEngine::executeInteraction(
             // Attempt to give to Sprite
             if (iRequest.sprite->giveItem(drop_at_tile->getItem()))
             {
+                // Sprite took the item. Now remove the drop
                 map->removeDropAtTile(
                     iRequest.tileX,
                     iRequest.tileY
