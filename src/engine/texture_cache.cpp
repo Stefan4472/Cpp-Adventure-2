@@ -24,7 +24,7 @@ SDL_Texture* TextureCache::getTexture(TextureId id)
     if (it == textureMap.end())
     {
         // std::cout << " Not Found" << std::endl;
-        SDL_Texture* texture = loadTexture(graphicsPath / getFilename(id));
+        SDL_Texture* texture = loadTexture(graphicsPath / getRelPath(id));
         textureMap[id] = texture;
         return texture;
     }

@@ -1,6 +1,7 @@
 #ifndef _TEXTURE_ID_H
 #define _TEXTURE_ID_H
 
+#include <boost/filesystem.hpp>
 #include <string>
 #include <stdexcept> 
 
@@ -23,7 +24,6 @@ enum class TextureId
     GRAVEL_ITEM
 };
 
-// TODO: RETURN RELATIVE PATH. THAT WAY WE CAN ORGANIZE ART INTO SUB-DIRECTORIES (E.G. 'TILES', 'SPRITES', ETC.)
-std::string getFilename(TextureId id);
+boost::filesystem::path getRelPath(TextureId id);
 
 #endif

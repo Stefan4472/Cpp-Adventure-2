@@ -1,68 +1,69 @@
 #include "texture_id.h"
 
-std::string getFilename(TextureId id)
+boost::filesystem::path getRelPath(TextureId id)
 {
+    // TODO: NOTE: THESE PATHS MIGHT NOT BE CROSS-PLATFORM DUE TO THE HARD-CODED '/' SEPARATOR
     switch (id) 
     {
         case TextureId::SPRITE_FRONT:
         {
-            return "player-front.png";
+            return boost::filesystem::path("sprites/player/front.png");
         }
         case TextureId::SPRITE_BACK:
         {
-            return "player-back.png";
+            return boost::filesystem::path("sprites/player/back.png");
         }
         case TextureId::SPRITE_LEFT:
         {
-            return "player-left.png";
+            return boost::filesystem::path("sprites/player/left.png");
         }
         case TextureId::SPRITE_RIGHT:
         {
-            return "player-right.png";
+            return boost::filesystem::path("sprites/player/right.png");
         }
         case TextureId::GRASS_TILE:
         {
-            return "grass-tile.png";
+            return boost::filesystem::path("tiles/grass.png");
         }
         case TextureId::DIRT_TILE:
         {
-            return "dirt-tile.png";
+            return boost::filesystem::path("tiles/dirt.png");
         }
         case TextureId::SAND_TILE:
         {
-            return "sand-tile.png";
+            return boost::filesystem::path("tiles/sand.png");
         }
         case TextureId::STONE_TILE:
         {
-            return "stone-tile.png";
+            return boost::filesystem::path("tiles/stone.png");
         }
         case TextureId::SPRITE_WALK_UP:
         {
-            return "player-walk-up.png";
+            return boost::filesystem::path("sprites/player/walk-up.png");
         }
         case TextureId::SPRITE_WALK_DOWN:
         {
-            return "player-walk-down.png";
+            return boost::filesystem::path("sprites/player/walk-down.png");
         }
         case TextureId::SPRITE_WALK_LEFT:
         {
-            return "player-walk-left.png";
+            return boost::filesystem::path("sprites/player/walk-left.png");
         }
         case TextureId::SPRITE_WALK_RIGHT:
         {
-            return "player-walk-right.png";
+            return boost::filesystem::path("sprites/player/walk-right.png");
         }
         case TextureId::ROCK_OBJECT:
         {
-            return "rock.png";
+            return boost::filesystem::path("objects/rock.png");
         }
         case TextureId::PICKAXE_ITEM:
         {
-            return "pickaxe.png";
+            return boost::filesystem::path("items/pickaxe.png");
         }
         case TextureId::GRAVEL_ITEM:
         {
-            return "gravel.png";
+            return boost::filesystem::path("items/gravel.png");
         }
         default:
         {
