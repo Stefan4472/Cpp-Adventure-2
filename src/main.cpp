@@ -89,6 +89,11 @@ int main(int argc, char* args[])
                         gameEngine.giveInput(EventId::PRESS_ACTION);
                         break;
                     }
+                    case SDLK_TAB:
+                    {
+                        gameEngine.giveInput(EventId::ROTATE_INVENTORY);
+                        break;
+                    }
                     default:
                     {
                         break;

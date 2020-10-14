@@ -58,6 +58,10 @@ void PlayerSprite::giveInput(EventId eventId, UpdateContext* updateContext)
     {
         executeAction(updateContext);
     }
+    else if (eventId == EventId::ROTATE_INVENTORY)
+    {
+        inventory.rotateToNextItem();
+    }
     else
     {
         inputHandler.giveInput(eventId);
