@@ -4,7 +4,7 @@
 #include <list>
 #include <stdexcept>
 #include "input_event.h"
-#include "walk_direction.h"
+#include "direction.h"
 
 
 // Manages input given to the Player Sprite
@@ -12,7 +12,7 @@ class InputHandler
 {
 public:
     void giveInput(EventId eventId);
-    WalkDirection getNextWalkCommand();
+    Direction getNextWalkCommand();
 
 private:
     // List of movement commands, in increasing priority.

@@ -50,7 +50,7 @@ PlayerSprite::PlayerSprite(
     );
 
     walkPxPerMs = gameContext->tileSizePx * 1.0 / TILE_WALK_TIME_MS;
-    currWalkCommand = WalkDirection::NONE;
+    currWalkCommand = Direction::NONE;
     goalWorldX = worldX;
     goalWorldY = worldY;
 }
@@ -109,18 +109,18 @@ void PlayerSprite::executeAction(UpdateContext* updateContext)
 void PlayerSprite::update(UpdateContext* updateContext)
 {
     // No current movement input: see if there's a new one
-    if (currWalkCommand == WalkDirection::NONE)
+    if (currWalkCommand == Direction::NONE)
     {
         updateWalkCommand();
     }
 
     switch (currWalkCommand)
     {
-        case WalkDirection::NONE:
+        case Direction::NONE:
         {
             break;
         }
-        case WalkDirection::UP:
+        case Direction::UP:
         {
             double px_to_move = 
                 walkPxPerMs * updateContext->msSincePrevUpdate;
@@ -133,7 +133,7 @@ void PlayerSprite::update(UpdateContext* updateContext)
             }
             break;
         }
-        case WalkDirection::DOWN:
+        case Direction::DOWN:
         {
             double px_to_move = 
                 walkPxPerMs * updateContext->msSincePrevUpdate;
@@ -146,7 +146,7 @@ void PlayerSprite::update(UpdateContext* updateContext)
             }
             break;
         }
-        case WalkDirection::LEFT:
+        case Direction::LEFT:
         {
             double px_to_move = 
                 walkPxPerMs * updateContext->msSincePrevUpdate;
@@ -159,7 +159,7 @@ void PlayerSprite::update(UpdateContext* updateContext)
             }
             break;
         }
-        case WalkDirection::RIGHT:
+        case Direction::RIGHT:
         {
             double px_to_move = 
                 walkPxPerMs * updateContext->msSincePrevUpdate;
@@ -217,12 +217,12 @@ void PlayerSprite::updateWalkCommand()
 
     switch (currWalkCommand)
     {
-        case WalkDirection::NONE:
+        case Direction::NONE:
         {
             spriteModel->stopMoving();
             break;
         }
-        case WalkDirection::UP:
+        case Direction::UP:
         {
             if (gameContext->engine->isTileWalkable(curr_tile_x, curr_tile_y - 1))
             {
@@ -232,7 +232,7 @@ void PlayerSprite::updateWalkCommand()
             }
             break;
         }
-        case WalkDirection::DOWN:
+        case Direction::DOWN:
         {
             if (gameContext->engine->isTileWalkable(curr_tile_x, curr_tile_y + 1))
             {
@@ -242,7 +242,7 @@ void PlayerSprite::updateWalkCommand()
             }
             break;
         }
-        case WalkDirection::LEFT:
+        case Direction::LEFT:
         {
             if (gameContext->engine->isTileWalkable(curr_tile_x - 1, curr_tile_y))
             {
@@ -252,7 +252,7 @@ void PlayerSprite::updateWalkCommand()
             }
             break;
         }
-        case WalkDirection::RIGHT:
+        case Direction::RIGHT:
         {
             if (gameContext->engine->isTileWalkable(curr_tile_x + 1, curr_tile_y))
             {

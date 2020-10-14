@@ -5,6 +5,7 @@
 #include "spritesheet.h"
 #include "texture_cache.h"
 #include "update_context.h"
+#include "direction.h"
 
 
 class SpriteModel
@@ -28,6 +29,8 @@ public:
     void moveLeft();
     void moveRight();
     void stopMoving();
+    // Get direction the sprite is currently facing
+    Direction getFacingDirection();
 
     void update(UpdateContext* updateContext);
 
@@ -45,7 +48,22 @@ private:
     std::shared_ptr<Spritesheet> walkLeftSheet;
     std::shared_ptr<Spritesheet> walkRightSheet;
 
+    Direction facingDirection;
+    bool isWalking;
+
+    void moveInDirection(
+        Direction newDirection
+    );
+
     void resetAnyPlaying();
+    
+    TextureId getImgForDirection(
+        Direction direction
+    );
+    
+    std::shared_ptr<Spritesheet> getSheetForDirection(
+        Direction direction
+    );
 };
 
 #endif

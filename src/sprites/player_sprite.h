@@ -7,7 +7,7 @@
 #include "sprite.h"
 #include "spritesheet.h"
 #include "sprite_model.h"
-#include "walk_direction.h"
+#include "direction.h"
 #include "input_event.h"
 #include "input_handler.h"
 #include "inventory.h"
@@ -48,7 +48,7 @@ private:
     Inventory inventory;
 
     // Direction currently being walked in
-    WalkDirection currWalkCommand;
+    Direction currWalkCommand;
     double goalWorldX, goalWorldY;
 
     void updateWalkCommand();

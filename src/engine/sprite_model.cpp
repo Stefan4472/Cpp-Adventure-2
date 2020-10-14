@@ -18,93 +18,71 @@ SpriteModel::SpriteModel(
     this->walkDownSheet = walkDownSheet;
     this->walkLeftSheet = walkLeftSheet;
     this->walkRightSheet = walkRightSheet;
+
+    facingDirection = Direction::DOWN;
+    isWalking = false;
 }
 
 void SpriteModel::moveUp()
 {
-    resetAnyPlaying();
-    walkUpSheet->start();
+    moveInDirection(Direction::UP);
 }
 
 void SpriteModel::moveDown()
 {
-    resetAnyPlaying();
-    walkDownSheet->start();
+    moveInDirection(Direction::DOWN);
 }
 
 void SpriteModel::moveLeft()
 {
-    resetAnyPlaying();
-    walkLeftSheet->start();
+    moveInDirection(Direction::LEFT);
 }
 
 void SpriteModel::moveRight()
 {
-    resetAnyPlaying();
-    walkRightSheet->start();
+    moveInDirection(Direction::RIGHT);
 }
 
 void SpriteModel::stopMoving()
 {
     resetAnyPlaying();
+    isWalking = false;
 }
 
 void SpriteModel::update(UpdateContext* updateContext)
 {
-    if (walkUpSheet->getIsPlaying())
+    if (isWalking)
     {
-        walkUpSheet->update(updateContext->msSincePrevUpdate);
-    }
-    else if (walkDownSheet->getIsPlaying())
-    {
-        walkDownSheet->update(updateContext->msSincePrevUpdate);
-    }
-    else if (walkLeftSheet->getIsPlaying())
-    {
-        walkLeftSheet->update(updateContext->msSincePrevUpdate);
-    }
-    else if (walkRightSheet->getIsPlaying())
-    {
-        walkRightSheet->update(updateContext->msSincePrevUpdate);
+        getSheetForDirection(facingDirection)->update(
+            updateContext->msSincePrevUpdate
+        );
     }
 }
 
 std::pair<TextureId, SDL_Rect> SpriteModel::getDrawInfo(TextureCache* textureCache)
 {
-    if (walkUpSheet->getIsPlaying())
+    // Currently walking: return frame from correct animation
+    if (isWalking)
     {
+        auto curr_sheet = getSheetForDirection(
+            facingDirection
+        );
+
         return std::make_pair(
-            walkUpSheet->getTextureID(),
-            walkUpSheet->getCurrentFrameSrc()
+            curr_sheet->getTextureID(),
+            curr_sheet->getCurrentFrameSrc()
         );
     }
-    else if (walkDownSheet->getIsPlaying())
-    {
-        return std::make_pair(
-            walkDownSheet->getTextureID(),
-            walkDownSheet->getCurrentFrameSrc()
-        );
-    }
-    else if (walkLeftSheet->getIsPlaying())
-    {
-        return std::make_pair(
-            walkLeftSheet->getTextureID(),
-            walkLeftSheet->getCurrentFrameSrc()
-        );
-    }
-    else if (walkRightSheet->getIsPlaying())
-    {
-        return std::make_pair(
-            walkRightSheet->getTextureID(),
-            walkRightSheet->getCurrentFrameSrc()
-        );
-    }
-    // No animation playing: return idleImg
+    // No animation playing: return idle image
     else
     {
+        TextureId curr_img = getImgForDirection(
+            facingDirection
+        );
+
         int img_width, img_height;
         std::tie(img_width, img_height) = 
-            textureCache->getDimensions(idleDownImg);
+            textureCache->getDimensions(curr_img);
         
         SDL_Rect source_rect = {
             0,
@@ -113,32 +91,92 @@ std::pair<TextureId, SDL_Rect> SpriteModel::getDrawInfo(TextureCache* textureCac
             img_height
         };
         return std::make_pair(
-            idleDownImg,
+            curr_img,
             source_rect
         );
     }
 }
 
+void SpriteModel::moveInDirection(Direction newDirection)
+{
+    resetAnyPlaying();
+    facingDirection = newDirection;
+    getSheetForDirection(newDirection)->start();
+    isWalking = true;
+}
+
+
 void SpriteModel::resetAnyPlaying()
 {
-    if (walkUpSheet->getIsPlaying())
+    if (isWalking)
     {
-        walkUpSheet->stop();
-        walkUpSheet->reset();
+        auto curr_sheet = getSheetForDirection(
+            facingDirection
+        );
+
+        curr_sheet->stop();
+        curr_sheet->reset();
     }
-    if (walkDownSheet->getIsPlaying())
+}
+
+TextureId SpriteModel::getImgForDirection(
+        Direction direction
+) {
+    switch (direction)
     {
-        walkDownSheet->stop();
-        walkDownSheet->reset();
+        case Direction::UP:
+        {
+            return idleUpImg;
+        }
+        case Direction::DOWN:
+        {
+            return idleDownImg;
+        }
+        case Direction::LEFT:
+        {
+            return idleLeftImg;
+        }
+        case Direction::RIGHT:
+        {
+            return idleRightImg;
+        }
+        default:
+        {
+            throw std::invalid_argument(
+                std::string("No image for the provided direction ") +
+                std::to_string(static_cast<int>(direction))
+            );
+        }
     }
-    if (walkLeftSheet->getIsPlaying())
+}
+    
+std::shared_ptr<Spritesheet> SpriteModel::getSheetForDirection(
+    Direction direction
+) {
+    switch (direction)
     {
-        walkLeftSheet->stop();
-        walkLeftSheet->reset();
-    }
-    if (walkRightSheet->getIsPlaying())
-    {
-        walkRightSheet->stop();
-        walkRightSheet->reset();
+        case Direction::UP:
+        {
+            return walkUpSheet;
+        }
+        case Direction::DOWN:
+        {
+            return walkDownSheet;
+        }
+        case Direction::LEFT:
+        {
+            return walkLeftSheet;
+        }
+        case Direction::RIGHT:
+        {
+            return walkRightSheet;
+        }
+        default:
+        {
+            throw std::invalid_argument(
+                std::string("No image for the provided direction") +
+                std::to_string(static_cast<int>(direction))
+            );
+        }
     }
 }

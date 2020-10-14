@@ -1,7 +1,7 @@
 #ifndef _WALK_DIRECTION_H
 #define _WALK_DIRECTION_H
 
-enum class WalkDirection
+enum class Direction
 {
     NONE,
     UP,

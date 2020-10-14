@@ -43,11 +43,11 @@ void InputHandler::giveInput(EventId eventId)
     }
 }
 
-WalkDirection InputHandler::getNextWalkCommand()
+Direction InputHandler::getNextWalkCommand()
 {
     if (moveCommands.empty())
     {
-        return WalkDirection::NONE;
+        return Direction::NONE;
     }
     else
     {
@@ -55,19 +55,19 @@ WalkDirection InputHandler::getNextWalkCommand()
         {
             case EventId::PRESS_UP:
             {
-                return WalkDirection::UP;
+                return Direction::UP;
             }
             case EventId::PRESS_DOWN:
             {
-                return WalkDirection::DOWN;
+                return Direction::DOWN;
             }
             case EventId::PRESS_LEFT:
             {
-                return WalkDirection::LEFT;
+                return Direction::LEFT;
             }
             case EventId::PRESS_RIGHT:
             {
-                return WalkDirection::RIGHT;
+                return Direction::RIGHT;
             }
             default:
             {
