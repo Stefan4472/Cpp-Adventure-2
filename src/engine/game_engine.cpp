@@ -50,6 +50,18 @@ GameEngine::GameEngine(
         gameContext, 
         player_start_tile
     );
+
+    SDL_Rect npc_start_tile = {
+        160, 
+        352, 
+        TextureCache::TILE_SIZE_PX, 
+        TextureCache::TILE_SIZE_PX
+    };
+
+    npc = std::make_shared<FriendlySprite>(
+        gameContext, 
+        npc_start_tile
+    );
 }
 
 std::shared_ptr<GameContext> GameEngine::getGameContextForTesting()
@@ -143,6 +155,7 @@ void GameEngine::update()
 
     // TODO: ACTUALLY PASS BY REFERENCE
     player->update(&update_context);
+    npc->update(&update_context);
 
     // Execute all requested interactions
     for (InteractRequest irequest : req_interactions)
@@ -381,4 +394,5 @@ void GameEngine::draw(SDL_Renderer* renderer)
 
     // Draw player
     player->draw(gameRenderer.get());
+    npc->draw(gameRenderer.get());
 }
