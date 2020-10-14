@@ -6,19 +6,19 @@ std::string getFilename(TextureId id)
     {
         case TextureId::SPRITE_FRONT:
         {
-            return "sprite-front.png";
+            return "player-front.png";
         }
         case TextureId::SPRITE_BACK:
         {
-            return "sprite-back.png";
+            return "player-back.png";
         }
         case TextureId::SPRITE_LEFT:
         {
-            return "sprite-left.png";
+            return "player-left.png";
         }
         case TextureId::SPRITE_RIGHT:
         {
-            return "sprite-right.png";
+            return "player-right.png";
         }
         case TextureId::GRASS_TILE:
         {
@@ -38,19 +38,19 @@ std::string getFilename(TextureId id)
         }
         case TextureId::SPRITE_WALK_UP:
         {
-            return "sprite-walk-up.png";
+            return "player-walk-up.png";
         }
         case TextureId::SPRITE_WALK_DOWN:
         {
-            return "sprite-walk-down.png";
+            return "player-walk-down.png";
         }
         case TextureId::SPRITE_WALK_LEFT:
         {
-            return "sprite-walk-left.png";
+            return "player-walk-left.png";
         }
         case TextureId::SPRITE_WALK_RIGHT:
         {
-            return "sprite-walk-right.png";
+            return "player-walk-right.png";
         }
         case TextureId::ROCK_OBJECT:
         {
