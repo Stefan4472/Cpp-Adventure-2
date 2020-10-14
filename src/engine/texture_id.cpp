@@ -1,73 +1,38 @@
 #include "texture_id.h"
 
+
+// ADD NEW TEXTURES HERE:
+// TODO: NOTE: THESE PATHS MIGHT NOT BE CROSS-PLATFORM DUE TO THE HARD-CODED '/' SEPARATOR
+const std::unordered_map<TextureId, boost::filesystem::path> TEX_TO_PATH_MAPPINGS = 
+{
+    {TextureId::SPRITE_FRONT, boost::filesystem::path("sprites/player/front.png")},
+    {TextureId::SPRITE_BACK, boost::filesystem::path("sprites/player/back.png")},
+    {TextureId::SPRITE_LEFT, boost::filesystem::path("sprites/player/left.png")},
+    {TextureId::SPRITE_RIGHT, boost::filesystem::path("sprites/player/right.png")},
+    {TextureId::GRASS_TILE, boost::filesystem::path("tiles/grass.png")},
+    {TextureId::DIRT_TILE, boost::filesystem::path("tiles/dirt.png")},
+    {TextureId::SAND_TILE, boost::filesystem::path("tiles/sand.png")},
+    {TextureId::STONE_TILE, boost::filesystem::path("tiles/stone.png")},
+    {TextureId::SPRITE_WALK_UP, boost::filesystem::path("sprites/player/walk-up.png")},
+    {TextureId::SPRITE_WALK_DOWN, boost::filesystem::path("sprites/player/walk-down.png")},
+    {TextureId::SPRITE_WALK_LEFT, boost::filesystem::path("sprites/player/walk-left.png")},
+    {TextureId::SPRITE_WALK_RIGHT, boost::filesystem::path("sprites/player/walk-right.png")},
+    {TextureId::ROCK_OBJECT, boost::filesystem::path("objects/rock.png")},
+    {TextureId::PICKAXE_ITEM, boost::filesystem::path("items/pickaxe.png")},
+    {TextureId::GRAVEL_ITEM, boost::filesystem::path("items/gravel.png")}
+};
+
 boost::filesystem::path getRelPath(TextureId id)
 {
-    // TODO: NOTE: THESE PATHS MIGHT NOT BE CROSS-PLATFORM DUE TO THE HARD-CODED '/' SEPARATOR
-    switch (id) 
+    auto it = TEX_TO_PATH_MAPPINGS.find(id);
+    if (it == TEX_TO_PATH_MAPPINGS.end())
     {
-        case TextureId::SPRITE_FRONT:
-        {
-            return boost::filesystem::path("sprites/player/front.png");
-        }
-        case TextureId::SPRITE_BACK:
-        {
-            return boost::filesystem::path("sprites/player/back.png");
-        }
-        case TextureId::SPRITE_LEFT:
-        {
-            return boost::filesystem::path("sprites/player/left.png");
-        }
-        case TextureId::SPRITE_RIGHT:
-        {
-            return boost::filesystem::path("sprites/player/right.png");
-        }
-        case TextureId::GRASS_TILE:
-        {
-            return boost::filesystem::path("tiles/grass.png");
-        }
-        case TextureId::DIRT_TILE:
-        {
-            return boost::filesystem::path("tiles/dirt.png");
-        }
-        case TextureId::SAND_TILE:
-        {
-            return boost::filesystem::path("tiles/sand.png");
-        }
-        case TextureId::STONE_TILE:
-        {
-            return boost::filesystem::path("tiles/stone.png");
-        }
-        case TextureId::SPRITE_WALK_UP:
-        {
-            return boost::filesystem::path("sprites/player/walk-up.png");
-        }
-        case TextureId::SPRITE_WALK_DOWN:
-        {
-            return boost::filesystem::path("sprites/player/walk-down.png");
-        }
-        case TextureId::SPRITE_WALK_LEFT:
-        {
-            return boost::filesystem::path("sprites/player/walk-left.png");
-        }
-        case TextureId::SPRITE_WALK_RIGHT:
-        {
-            return boost::filesystem::path("sprites/player/walk-right.png");
-        }
-        case TextureId::ROCK_OBJECT:
-        {
-            return boost::filesystem::path("objects/rock.png");
-        }
-        case TextureId::PICKAXE_ITEM:
-        {
-            return boost::filesystem::path("items/pickaxe.png");
-        }
-        case TextureId::GRAVEL_ITEM:
-        {
-            return boost::filesystem::path("items/gravel.png");
-        }
-        default:
-        {
-            throw std::invalid_argument("Unsupported TextureId");
-        }
+        throw std::invalid_argument(
+            "Unsupported TextureId/missing filepath definition"
+        );
+    }
+    else
+    {
+        return it->second;
     }
 }

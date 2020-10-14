@@ -2,9 +2,12 @@
 #define _TEXTURE_ID_H
 
 #include <boost/filesystem.hpp>
+#include <unordered_map>
 #include <string>
 #include <stdexcept> 
 
+// NOTE: each texture must have a filepath defined in `texture_id.cpp`
+// TODO: IMPLEMENT A TEXTURE ATLAS
 enum class TextureId
 {
     SPRITE_FRONT,
