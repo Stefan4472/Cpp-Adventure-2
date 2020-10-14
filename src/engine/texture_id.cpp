@@ -19,7 +19,15 @@ const std::unordered_map<TextureId, boost::filesystem::path> TEX_TO_PATH_MAPPING
     {TextureId::SPRITE_WALK_RIGHT, boost::filesystem::path("sprites/player/walk-right.png")},
     {TextureId::ROCK_OBJECT, boost::filesystem::path("objects/rock.png")},
     {TextureId::PICKAXE_ITEM, boost::filesystem::path("items/pickaxe.png")},
-    {TextureId::GRAVEL_ITEM, boost::filesystem::path("items/gravel.png")}
+    {TextureId::GRAVEL_ITEM, boost::filesystem::path("items/gravel.png")},
+    {TextureId::FRIENDLY_FRONT, boost::filesystem::path("sprites/friendly/front.png")},
+    {TextureId::FRIENDLY_BACK, boost::filesystem::path("sprites/friendly/back.png")},
+    {TextureId::FRIENDLY_LEFT, boost::filesystem::path("sprites/friendly/left.png")},
+    {TextureId::FRIENDLY_RIGHT, boost::filesystem::path("sprites/friendly/right.png")},
+    {TextureId::FRIENDLY_WALK_UP, boost::filesystem::path("sprites/friendly/walk-up.png")},
+    {TextureId::FRIENDLY_WALK_DOWN, boost::filesystem::path("sprites/friendly/walk-down.png")},
+    {TextureId::FRIENDLY_WALK_LEFT, boost::filesystem::path("sprites/friendly/walk-left.png")},
+    {TextureId::FRIENDLY_WALK_RIGHT, boost::filesystem::path("sprites/friendly/walk-right.png")},
 };
 
 boost::filesystem::path getRelPath(TextureId id)
