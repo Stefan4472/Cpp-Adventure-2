@@ -13,7 +13,10 @@ public:
     // Note: coded so that only one animation should be playing at a time
     // TODO: THIS IS KIND OF CRUDELY PROGRAMMED, NEEDS SOME REVISION
     SpriteModel(
-        TextureId idleImg,
+        TextureId idleUpImg,
+        TextureId idleDownImg,
+        TextureId idleLeftImg,
+        TextureId idleRightImg,
         std::shared_ptr<Spritesheet> walkUpSheet,
         std::shared_ptr<Spritesheet> walkDownSheet,
         std::shared_ptr<Spritesheet> walkLeftSheet,
@@ -33,7 +36,10 @@ public:
     );
 
 private:
-    TextureId idleImg;
+    TextureId idleUpImg;
+    TextureId idleDownImg;
+    TextureId idleLeftImg;
+    TextureId idleRightImg;
     std::shared_ptr<Spritesheet> walkUpSheet;
     std::shared_ptr<Spritesheet> walkDownSheet;
     std::shared_ptr<Spritesheet> walkLeftSheet;

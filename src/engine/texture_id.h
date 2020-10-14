@@ -7,6 +7,9 @@
 enum class TextureId
 {
     SPRITE_FRONT,
+    SPRITE_BACK,
+    SPRITE_LEFT,
+    SPRITE_RIGHT,
     GRASS_TILE,
     DIRT_TILE,
     SAND_TILE,

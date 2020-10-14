@@ -39,7 +39,10 @@ PlayerSprite::PlayerSprite(
         true
     );
     spriteModel = std::make_shared<SpriteModel>(
+        TextureId::SPRITE_BACK,
         TextureId::SPRITE_FRONT,
+        TextureId::SPRITE_LEFT,
+        TextureId::SPRITE_RIGHT,
         walkUpSpritesheet,
         walkDownSpritesheet,
         walkLeftSpritesheet,
@@ -190,14 +193,12 @@ void PlayerSprite::draw(GameRenderer* renderer)
     );
 
     // Draw in-hand item
-    // (currently at some rough approximation of "in-hand")
-    if (inventory.getSelectedItem())
+    // (currently drawing at an offset so as to give a rough 
+    // approximation that the item is actually in the Sprite's 
+    // hand.
+    auto inHandItem = inventory.getSelectedItem();
+    if (inHandItem)
     {
-        auto inHandItem = inventory.getSelectedItem();
-        std::cout << "Drawing inHandItem " << inHandItem << std::endl;
-        std::cout << "ItemType is " << int(inHandItem->getItemType()) << std::endl;
-        std::cout << "inHandItem is now " << inHandItem << std::endl;
-        std::cout << "TextureId is " << int(inHandItem->getTextureId()) << std::endl;
         renderer->drawToWorld(
             inHandItem->getTextureId(),
             worldX + src_rect.w / 2 - 10,

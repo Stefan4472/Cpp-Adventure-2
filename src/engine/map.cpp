@@ -236,17 +236,9 @@ void Map::removeDropAtTile(
         int tileX,
         int tileY
 ) {
-    std::cout << "Removing drop" << std::endl;
     if (isTileWithinMap(tileX, tileY))
     {
-        // TODO: FIGURE OUT WHY RESETTING THE `DROP` INSTANCE
-        // CAUSES ITS `ITEM` INSTANCE TO SEGFAULT (CAN NO LONGER
-        // ACCESS ITS ABSTRACT METHODS)
-
-        // auto item = drops[tileY][tileX]->getItem();
         drops[tileY][tileX].reset();
-        // std::cout << "Did the reset" << std::endl;
-        // std::cout << "Item now " << item << std::endl;
     }
     else
     {
@@ -320,7 +312,6 @@ void Map::drawObjects(
             // Draw Drop at tile, if one exists
             if (drops[tile_y][tile_x])
             {
-                std::cout << "Drawing drop " << drops[tile_y][tile_x] << std::endl;
                 drops[tile_y][tile_x]->draw(gameRenderer);
             }
         }

@@ -8,6 +8,18 @@ std::string getFilename(TextureId id)
         {
             return "sprite-front.png";
         }
+        case TextureId::SPRITE_BACK:
+        {
+            return "sprite-back.png";
+        }
+        case TextureId::SPRITE_LEFT:
+        {
+            return "sprite-left.png";
+        }
+        case TextureId::SPRITE_RIGHT:
+        {
+            return "sprite-right.png";
+        }
         case TextureId::GRASS_TILE:
         {
             return "grass-tile.png";

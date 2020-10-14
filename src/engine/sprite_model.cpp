@@ -1,13 +1,19 @@
 #include "sprite_model.h"
 
 SpriteModel::SpriteModel(
-        TextureId idleImg,
+        TextureId idleUpImg,
+        TextureId idleDownImg,
+        TextureId idleLeftImg,
+        TextureId idleRightImg,
         std::shared_ptr<Spritesheet> walkUpSheet,
         std::shared_ptr<Spritesheet> walkDownSheet,
         std::shared_ptr<Spritesheet> walkLeftSheet,
         std::shared_ptr<Spritesheet> walkRightSheet
 ) {
-    this->idleImg = idleImg;
+    this->idleUpImg = idleUpImg;
+    this->idleDownImg = idleDownImg;
+    this->idleLeftImg = idleLeftImg;
+    this->idleRightImg = idleRightImg;
     this->walkUpSheet = walkUpSheet;
     this->walkDownSheet = walkDownSheet;
     this->walkLeftSheet = walkLeftSheet;
@@ -98,7 +104,7 @@ std::pair<TextureId, SDL_Rect> SpriteModel::getDrawInfo(TextureCache* textureCac
     {
         int img_width, img_height;
         std::tie(img_width, img_height) = 
-            textureCache->getDimensions(idleImg);
+            textureCache->getDimensions(idleDownImg);
         
         SDL_Rect source_rect = {
             0,
@@ -107,7 +113,7 @@ std::pair<TextureId, SDL_Rect> SpriteModel::getDrawInfo(TextureCache* textureCac
             img_height
         };
         return std::make_pair(
-            idleImg,
+            idleDownImg,
             source_rect
         );
     }
