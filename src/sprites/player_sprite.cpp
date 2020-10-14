@@ -94,15 +94,44 @@ void PlayerSprite::executeAction(UpdateContext* updateContext)
         gameContext->engine->resolveTile(worldX, worldY);
 
     // Determine the tile to interact with.
+    int interact_tile_x, interact_tile_y;
+    switch (spriteModel->getFacingDirection())
+    {
+        case Direction::UP:
+        {
+            interact_tile_x = curr_tile_x;
+            interact_tile_y = curr_tile_y - 1;
+            break;
+        }
+        case Direction::DOWN:
+        {
+            interact_tile_x = curr_tile_x;
+            interact_tile_y = curr_tile_y + 1;
+            break;
+        }
+        case Direction::LEFT:
+        {
+            interact_tile_x = curr_tile_x - 1;
+            interact_tile_y = curr_tile_y;
+            break;
+        }
+        case Direction::RIGHT:
+        {
+            interact_tile_x = curr_tile_x + 1;
+            interact_tile_y = curr_tile_y;
+            break;
+        }
+    }
+
+    // Request the interaction.
     // Note that this may send a `nullptr` as `Item`. This is okay.
     // If there is no in-hand item, the user will attempt to pick
     // up a drop.
-    // TODO: DETERMINE BASED ON CURRENT DIRECTION. FOR DEVELOPMENT, FOR NOW, WE WILL ALWAYS JUST DO THE TILE BELOW US
     updateContext->requestInteract(
         this,
         inventory.getSelectedItem().get(),
-        curr_tile_x,
-        curr_tile_y + 1
+        interact_tile_x,
+        interact_tile_y
     );
 }
 

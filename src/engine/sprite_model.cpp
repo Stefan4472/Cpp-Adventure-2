@@ -23,6 +23,11 @@ SpriteModel::SpriteModel(
     isWalking = false;
 }
 
+Direction SpriteModel::getFacingDirection()
+{
+    return facingDirection;
+}
+
 void SpriteModel::moveUp()
 {
     moveInDirection(Direction::UP);

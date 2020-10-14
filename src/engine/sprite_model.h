@@ -12,7 +12,7 @@ class SpriteModel
 {
 public:
     // Note: coded so that only one animation should be playing at a time
-    // TODO: THIS IS KIND OF CRUDELY PROGRAMMED, NEEDS SOME REVISION
+    // TODO: STORE REF TO INHANDITEM, SO WE CAN DRAW IT CORRECTLY
     SpriteModel(
         TextureId idleUpImg,
         TextureId idleDownImg,
