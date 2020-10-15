@@ -100,7 +100,7 @@ public:
     );
     // Return the Sprite (if any) currently at the specified
     // tile coordinates.
-    std::shared_ptr<TestSprite> getSpriteAtTile(
+    std::shared_ptr<Sprite> getSpriteAtTile(
         int tileX,
         int tileY
     );
@@ -130,6 +130,11 @@ public:
     void removeDropAtTile(
         int tileX,
         int tileY
+    );
+    // Looks up the Actor that the specified Sprite belongs to.
+    // Note: currently very slow (TODO)
+    std::shared_ptr<Actor> lookupSpriteActor(
+        Sprite* sprite
     );
 
     // Update *everything*

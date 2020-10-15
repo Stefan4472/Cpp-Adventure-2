@@ -49,12 +49,12 @@ void PlayerActor::executeAction(UpdateContext* updateContext) {
     // Note that this may send a `nullptr` as `Item`. This is okay.
     // If there is no in-hand item, the user will attempt to pick
     // up a drop.
-    // updateContext->requestInteract(
-    //     sprite.get(),
-    //     inventory.getSelectedItem().get(),
-    //     interact_tile_x,
-    //     interact_tile_y
-    // );
+    updateContext->requestInteract(
+        sprite.get(),
+        inventory.getSelectedItem().get(),
+        interact_tile_x,
+        interact_tile_y
+    );
 }
 
 void PlayerActor::respondToInteract(
@@ -130,4 +130,19 @@ void PlayerActor::updateWalkCommand()
 void PlayerActor::draw(GameRenderer* renderer) 
 {
     sprite->draw(renderer);
+
+    // Draw in-hand item
+    // (currently drawing at an offset so as to give a rough 
+    // approximation that the item is actually in the Sprite's 
+    // hand.
+    // TODO: MOVE DRAWING OF ITEM TO SPRITEMODEL
+    auto inHandItem = inventory.getSelectedItem();
+    if (inHandItem)
+    {
+        renderer->drawToWorld(
+            inHandItem->getTextureId(),
+            sprite->getWorldX() + 6,
+            sprite->getWorldY() - 26
+        );
+    }
 }

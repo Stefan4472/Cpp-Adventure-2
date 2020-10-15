@@ -36,11 +36,6 @@ void NPCActor::update(UpdateContext* updateContext)
 
     currAction->update(updateContext);
 
-    if (currAction->getIsFinished())
-    {
-        std::cout << "Action finished" << std::endl;
-    }
-
     // Not walking: see if there's new input
     // if (!sprite->getIsWalking())
     // {

@@ -1,5 +1,5 @@
-#ifndef _TEST_SPRITE_H
-#define _TEST_SPRITE_H
+#ifndef _SPRITE_H
+#define _SPRITE_H
 
 #include <SDL2/SDL.h>
 #include <memory>
@@ -10,10 +10,10 @@
 #include "sprite_model.h"
 #include "item.h"
 
-class TestSprite
+class Sprite
 {
 public:
-    TestSprite(
+    Sprite(
         SpriteType spriteType, 
         std::shared_ptr<SpriteModel> spriteModel,
         // int hp,

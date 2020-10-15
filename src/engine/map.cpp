@@ -209,7 +209,7 @@ void Map::removeObjectAtTile(
     }
 }
 
-std::shared_ptr<TestSprite> Map::getSpriteAtTile(int tileX, int tileY)
+std::shared_ptr<Sprite> Map::getSpriteAtTile(int tileX, int tileY)
 {
     if (isTileWithinMap(tileX, tileY))
     {
@@ -293,6 +293,24 @@ void Map::removeDropAtTile(
             "Tile coordinates out of bounds"
         );
     }
+}
+
+std::shared_ptr<Actor> Map::lookupSpriteActor(
+        Sprite* sprite
+) {
+    for (auto actor_row : actors)
+    {
+        for (auto actor : actor_row)
+        {
+            if (actor && actor->getSprite().get() == sprite)
+            {
+                return actor;
+            }
+        }
+    }
+    throw std::invalid_argument(
+        "Sprite not found"
+    );
 }
 
 void Map::update(UpdateContext& updateContext)
@@ -832,7 +850,6 @@ void Map::checkMapValidity(
     {
         for (auto actor : row)
         {
-            std::cout << actor << "\t";
             if (actor && actor->getSprite()->getSpriteType() == SpriteType::PLAYER)
             {
                 if (player_found)
@@ -847,7 +864,6 @@ void Map::checkMapValidity(
                 }
             }
         }
-        std::cout << std::endl;
     }
     if (!player_found)
     {

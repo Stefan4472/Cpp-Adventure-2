@@ -1,6 +1,6 @@
-#include "test_sprite.h"
+#include "sprite.h"
 
-TestSprite::TestSprite(
+Sprite::Sprite(
         SpriteType spriteType, 
         std::shared_ptr<SpriteModel> spriteModel,
         // int hp,
@@ -18,27 +18,27 @@ TestSprite::TestSprite(
     goalWorldY = worldY;
 }
 
-SpriteType TestSprite::getSpriteType()
+SpriteType Sprite::getSpriteType()
 {
     return spriteType;
 }
 
-void TestSprite::setInHandItem(std::shared_ptr<Item> item)
+void Sprite::setInHandItem(std::shared_ptr<Item> item)
 {
     inHandItem = item;
 }
 
-double TestSprite::getWorldX()
+double Sprite::getWorldX()
 {
     return worldX;
 }
 
-double TestSprite::getWorldY()
+double Sprite::getWorldY()
 {
     return worldY;
 }
 
-std::pair<double, double> TestSprite::getWorldCoords()
+std::pair<double, double> Sprite::getWorldCoords()
 {
     return std::make_pair(
         worldX,
@@ -46,17 +46,17 @@ std::pair<double, double> TestSprite::getWorldCoords()
     );
 }
 
-Direction TestSprite::getFacingDirection()
+Direction Sprite::getFacingDirection()
 {
     return spriteModel->getFacingDirection();
 }
 
-bool TestSprite::getIsWalking()
+bool Sprite::getIsWalking()
 {
     return (currWalkCommand != Direction::NONE);
 }
 
-void TestSprite::walkUp(int numPx)
+void Sprite::walkUp(int numPx)
 {
     currWalkCommand = Direction::UP;
     goalWorldX = worldX;
@@ -64,7 +64,7 @@ void TestSprite::walkUp(int numPx)
     spriteModel->moveUp();
 }
 
-void TestSprite::walkDown(int numPx)
+void Sprite::walkDown(int numPx)
 {
     currWalkCommand = Direction::DOWN;
     goalWorldX = worldX;
@@ -72,7 +72,7 @@ void TestSprite::walkDown(int numPx)
     spriteModel->moveDown();
 }
 
-void TestSprite::walkLeft(int numPx)
+void Sprite::walkLeft(int numPx)
 {
     currWalkCommand = Direction::LEFT;
     goalWorldX = worldX - numPx;
@@ -80,7 +80,7 @@ void TestSprite::walkLeft(int numPx)
     spriteModel->moveLeft();
 }
 
-void TestSprite::walkRight(int numPx)
+void Sprite::walkRight(int numPx)
 {
     currWalkCommand = Direction::RIGHT;
     goalWorldX = worldX + numPx;
@@ -88,7 +88,7 @@ void TestSprite::walkRight(int numPx)
     spriteModel->moveRight();
 }
 
-void TestSprite::update(int msSincePrevUpdate)
+void Sprite::update(int msSincePrevUpdate)
 {
     // Move sprite, if currently walking
     switch (currWalkCommand)
@@ -151,7 +151,7 @@ void TestSprite::update(int msSincePrevUpdate)
     spriteModel->update(msSincePrevUpdate);
 }
 
-void TestSprite::draw(GameRenderer* renderer)
+void Sprite::draw(GameRenderer* renderer)
 {
     // Get drawing information from spriteModel
     TextureId texture_id;

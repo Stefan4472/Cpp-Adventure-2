@@ -233,7 +233,8 @@ void GameEngine::executeInteraction(
             std::cout << "Got drop: " << drop_at_tile << " with item " << 
                 drop_at_tile->getItem() << std::endl;
             // Attempt to give to Sprite
-            if (iRequest.sprite->giveItem(drop_at_tile->getItem()))
+            auto sprite_actor = map->lookupSpriteActor(iRequest.sprite);
+            if (sprite_actor->giveItem(drop_at_tile->getItem()))
             {
                 // Sprite took the item. Now remove the drop
                 map->removeDropAtTile(
@@ -291,10 +292,6 @@ void GameEngine::executeInteraction(
         iRequest.item->onFinishedInteract(
             interacted_object->getObjectType()
         );
-        // if (interacted_object->getRemoveFromGame())
-        // {
-        //     map->removeObjectAtTile(iRequest.tileX, iRequest.tileY);
-        // }
         return;
     }
 

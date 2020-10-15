@@ -1,6 +1,6 @@
 #include "action.h"
 
-Action::Action(std::shared_ptr<TestSprite> sprite)
+Action::Action(std::shared_ptr<Sprite> sprite)
 {
     this->sprite = sprite;
 }
@@ -19,4 +19,3 @@ void Action::update(UpdateContext* updateContext)
 {
 
 }
-

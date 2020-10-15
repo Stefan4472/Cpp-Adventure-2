@@ -16,7 +16,7 @@ Actor::Actor(
     double world_x = worldCoords.x + worldCoords.w / 2;
     double world_y = worldCoords.y + worldCoords.h - 1;
 
-    sprite = std::make_shared<TestSprite>(
+    sprite = std::make_shared<Sprite>(
         spriteType, 
         model,
         world_x, 
@@ -24,7 +24,7 @@ Actor::Actor(
     );
 }
 
-std::shared_ptr<TestSprite> Actor::getSprite()
+std::shared_ptr<Sprite> Actor::getSprite()
 {
     return sprite;
 }

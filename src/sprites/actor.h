@@ -2,7 +2,7 @@
 #define _ACTOR_H
 
 #include "game_context.h"
-#include "test_sprite.h"
+#include "sprite.h"
 #include "model_factory.h"
 
 // Higher-level of logic that controls a Sprite.
@@ -15,10 +15,10 @@ public:
         SDL_Rect worldCoords
     );
 
-    std::shared_ptr<TestSprite> getSprite();
+    std::shared_ptr<Sprite> getSprite();
 
     std::pair<double, double> getWorldCoords();
-    
+
     // TODO: MOVE SOME OF THESE TO `SPRITE`?
     // Get tile coordinates that the sprite is on
     std::pair<int, int> getTileCoords();
@@ -49,6 +49,6 @@ public:
 
 protected:
     GameContext* gameContext;
-    std::shared_ptr<TestSprite> sprite;
+    std::shared_ptr<Sprite> sprite;
 };
 #endif
