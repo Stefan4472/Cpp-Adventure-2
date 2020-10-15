@@ -5,7 +5,8 @@ NPCActor::NPCActor(
         SDL_Rect worldCoords
 ) : Actor(gameContext, SpriteType::FRIENDLY, worldCoords)
 {
-
+    currAction = std::make_shared<Action>(sprite);
+    currAction->start();
 }
 
 bool NPCActor::giveItem(std::shared_ptr<Item> item) {
@@ -32,6 +33,13 @@ void NPCActor::update(UpdateContext* updateContext)
 {
     // Update Sprite
     sprite->update(updateContext->msSincePrevUpdate);
+
+    currAction->update(updateContext);
+
+    if (currAction->getIsFinished())
+    {
+        std::cout << "Action finished" << std::endl;
+    }
 
     // Not walking: see if there's new input
     // if (!sprite->getIsWalking())
@@ -92,5 +100,7 @@ void NPCActor::update(UpdateContext* updateContext)
 
 void NPCActor::draw(GameRenderer* renderer) 
 {
+    // int tile_x, tile_y;
+    // std::tie(tile_x, tile_y) = getTileCoords();
     sprite->draw(renderer);
 }

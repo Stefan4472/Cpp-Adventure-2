@@ -5,6 +5,7 @@
 #include "input_event.h"
 #include "input_handler.h"
 #include "inventory.h"
+#include "action.h"
 
 
 class NPCActor : public Actor
@@ -36,6 +37,7 @@ public:
 
 private:
     Inventory inventory;
+    std::shared_ptr<Action> currAction;
 };
 
 #endif

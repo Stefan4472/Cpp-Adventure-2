@@ -28,6 +28,8 @@ public:
     
     void setInHandItem(std::shared_ptr<Item> item);
 
+    double getWorldX();
+    double getWorldY();
     std::pair<double, double> getWorldCoords();
 
     Direction getFacingDirection();

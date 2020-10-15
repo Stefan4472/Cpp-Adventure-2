@@ -28,6 +28,16 @@ void TestSprite::setInHandItem(std::shared_ptr<Item> item)
     inHandItem = item;
 }
 
+double TestSprite::getWorldX()
+{
+    return worldX;
+}
+
+double TestSprite::getWorldY()
+{
+    return worldY;
+}
+
 std::pair<double, double> TestSprite::getWorldCoords()
 {
     return std::make_pair(

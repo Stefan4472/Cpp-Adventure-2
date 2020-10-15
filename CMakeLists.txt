@@ -24,6 +24,7 @@ include_directories(
     src/tiles
     src/objects
     src/sprites
+    src/actions
     src/models
     src/items
     src/drops

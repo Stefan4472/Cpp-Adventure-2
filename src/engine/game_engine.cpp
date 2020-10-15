@@ -132,7 +132,6 @@ void GameEngine::update()
     std::list<DestroyObjectRequest> req_destroyed_objects;
     std::list<ReplaceTileRequest> req_replaced_tiles;
     std::list<CreateDropRequest> req_created_drops;
-    std::cout << ms_since_prev << " ms" << std::endl;
  
     // Create UpdateContext
     UpdateContext update_context = {
