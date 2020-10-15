@@ -30,6 +30,8 @@ public:
 
     std::pair<double, double> getWorldCoords();
 
+    Direction getFacingDirection();
+    
     // TODO    
     // int getHp();
 

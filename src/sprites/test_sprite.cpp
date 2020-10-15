@@ -36,6 +36,11 @@ std::pair<double, double> TestSprite::getWorldCoords()
     );
 }
 
+Direction TestSprite::getFacingDirection()
+{
+    return spriteModel->getFacingDirection();
+}
+
 bool TestSprite::getIsWalking()
 {
     return (currWalkCommand != Direction::NONE);
