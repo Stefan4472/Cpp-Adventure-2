@@ -37,33 +37,6 @@ GameEngine::GameEngine(
         gameContext.get(), 
         map_path
     ));
-
-    // TODO: `PLAYER` SHOULD REALLY BE STORED IN `MAP`
-    SDL_Rect player_start_tile = {
-        320, 
-        256, 
-        TextureCache::TILE_SIZE_PX, 
-        TextureCache::TILE_SIZE_PX
-    };
-
-    player = std::dynamic_pointer_cast<PlayerSprite>(SpriteFactory::createSprite(
-        gameContext.get(),
-        SpriteType::PLAYER, 
-        player_start_tile
-    ));
-
-    SDL_Rect npc_start_tile = {
-        160, 
-        352, 
-        TextureCache::TILE_SIZE_PX, 
-        TextureCache::TILE_SIZE_PX
-    };
-
-    npc = SpriteFactory::createSprite(
-        gameContext.get(), 
-        SpriteType::FRIENDLY,
-        npc_start_tile
-    );
 }
 
 std::shared_ptr<GameContext> GameEngine::getGameContextForTesting()
@@ -155,9 +128,7 @@ void GameEngine::update()
         prevUpdateMs = SDL_GetTicks();
     }
 
-    // TODO: ACTUALLY PASS BY REFERENCE
-    player->update(&update_context);
-    npc->update(&update_context);
+    map->update(update_context);
 
     // Execute all requested interactions
     for (InteractRequest irequest : req_interactions)
@@ -214,7 +185,10 @@ void GameEngine::update()
 void GameEngine::handleInput(EventId inputId, UpdateContext* updateContext)
 {
     // Pass input to the Player
-    player->giveInput(inputId, updateContext);
+    map->getPlayerSprite()->giveInput(
+        inputId, 
+        updateContext
+    );
 }
 
 void GameEngine::executeInteraction(
@@ -346,7 +320,8 @@ void GameEngine::draw(SDL_Renderer* renderer)
     std::tie(world_width, world_height) = map->getSizePx();
 
     double player_x, player_y;
-    std::tie(player_x, player_y) = player->getWorldCoords();
+    std::tie(player_x, player_y) = 
+        map->getPlayerSprite()->getWorldCoords();
 
     // Center viewable area on player
     double top_left_wx = 
@@ -398,8 +373,4 @@ void GameEngine::draw(SDL_Renderer* renderer)
         gameRenderer.get(),
         visible_bounds
     );
-
-    // Draw player
-    player->draw(gameRenderer.get());
-    npc->draw(gameRenderer.get());
 }

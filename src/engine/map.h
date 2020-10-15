@@ -27,6 +27,9 @@ public:
         std::vector<std::vector<std::shared_ptr<Sprite>>> sprites
     );
 
+    // Return ref to the PlayerSprite
+    std::shared_ptr<PlayerSprite> getPlayerSprite();
+
     // Return size of world (x, y) (pixels)
     std::pair<int, int> getSizePx();
 
@@ -96,8 +99,14 @@ public:
         int tileY
     );
     // Return the Sprite (if any) currently at the specified
-    // tile coordinates. (TODO)
+    // tile coordinates.
     std::shared_ptr<Sprite> getSpriteAtTile(
+        int tileX,
+        int tileY
+    );
+    // Removes the Sprite (if any) at the specified tile 
+    // coordinates.
+    void removeSpriteAtTile(
         int tileX,
         int tileY
     );
@@ -122,6 +131,9 @@ public:
         int tileX,
         int tileY
     );
+
+    // Update *everything*
+    void update(UpdateContext& updateContext);
 
     // Draw the tiles to the provided `GameRenderer`. 
     // `visibleWorld` specifies the clip of world coordinates 

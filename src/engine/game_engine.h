@@ -10,15 +10,11 @@
 #include "input_event.h"
 #include "texture_cache.h"
 #include "map.h"
-#include "tile_type.h"
 #include "game_context.h"
 #include "engine_interface.h"
 #include "update_context.h"
 #include "game_renderer.h"
-#include "item_factory.h"
 
-// TODO: REMOVE/REPLACE WITH `SPRITE_FACTORY`, MOVE TO MAP
-#include "sprite_factory.h"
 
 class GameEngine : public EngineInterface
 {
@@ -66,10 +62,6 @@ private:
     std::shared_ptr<GameRenderer> gameRenderer;
     std::shared_ptr<Map> map;
     std::shared_ptr<GameContext> gameContext;
-
-    // TODO: MOVE TO MAP.CPP
-    std::shared_ptr<PlayerSprite> player;
-    std::shared_ptr<Sprite> npc;
 
     uint32_t prevUpdateMs;
 

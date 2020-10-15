@@ -33,6 +33,11 @@ Map::Map(
     }
 }
 
+std::shared_ptr<PlayerSprite> Map::getPlayerSprite()
+{
+    return playerSprite;
+}
+
 std::pair<int, int> Map::getSizePx()
 {
     return std::make_pair(
@@ -57,11 +62,14 @@ bool Map::isTileWalkable(int tileX, int tileY)
     {
         return false;
     }
-    // Get object (if any) on desired tile
-    std::shared_ptr<MapObject> object_on_tile =
-        getObjectAtTile(tileX, tileY);
+    // Return false if a sprite is on that tile
+    if (sprites[tileY][tileX])
+    {
+        return false;
+    }
+    // Return false if there is a non-walkable object on that tile
     // Check if object exists and isn't walkable
-    if (object_on_tile && !object_on_tile->getIsWalkable())
+    if (mapObjects[tileY][tileX] && !mapObjects[tileY][tileX]->getIsWalkable())
     {
         return false;
     }
@@ -203,11 +211,32 @@ void Map::removeObjectAtTile(
 
 std::shared_ptr<Sprite> Map::getSpriteAtTile(int tileX, int tileY)
 {
-    // TODO: IMPLEMENT
-    throw std::runtime_error(
-        "Unimplemented"
-    );
-    // return std::shared_ptr<Sprite>();
+    if (isTileWithinMap(tileX, tileY))
+    {
+        return sprites[tileY][tileX];
+    }
+    else
+    {
+        throw std::invalid_argument(
+            "Tile coordinates out of bounds"
+        );
+    }
+}
+
+void Map::removeSpriteAtTile(
+        int tileX,
+        int tileY
+) {
+    if (isTileWithinMap(tileX, tileY))
+    {
+        sprites[tileY][tileX].reset();
+    }
+    else
+    {
+        throw std::invalid_argument(
+            "Tile coordinates out of bounds"
+        );
+    }
 }
 
 void Map::createDropAtTile(
@@ -231,7 +260,6 @@ void Map::createDropAtTile(
             "Tile coordinates out of bounds"
         );
     }
-
 }
     
 std::shared_ptr<Drop> Map::getDropAtTile(
@@ -265,6 +293,80 @@ void Map::removeDropAtTile(
         );
     }
 }
+
+void Map::update(UpdateContext& updateContext)
+{
+    for (auto tile_row : tiles)
+    {
+        for (auto tile: tile_row)
+        {
+            if (tile)
+            {
+                tile->update(updateContext);
+            }
+        }
+    }
+    for (auto object_row : mapObjects)
+    {
+        for (auto object: object_row)
+        {
+            if (object)
+            {
+                object->update(updateContext);
+            }
+        }
+    }
+    for (auto drop_row : drops)
+    {
+        for (auto drop: drop_row)
+        {
+            if (drop)
+            {
+                drop->update(updateContext);
+            }
+        }
+    }
+    for (auto sprite_row : sprites)
+    {
+        for (auto sprite: sprite_row)
+        {
+            if (sprite)
+            {
+                // Get sprite's starting tile coordinates
+                double start_wx, start_wy;
+                std::tie(start_wx, start_wy) = sprite->getWorldCoords();
+                
+                int start_tx, start_ty;
+                std::tie(start_tx, start_ty) = resolveTile(
+                    start_wx,
+                    start_wy
+                );
+
+                sprite->update(&updateContext);
+
+                // Get sprite's ending tile coordinates
+                double end_wx, end_wy;
+                std::tie(end_wx, end_wy) = sprite->getWorldCoords();
+                
+                int end_tx, end_ty;
+                std::tie(end_tx, end_ty) = resolveTile(
+                    end_wx,
+                    end_wy
+                );
+
+                // Move Sprite reference if it has changed tiles
+                // TODO: MAKE SURE NO SPRITE ISN'T ALREADY THERE?
+                if (end_tx != start_tx || end_ty != start_ty)
+                {
+                    std::cout << "Sprite has changed tiles" << std::endl;
+                    sprites[start_ty][start_tx].reset();
+                    sprites[end_ty][end_tx] = sprite;
+                }
+            }
+        }
+    }
+}
+
 void Map::drawTiles(
         GameRenderer* gameRenderer,
         SDL_Rect& visibleWorld
@@ -285,13 +387,14 @@ void Map::drawTiles(
             int tile_x = start_tile_x + j;
             int tile_y = start_tile_y + i;
 
-            // Skip if out of range (special case)
-            if (!isTileWithinMap(tile_x, tile_y))
+            // Make sure tile is within Map before drawing.
+            // Out-of-bounds coordinates will occur when the player
+            // is close to a map edge.
+            if (isTileWithinMap(tile_x, tile_y))
             {
-                continue;
+                tiles[tile_y][tile_x]->draw(gameRenderer);
             }
 
-            tiles[tile_y][tile_x]->draw(gameRenderer);
         }
     }
 }
@@ -356,16 +459,13 @@ void Map::drawSprites(
             int tile_x = start_tile_x + j;
             int tile_y = start_tile_y + i;
 
-            // Skip if out of range (special case, occurs close to
-            // map bounds)
-            if (!isTileWithinMap(tile_x, tile_y))
+            if (isTileWithinMap(tile_x, tile_y))
             {
-                continue;
-            }
-            // Draw Sprite at tile, if one exists
-            if (sprites[tile_y][tile_x])
-            {
-                sprites[tile_y][tile_x]->draw(gameRenderer);
+                // Draw Sprite at tile, if one exists
+                if (sprites[tile_y][tile_x])
+                {
+                    sprites[tile_y][tile_x]->draw(gameRenderer);
+                }
             }
         }
     }
