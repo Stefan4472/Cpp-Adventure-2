@@ -394,6 +394,11 @@ void GameEngine::draw(SDL_Renderer* renderer)
         visible_bounds    
     );
 
+    map->drawSprites(
+        gameRenderer.get(),
+        visible_bounds
+    );
+
     // Draw player
     player->draw(gameRenderer.get());
     npc->draw(gameRenderer.get());

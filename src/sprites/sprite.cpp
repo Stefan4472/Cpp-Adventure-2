@@ -12,6 +12,11 @@ Sprite::Sprite(
     this->worldY = worldY;
 }
 
+SpriteType Sprite::getSpriteType()
+{
+    return spriteType;
+}
+
 std::pair<double, double> Sprite::getWorldCoords()
 {
     return std::make_pair(

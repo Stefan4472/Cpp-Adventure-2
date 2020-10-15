@@ -19,6 +19,8 @@ public:
         double worldY
     );
 
+    SpriteType getSpriteType();
+    
     std::pair<double, double> getWorldCoords();
 
     // Gives the Sprite the specified Item. Returns

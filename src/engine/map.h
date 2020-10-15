@@ -8,12 +8,11 @@
 #include "tile_factory.h"
 #include "object_factory.h"
 #include "item_factory.h"
+#include "sprite_factory.h"
 #include "game_renderer.h"
 #include "game_context.h"
-#include "sprite.h"
 #include "drop.h"
 
-#include "player_sprite.h"
 
 class Map
 {
@@ -24,7 +23,8 @@ public:
         GameContext* gameContext,
         std::vector<std::vector<std::shared_ptr<Tile>>> tiles,
         std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects,
-        std::vector<std::vector<std::shared_ptr<Drop>>> drops
+        std::vector<std::vector<std::shared_ptr<Drop>>> drops,
+        std::vector<std::vector<std::shared_ptr<Sprite>>> sprites
     );
 
     // Return size of world (x, y) (pixels)
@@ -139,6 +139,11 @@ public:
         SDL_Rect& visibleWorld
     );
 
+    void drawSprites(
+        GameRenderer* gameRenderer,
+        SDL_Rect& visibleWorld
+    );
+
     // Load map stored at the specified directory and return
     // created `Map` instance.
     static Map loadMap(
@@ -149,10 +154,11 @@ public:
 private:
     int numRows, numCols;
     GameContext* gameContext;
-    // std::shared_ptr<Sprite> playerSprite;
     std::vector<std::vector<std::shared_ptr<Tile>>> tiles;
     std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects;
     std::vector<std::vector<std::shared_ptr<Drop>>> drops;
+    std::vector<std::vector<std::shared_ptr<Sprite>>> sprites;
+    std::shared_ptr<PlayerSprite> playerSprite;
 
     static std::vector<std::vector<std::shared_ptr<Tile>>> loadTiles(
         GameContext* gameContext,
@@ -173,11 +179,17 @@ private:
         boost::filesystem::path objectsPath
     );
 
+    static std::vector<std::vector<std::shared_ptr<Sprite>>> loadSprites(
+        GameContext* gameContext,
+        boost::filesystem::path spritesPath
+    );
+
     // Throws runtime_error
     static void checkMapValidity(
         std::vector<std::vector<std::shared_ptr<Tile>>> tiles,
         std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects,
-        std::vector<std::vector<std::shared_ptr<Drop>>> drops
+        std::vector<std::vector<std::shared_ptr<Drop>>> drops,
+        std::vector<std::vector<std::shared_ptr<Sprite>>> sprites
     );
 
     // Convert integer read from map file to a `TileType` instance.
@@ -186,6 +198,8 @@ private:
     static ObjectType resolveObjectType(int objectId);
     // Convert integer read from map file to an `ItemType` instance.
     static ItemType resolveItemType(int itemId);
+    // Convert integer read from map file to a `SpriteType` instance.
+    static SpriteType resolveSpriteType(int spriteId);
 };
 
 #endif

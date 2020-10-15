@@ -4,15 +4,33 @@ Map::Map(
         GameContext* gameContext,
         std::vector<std::vector<std::shared_ptr<Tile>>> tiles,
         std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects,
-        std::vector<std::vector<std::shared_ptr<Drop>>> drops
+        std::vector<std::vector<std::shared_ptr<Drop>>> drops,
+        std::vector<std::vector<std::shared_ptr<Sprite>>> sprites
 ) {
-    checkMapValidity(tiles, mapObjects, drops);
+    checkMapValidity(tiles, mapObjects, drops, sprites);
     this->gameContext = gameContext;
     this->tiles = tiles;
     this->mapObjects = mapObjects;
     this->drops = drops;
+    this->sprites = sprites;
+
     numRows = this->tiles.size();
     numCols = this->tiles[0].size();
+
+    // Find reference to the PlayerSprite.
+    // `checkMapValidity()` will have ensured there is exactly one.
+    for (auto row : sprites)
+    {
+        for (auto sprite : row)
+        {
+            if (sprite && sprite->getSpriteType() == SpriteType::PLAYER)
+            {
+                playerSprite = std::dynamic_pointer_cast<PlayerSprite>(
+                    sprite
+                );
+            }
+        }
+    }
 }
 
 std::pair<int, int> Map::getSizePx()
@@ -318,6 +336,41 @@ void Map::drawObjects(
     }
 }
 
+void Map::drawSprites(
+        GameRenderer* gameRenderer,
+        SDL_Rect& visibleWorld
+) {
+    // Calculate number of tiles needed to fill the screen.
+    // Add two in each dimension to ensure the screen is always covered.
+    int tiles_w = visibleWorld.w / TextureCache::TILE_SIZE_PX + 2;
+    int tiles_h = visibleWorld.h / TextureCache::TILE_SIZE_PX + 2;
+    
+    int start_tile_x = visibleWorld.x / TextureCache::TILE_SIZE_PX - 1;
+    int start_tile_y = visibleWorld.y / TextureCache::TILE_SIZE_PX - 1;
+    
+    // Draw sprites
+    for (int i = 0; i < tiles_h; i++)
+    {
+        for (int j = 0; j < tiles_w; j++)
+        {
+            int tile_x = start_tile_x + j;
+            int tile_y = start_tile_y + i;
+
+            // Skip if out of range (special case, occurs close to
+            // map bounds)
+            if (!isTileWithinMap(tile_x, tile_y))
+            {
+                continue;
+            }
+            // Draw Sprite at tile, if one exists
+            if (sprites[tile_y][tile_x])
+            {
+                sprites[tile_y][tile_x]->draw(gameRenderer);
+            }
+        }
+    }
+}
+
 // Static method
 Map Map::loadMap(
         GameContext* gameContext,
@@ -342,12 +395,17 @@ Map Map::loadMap(
         gameContext,
         dirPath / "drops.txt"
     );
+    auto map_sprites = loadSprites(
+        gameContext,
+        dirPath / "sprites.txt"
+    );
 
     return Map(
         gameContext,
         map_tiles, 
         map_objects,
-        map_drops
+        map_drops,
+        map_sprites
     );
 }
 
@@ -525,10 +583,71 @@ std::vector<std::vector<std::shared_ptr<Drop>>> Map::loadDrops(
     return map_drops;
 }
 
+std::vector<std::vector<std::shared_ptr<Sprite>>> Map::loadSprites(
+        GameContext* gameContext,
+        boost::filesystem::path spritesPath
+) {
+    std::ifstream sprites_file(spritesPath.string());
+    if (!sprites_file.is_open())
+    {
+        throw std::runtime_error(
+            std::string("Couldn't open map sprites file '") +
+            spritesPath.string() + "')"
+        );
+    }
+    
+    std::vector<std::vector<std::shared_ptr<Sprite>>> map_sprites;
+    std::string next_line;
+    int curr_row = 0;
+    int curr_col = 0;
+
+    while (std::getline(sprites_file, next_line))
+    {
+        int next_val;
+        std::stringstream str_stream(next_line);
+        map_sprites.push_back(std::vector<std::shared_ptr<Sprite>>());
+     
+        // Get each integer
+        while (str_stream >> next_val)
+        {
+            if (next_val)
+            {
+                SDL_Rect base_tile = {
+                    curr_col * TextureCache::TILE_SIZE_PX,
+                    curr_row * TextureCache::TILE_SIZE_PX,
+                    TextureCache::TILE_SIZE_PX,
+                    TextureCache::TILE_SIZE_PX
+                };
+
+                map_sprites.back().push_back(SpriteFactory::createSprite(
+                    gameContext,
+                    resolveSpriteType(next_val),
+                    base_tile
+                ));
+            }
+            else
+            {
+                // Push empty pointer
+                map_sprites.back().push_back(
+                    std::shared_ptr<Sprite>()
+                );
+            }
+            curr_col++;
+        }
+
+        curr_row++;
+        curr_col = 0;
+    }
+
+    sprites_file.close();
+    return map_sprites;
+}
+
 void Map::checkMapValidity(
         std::vector<std::vector<std::shared_ptr<Tile>>> tiles,
         std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects,
-        std::vector<std::vector<std::shared_ptr<Drop>>> drops
+        std::vector<std::vector<std::shared_ptr<Drop>>> drops,
+        std::vector<std::vector<std::shared_ptr<Sprite>>> sprites
 ) {
     // Make sure `tiles` is non-empty
     if (tiles.empty())
@@ -593,6 +712,51 @@ void Map::checkMapValidity(
                 std::to_string(curr_row) + ")"
             );
         }
+    }
+
+    // Make sure `sprites` is the same size as `tiles`
+    if (sprites.size() != tiles.size())
+    {
+        throw std::invalid_argument(
+            "`drops` does not have the same number of rows as `tiles`"
+        );
+    }
+    for (int i = 0; i < tiles.size(); i++)
+    {
+        if (tiles[i].size() != sprites[i].size())
+        {
+            throw std::invalid_argument(
+                std::string("`sprites` does not have the same number of columns as `tiles` (row ") +
+                std::to_string(curr_row) + ")"
+            );
+        }
+    }
+    // Make sure exactly one PlayerSprite has been defined
+    bool player_found = false;
+    for (auto row : sprites)
+    {
+        for (auto sprite : row)
+        {
+            if (sprite && sprite->getSpriteType() == SpriteType::PLAYER)
+            {
+                if (player_found)
+                {
+                    throw std::invalid_argument(
+                        "More than one Player location defined"
+                    );
+                }
+                else
+                {
+                    player_found = true;
+                }
+            }
+        }
+    }
+    if (!player_found)
+    {
+        throw std::invalid_argument(
+            "No Player location defined"
+        );
     }
 }
 
@@ -660,6 +824,28 @@ ItemType Map::resolveItemType(int itemId)
             throw std::invalid_argument(
                 std::string("Unsupported ItemID ") + 
                 std::to_string(itemId)
+            );
+        }
+    }
+}
+
+SpriteType Map::resolveSpriteType(int spriteId)
+{
+    switch (spriteId)
+    {
+        case 1:
+        {
+            return SpriteType::PLAYER;
+        }
+        case 2:
+        {
+            return SpriteType::FRIENDLY;
+        }
+        default:
+        {
+            throw std::invalid_argument(
+                std::string("Unsupported SpriteID ") + 
+                std::to_string(spriteId)
             );
         }
     }
