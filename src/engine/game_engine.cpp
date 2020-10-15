@@ -37,6 +37,16 @@ GameEngine::GameEngine(
         gameContext.get(), 
         map_path
     ));
+    
+    playerActor = std::make_shared<PlayerActor>(
+        gameContext.get(),
+        SDL_Rect{
+            64,
+            64,
+            TextureCache::TILE_SIZE_PX,
+            TextureCache::TILE_SIZE_PX
+        }
+    );
 }
 
 std::shared_ptr<GameContext> GameEngine::getGameContextForTesting()
@@ -130,6 +140,9 @@ void GameEngine::update()
 
     map->update(update_context);
 
+    // TODO: REMOVE
+    playerActor->update(&update_context);
+
     // Execute all requested interactions
     for (InteractRequest irequest : req_interactions)
     {
@@ -187,6 +200,11 @@ void GameEngine::handleInput(EventId inputId, UpdateContext* updateContext)
     // Pass input to the Player
     map->getPlayerSprite()->giveInput(
         inputId, 
+        updateContext
+    );
+    // TODO: REMOVE
+    playerActor->giveInput(
+        inputId,
         updateContext
     );
 }
@@ -373,4 +391,7 @@ void GameEngine::draw(SDL_Renderer* renderer)
         gameRenderer.get(),
         visible_bounds
     );
+
+    // TODO: REMOVE
+    playerActor->draw(gameRenderer.get());
 }

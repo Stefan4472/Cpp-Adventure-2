@@ -14,7 +14,7 @@ Actor::Actor(
 
     // Center world coordinates in the tile
     double world_x = worldCoords.x + worldCoords.w / 2;
-    double world_y = worldCoords.y + worldCoords.h / 2;
+    double world_y = worldCoords.y + worldCoords.h - 1;
 
     sprite = std::make_shared<TestSprite>(
         spriteType, 

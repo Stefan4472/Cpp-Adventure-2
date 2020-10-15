@@ -15,6 +15,8 @@
 #include "update_context.h"
 #include "game_renderer.h"
 
+// TODO: REMOVE
+#include "player_actor.h"
 
 class GameEngine : public EngineInterface
 {
@@ -63,6 +65,9 @@ private:
     std::shared_ptr<Map> map;
     std::shared_ptr<GameContext> gameContext;
 
+    // TODO: REMOVE
+    std::shared_ptr<PlayerActor> playerActor;
+    
     uint32_t prevUpdateMs;
 
     void handleInput(
