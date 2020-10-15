@@ -358,7 +358,6 @@ void Map::update(UpdateContext& updateContext)
                 // TODO: MAKE SURE NO SPRITE ISN'T ALREADY THERE?
                 if (end_tx != start_tx || end_ty != start_ty)
                 {
-                    std::cout << "Sprite has changed tiles" << std::endl;
                     sprites[start_ty][start_tx].reset();
                     sprites[end_ty][end_tx] = sprite;
                 }

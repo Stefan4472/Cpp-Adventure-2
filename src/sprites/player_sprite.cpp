@@ -164,7 +164,7 @@ void PlayerSprite::update(UpdateContext* updateContext)
         }
     }
 
-    spriteModel->update(updateContext);
+    spriteModel->update(updateContext->msSincePrevUpdate);
 }
 
 void PlayerSprite::draw(GameRenderer* renderer)
@@ -172,8 +172,7 @@ void PlayerSprite::draw(GameRenderer* renderer)
     // Get drawing information from spriteModel
     TextureId texture_id;
     SDL_Rect src_rect;
-    std::tie(texture_id, src_rect) = 
-        spriteModel->getDrawInfo(gameContext->textureCache.get());
+    std::tie(texture_id, src_rect) = spriteModel->getDrawInfo();
 
     renderer->drawToWorld(
         texture_id,

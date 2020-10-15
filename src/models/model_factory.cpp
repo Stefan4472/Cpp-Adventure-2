@@ -35,6 +35,7 @@ std::shared_ptr<SpriteModel> ModelFactory::createSpriteModel(
                 true
             );
             return std::make_shared<SpriteModel>(
+                textureCache,
                 TextureId::SPRITE_BACK,
                 TextureId::SPRITE_FRONT,
                 TextureId::SPRITE_LEFT,

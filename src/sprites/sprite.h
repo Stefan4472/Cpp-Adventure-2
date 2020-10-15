@@ -14,13 +14,13 @@ class Sprite
 public:
     Sprite(
         GameContext* gameContext, 
-        SpriteType spriteType, 
+        SpriteType spriteType,
         double worldX, 
         double worldY
     );
 
     SpriteType getSpriteType();
-    
+
     std::pair<double, double> getWorldCoords();
 
     // Gives the Sprite the specified Item. Returns

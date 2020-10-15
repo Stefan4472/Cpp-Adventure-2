@@ -1,6 +1,7 @@
 #include "sprite_model.h"
 
 SpriteModel::SpriteModel(
+        TextureCache* textureCache,
         TextureId idleUpImg,
         TextureId idleDownImg,
         TextureId idleLeftImg,
@@ -10,6 +11,7 @@ SpriteModel::SpriteModel(
         std::shared_ptr<Spritesheet> walkLeftSheet,
         std::shared_ptr<Spritesheet> walkRightSheet
 ) {
+    this->textureCache = textureCache;
     this->idleUpImg = idleUpImg;
     this->idleDownImg = idleDownImg;
     this->idleLeftImg = idleLeftImg;
@@ -19,8 +21,20 @@ SpriteModel::SpriteModel(
     this->walkLeftSheet = walkLeftSheet;
     this->walkRightSheet = walkRightSheet;
 
+    std::tie(widthPx, heightPx) = textureCache->getDimensions(
+        idleUpImg
+    );
+
     facingDirection = Direction::DOWN;
     isWalking = false;
+}
+
+std::pair<int, int> SpriteModel::getSpriteSize()
+{
+    return std::make_pair(
+        widthPx,
+        heightPx
+    );
 }
 
 Direction SpriteModel::getFacingDirection()
@@ -54,17 +68,17 @@ void SpriteModel::stopMoving()
     isWalking = false;
 }
 
-void SpriteModel::update(UpdateContext* updateContext)
+void SpriteModel::update(int msSincePrevUpdate)
 {
     if (isWalking)
     {
         getSheetForDirection(facingDirection)->update(
-            updateContext->msSincePrevUpdate
+            msSincePrevUpdate
         );
     }
 }
 
-std::pair<TextureId, SDL_Rect> SpriteModel::getDrawInfo(TextureCache* textureCache)
+std::pair<TextureId, SDL_Rect> SpriteModel::getDrawInfo()
 {
     // Currently walking: return frame from correct animation
     if (isWalking)
@@ -85,16 +99,13 @@ std::pair<TextureId, SDL_Rect> SpriteModel::getDrawInfo(TextureCache* textureCac
             facingDirection
         );
 
-        int img_width, img_height;
-        std::tie(img_width, img_height) = 
-            textureCache->getDimensions(curr_img);
-        
         SDL_Rect source_rect = {
             0,
             0,
-            img_width,
-            img_height
+            widthPx,
+            heightPx
         };
+
         return std::make_pair(
             curr_img,
             source_rect
