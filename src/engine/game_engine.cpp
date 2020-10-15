@@ -57,6 +57,8 @@ GameEngine::GameEngine(
             TextureCache::TILE_SIZE_PX
         }
     );
+
+    prevUpdateMs = 0;
 }
 
 std::shared_ptr<GameContext> GameEngine::getGameContextForTesting()
@@ -119,13 +121,20 @@ std::pair<int, int> GameEngine::resolveTile(
 void GameEngine::update()
 {
     uint32_t curr_game_time = SDL_GetTicks();
+    if (!prevUpdateMs)
+    {
+        prevUpdateMs = SDL_GetTicks();
+    }
     uint32_t ms_since_prev = curr_game_time - prevUpdateMs;
+ 
     std::list<InteractRequest> req_interactions;
     std::list<CreateObjectRequest> req_created_objects;
     std::list<DestroyObjectRequest> req_destroyed_objects;
     std::list<ReplaceTileRequest> req_replaced_tiles;
     std::list<CreateDropRequest> req_created_drops;
-
+    std::cout << ms_since_prev << " ms" << std::endl;
+ 
+    // Create UpdateContext
     UpdateContext update_context = {
         curr_game_time,
         ms_since_prev,
@@ -136,16 +145,12 @@ void GameEngine::update()
         req_created_drops
     };
 
+    // Handle any input queued since last update
     while (!inputQueue.empty())
     {
         EventId next_input = inputQueue.front();
         handleInput(next_input, &update_context);
         inputQueue.pop();
-    }
-
-    if (!prevUpdateMs)
-    {
-        prevUpdateMs = SDL_GetTicks();
     }
 
     map->update(update_context);
