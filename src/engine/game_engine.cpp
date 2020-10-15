@@ -47,6 +47,16 @@ GameEngine::GameEngine(
             TextureCache::TILE_SIZE_PX
         }
     );
+
+    npcActor = std::make_shared<NPCActor>(
+        gameContext.get(),
+        SDL_Rect{
+            128,
+            64,
+            TextureCache::TILE_SIZE_PX,
+            TextureCache::TILE_SIZE_PX
+        }
+    );
 }
 
 std::shared_ptr<GameContext> GameEngine::getGameContextForTesting()
@@ -142,6 +152,7 @@ void GameEngine::update()
 
     // TODO: REMOVE
     playerActor->update(&update_context);
+    npcActor->update(&update_context);
 
     // Execute all requested interactions
     for (InteractRequest irequest : req_interactions)
@@ -394,4 +405,5 @@ void GameEngine::draw(SDL_Renderer* renderer)
 
     // TODO: REMOVE
     playerActor->draw(gameRenderer.get());
+    npcActor->draw(gameRenderer.get());
 }

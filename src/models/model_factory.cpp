@@ -46,9 +46,47 @@ std::shared_ptr<SpriteModel> ModelFactory::createSpriteModel(
                 walk_right_sheet
             );
         }
+        case SpriteType::FRIENDLY:
+        {
+            auto walk_up_sheet = std::make_shared<Spritesheet>(
+                textureCache,
+                TextureId::FRIENDLY_WALK_UP,
+                std::vector<int>({100, 100, 100, 100}),
+                true
+            );
+            auto walk_down_sheet = std::make_shared<Spritesheet>(
+                textureCache,
+                TextureId::FRIENDLY_WALK_DOWN,
+                std::vector<int>({100, 100, 100, 100}),
+                true
+            );
+            auto walk_left_sheet = std::make_shared<Spritesheet>(
+                textureCache,
+                TextureId::FRIENDLY_WALK_LEFT,
+                std::vector<int>({100, 100, 100, 100}),
+                true
+            );
+            auto walk_right_sheet = std::make_shared<Spritesheet>(
+                textureCache,
+                TextureId::FRIENDLY_WALK_RIGHT,
+                std::vector<int>({100, 100, 100, 100}),
+                true
+            );
+            return std::make_shared<SpriteModel>(
+                textureCache,
+                TextureId::FRIENDLY_BACK,
+                TextureId::FRIENDLY_FRONT,
+                TextureId::FRIENDLY_LEFT,
+                TextureId::FRIENDLY_RIGHT,
+                walk_up_sheet,
+                walk_down_sheet,
+                walk_left_sheet,
+                walk_right_sheet
+            );
+        }
         default:
         {
-            throw new std::invalid_argument(
+            throw std::invalid_argument(
                 std::string("Unsupported SpriteType ") + 
                 std::to_string(static_cast<int>(spriteType))
             );

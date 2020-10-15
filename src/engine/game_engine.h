@@ -17,6 +17,7 @@
 
 // TODO: REMOVE
 #include "player_actor.h"
+#include "npc_actor.h"
 
 class GameEngine : public EngineInterface
 {
@@ -67,6 +68,7 @@ private:
 
     // TODO: REMOVE
     std::shared_ptr<PlayerActor> playerActor;
+    std::shared_ptr<Actor> npcActor;
     
     uint32_t prevUpdateMs;
 
