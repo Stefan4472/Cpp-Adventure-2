@@ -1,6 +1,6 @@
-#include "sprite_factory.h"
+#include "actor_factory.h"
 
-std::shared_ptr<Sprite> SpriteFactory::createSprite(
+std::shared_ptr<Actor> ActorFactory::createActor(
         GameContext* gameContext,
         SpriteType spriteType,
         SDL_Rect worldCoords
@@ -9,14 +9,14 @@ std::shared_ptr<Sprite> SpriteFactory::createSprite(
     {
         case SpriteType::PLAYER:
         {
-            return std::make_shared<PlayerSprite>(
+            return std::make_shared<PlayerActor>(
                 gameContext,
                 worldCoords
             );
         }
         case SpriteType::FRIENDLY:
         {
-            return std::make_shared<FriendlySprite>(
+            return std::make_shared<NPCActor>(
                 gameContext,
                 worldCoords
             );

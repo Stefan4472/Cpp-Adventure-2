@@ -8,7 +8,7 @@
 #include "tile_factory.h"
 #include "object_factory.h"
 #include "item_factory.h"
-#include "sprite_factory.h"
+#include "actor_factory.h"
 #include "game_renderer.h"
 #include "game_context.h"
 #include "drop.h"
@@ -24,11 +24,11 @@ public:
         std::vector<std::vector<std::shared_ptr<Tile>>> tiles,
         std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects,
         std::vector<std::vector<std::shared_ptr<Drop>>> drops,
-        std::vector<std::vector<std::shared_ptr<Sprite>>> sprites
+        std::vector<std::vector<std::shared_ptr<Actor>>> actors
     );
 
-    // Return ref to the PlayerSprite
-    std::shared_ptr<PlayerSprite> getPlayerSprite();
+    // Return ref to the PlayerActor
+    std::shared_ptr<PlayerActor> getPlayerActor();
 
     // Return size of world (x, y) (pixels)
     std::pair<int, int> getSizePx();
@@ -100,7 +100,7 @@ public:
     );
     // Return the Sprite (if any) currently at the specified
     // tile coordinates.
-    std::shared_ptr<Sprite> getSpriteAtTile(
+    std::shared_ptr<TestSprite> getSpriteAtTile(
         int tileX,
         int tileY
     );
@@ -169,8 +169,8 @@ private:
     std::vector<std::vector<std::shared_ptr<Tile>>> tiles;
     std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects;
     std::vector<std::vector<std::shared_ptr<Drop>>> drops;
-    std::vector<std::vector<std::shared_ptr<Sprite>>> sprites;
-    std::shared_ptr<PlayerSprite> playerSprite;
+    std::vector<std::vector<std::shared_ptr<Actor>>> actors;
+    std::shared_ptr<PlayerActor> playerActor;
 
     static std::vector<std::vector<std::shared_ptr<Tile>>> loadTiles(
         GameContext* gameContext,
@@ -191,7 +191,7 @@ private:
         boost::filesystem::path objectsPath
     );
 
-    static std::vector<std::vector<std::shared_ptr<Sprite>>> loadSprites(
+    static std::vector<std::vector<std::shared_ptr<Actor>>> loadActors(
         GameContext* gameContext,
         boost::filesystem::path spritesPath
     );
@@ -201,7 +201,7 @@ private:
         std::vector<std::vector<std::shared_ptr<Tile>>> tiles,
         std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects,
         std::vector<std::vector<std::shared_ptr<Drop>>> drops,
-        std::vector<std::vector<std::shared_ptr<Sprite>>> sprites
+        std::vector<std::vector<std::shared_ptr<Actor>>> actors
     );
 
     // Convert integer read from map file to a `TileType` instance.

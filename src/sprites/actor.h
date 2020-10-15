@@ -17,6 +17,8 @@ public:
 
     std::shared_ptr<TestSprite> getSprite();
 
+    std::pair<double, double> getWorldCoords();
+    
     // TODO: MOVE SOME OF THESE TO `SPRITE`?
     // Get tile coordinates that the sprite is on
     std::pair<int, int> getTileCoords();
@@ -36,6 +38,8 @@ public:
         Sprite* owner, 
         Item* withItem
     ) = 0;
+
+    // TODO: `RESPONDTOBLOCKED()`, CALLED WHEN SPRITE ATTEMPTS TO MOVE ONTO A NON-WALKABLE TILE
 
     // Update
     virtual void update(UpdateContext* updateContext) = 0;

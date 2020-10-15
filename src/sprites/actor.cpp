@@ -29,6 +29,11 @@ std::shared_ptr<TestSprite> Actor::getSprite()
     return sprite;
 }
 
+std::pair<double, double> Actor::getWorldCoords()
+{
+    return sprite->getWorldCoords();
+}
+
 std::pair<int, int> Actor::getTileCoords()
 {
     double world_x, world_y;

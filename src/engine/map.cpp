@@ -5,37 +5,37 @@ Map::Map(
         std::vector<std::vector<std::shared_ptr<Tile>>> tiles,
         std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects,
         std::vector<std::vector<std::shared_ptr<Drop>>> drops,
-        std::vector<std::vector<std::shared_ptr<Sprite>>> sprites
+        std::vector<std::vector<std::shared_ptr<Actor>>> actors
 ) {
-    checkMapValidity(tiles, mapObjects, drops, sprites);
+    checkMapValidity(tiles, mapObjects, drops, actors);
     this->gameContext = gameContext;
     this->tiles = tiles;
     this->mapObjects = mapObjects;
     this->drops = drops;
-    this->sprites = sprites;
+    this->actors = actors;
 
     numRows = this->tiles.size();
     numCols = this->tiles[0].size();
 
     // Find reference to the PlayerSprite.
     // `checkMapValidity()` will have ensured there is exactly one.
-    for (auto row : sprites)
+    for (auto row : this->actors)
     {
-        for (auto sprite : row)
+        for (auto actor : row)
         {
-            if (sprite && sprite->getSpriteType() == SpriteType::PLAYER)
+            if (actor && actor->getSprite()->getSpriteType() == SpriteType::PLAYER)
             {
-                playerSprite = std::dynamic_pointer_cast<PlayerSprite>(
-                    sprite
+                playerActor = std::dynamic_pointer_cast<PlayerActor>(
+                    actor
                 );
             }
         }
     }
 }
 
-std::shared_ptr<PlayerSprite> Map::getPlayerSprite()
+std::shared_ptr<PlayerActor> Map::getPlayerActor()
 {
-    return playerSprite;
+    return playerActor;
 }
 
 std::pair<int, int> Map::getSizePx()
@@ -63,7 +63,7 @@ bool Map::isTileWalkable(int tileX, int tileY)
         return false;
     }
     // Return false if a sprite is on that tile
-    if (sprites[tileY][tileX])
+    if (actors[tileY][tileX])
     {
         return false;
     }
@@ -209,11 +209,11 @@ void Map::removeObjectAtTile(
     }
 }
 
-std::shared_ptr<Sprite> Map::getSpriteAtTile(int tileX, int tileY)
+std::shared_ptr<TestSprite> Map::getSpriteAtTile(int tileX, int tileY)
 {
     if (isTileWithinMap(tileX, tileY))
     {
-        return sprites[tileY][tileX];
+        return actors[tileY][tileX]->getSprite();
     }
     else
     {
@@ -229,7 +229,8 @@ void Map::removeSpriteAtTile(
 ) {
     if (isTileWithinMap(tileX, tileY))
     {
-        sprites[tileY][tileX].reset();
+        // TODO: MAKE SURE NO MEMORY LEAK OF CONTAINED SPRITE
+        actors[tileY][tileX].reset();
     }
     else
     {
@@ -326,40 +327,35 @@ void Map::update(UpdateContext& updateContext)
             }
         }
     }
-    for (auto sprite_row : sprites)
+    for (auto actor_row : actors)
     {
-        for (auto sprite: sprite_row)
+        for (auto actor : actor_row)
         {
-            if (sprite)
+            if (actor)
             {
                 // Get sprite's starting tile coordinates
-                double start_wx, start_wy;
-                std::tie(start_wx, start_wy) = sprite->getWorldCoords();
-                
                 int start_tx, start_ty;
-                std::tie(start_tx, start_ty) = resolveTile(
-                    start_wx,
-                    start_wy
-                );
+                std::tie(start_tx, start_ty) = actor->getTileCoords();
 
-                sprite->update(&updateContext);
+                actor->update(&updateContext);
 
                 // Get sprite's ending tile coordinates
-                double end_wx, end_wy;
-                std::tie(end_wx, end_wy) = sprite->getWorldCoords();
-                
                 int end_tx, end_ty;
-                std::tie(end_tx, end_ty) = resolveTile(
-                    end_wx,
-                    end_wy
-                );
+                std::tie(end_tx, end_ty) = actor->getTileCoords();
 
+                if (!isTileWithinMap(end_tx, end_ty))
+                {
+                    std::cout << "An NPC is off the map" << std::endl;
+                    return;
+                }
                 // Move Sprite reference if it has changed tiles
                 // TODO: MAKE SURE NO SPRITE ISN'T ALREADY THERE?
                 if (end_tx != start_tx || end_ty != start_ty)
                 {
-                    sprites[start_ty][start_tx].reset();
-                    sprites[end_ty][end_tx] = sprite;
+                    // std::cout << actors[start_ty][start_tx] << std::endl;
+                    // std::cout << actors[end_ty][end_tx] << std::endl;
+                    actors[start_ty][start_tx].reset();
+                    actors[end_ty][end_tx] = actor;
                 }
             }
         }
@@ -461,9 +457,9 @@ void Map::drawSprites(
             if (isTileWithinMap(tile_x, tile_y))
             {
                 // Draw Sprite at tile, if one exists
-                if (sprites[tile_y][tile_x])
+                if (actors[tile_y][tile_x])
                 {
-                    sprites[tile_y][tile_x]->draw(gameRenderer);
+                    actors[tile_y][tile_x]->draw(gameRenderer);
                 }
             }
         }
@@ -494,7 +490,7 @@ Map Map::loadMap(
         gameContext,
         dirPath / "drops.txt"
     );
-    auto map_sprites = loadSprites(
+    auto map_actors = loadActors(
         gameContext,
         dirPath / "sprites.txt"
     );
@@ -504,7 +500,7 @@ Map Map::loadMap(
         map_tiles, 
         map_objects,
         map_drops,
-        map_sprites
+        map_actors
     );
 }
 
@@ -682,7 +678,7 @@ std::vector<std::vector<std::shared_ptr<Drop>>> Map::loadDrops(
     return map_drops;
 }
 
-std::vector<std::vector<std::shared_ptr<Sprite>>> Map::loadSprites(
+std::vector<std::vector<std::shared_ptr<Actor>>> Map::loadActors(
         GameContext* gameContext,
         boost::filesystem::path spritesPath
 ) {
@@ -695,7 +691,7 @@ std::vector<std::vector<std::shared_ptr<Sprite>>> Map::loadSprites(
         );
     }
     
-    std::vector<std::vector<std::shared_ptr<Sprite>>> map_sprites;
+    std::vector<std::vector<std::shared_ptr<Actor>>> map_actors;
     std::string next_line;
     int curr_row = 0;
     int curr_col = 0;
@@ -704,7 +700,7 @@ std::vector<std::vector<std::shared_ptr<Sprite>>> Map::loadSprites(
     {
         int next_val;
         std::stringstream str_stream(next_line);
-        map_sprites.push_back(std::vector<std::shared_ptr<Sprite>>());
+        map_actors.push_back(std::vector<std::shared_ptr<Actor>>());
      
         // Get each integer
         while (str_stream >> next_val)
@@ -718,7 +714,7 @@ std::vector<std::vector<std::shared_ptr<Sprite>>> Map::loadSprites(
                     TextureCache::TILE_SIZE_PX
                 };
 
-                map_sprites.back().push_back(SpriteFactory::createSprite(
+                map_actors.back().push_back(ActorFactory::createActor(
                     gameContext,
                     resolveSpriteType(next_val),
                     base_tile
@@ -727,8 +723,8 @@ std::vector<std::vector<std::shared_ptr<Sprite>>> Map::loadSprites(
             else
             {
                 // Push empty pointer
-                map_sprites.back().push_back(
-                    std::shared_ptr<Sprite>()
+                map_actors.back().push_back(
+                    std::shared_ptr<Actor>()
                 );
             }
             curr_col++;
@@ -739,14 +735,14 @@ std::vector<std::vector<std::shared_ptr<Sprite>>> Map::loadSprites(
     }
 
     sprites_file.close();
-    return map_sprites;
+    return map_actors;
 }
 
 void Map::checkMapValidity(
         std::vector<std::vector<std::shared_ptr<Tile>>> tiles,
         std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects,
         std::vector<std::vector<std::shared_ptr<Drop>>> drops,
-        std::vector<std::vector<std::shared_ptr<Sprite>>> sprites
+        std::vector<std::vector<std::shared_ptr<Actor>>> actors
 ) {
     // Make sure `tiles` is non-empty
     if (tiles.empty())
@@ -814,7 +810,7 @@ void Map::checkMapValidity(
     }
 
     // Make sure `sprites` is the same size as `tiles`
-    if (sprites.size() != tiles.size())
+    if (actors.size() != tiles.size())
     {
         throw std::invalid_argument(
             "`drops` does not have the same number of rows as `tiles`"
@@ -822,7 +818,7 @@ void Map::checkMapValidity(
     }
     for (int i = 0; i < tiles.size(); i++)
     {
-        if (tiles[i].size() != sprites[i].size())
+        if (tiles[i].size() != actors[i].size())
         {
             throw std::invalid_argument(
                 std::string("`sprites` does not have the same number of columns as `tiles` (row ") +
@@ -832,11 +828,12 @@ void Map::checkMapValidity(
     }
     // Make sure exactly one PlayerSprite has been defined
     bool player_found = false;
-    for (auto row : sprites)
+    for (auto row : actors)
     {
-        for (auto sprite : row)
+        for (auto actor : row)
         {
-            if (sprite && sprite->getSpriteType() == SpriteType::PLAYER)
+            std::cout << actor << "\t";
+            if (actor && actor->getSprite()->getSpriteType() == SpriteType::PLAYER)
             {
                 if (player_found)
                 {
@@ -850,6 +847,7 @@ void Map::checkMapValidity(
                 }
             }
         }
+        std::cout << std::endl;
     }
     if (!player_found)
     {

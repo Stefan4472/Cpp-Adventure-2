@@ -37,26 +37,6 @@ GameEngine::GameEngine(
         gameContext.get(), 
         map_path
     ));
-    
-    playerActor = std::make_shared<PlayerActor>(
-        gameContext.get(),
-        SDL_Rect{
-            64,
-            64,
-            TextureCache::TILE_SIZE_PX,
-            TextureCache::TILE_SIZE_PX
-        }
-    );
-
-    npcActor = std::make_shared<NPCActor>(
-        gameContext.get(),
-        SDL_Rect{
-            128,
-            64,
-            TextureCache::TILE_SIZE_PX,
-            TextureCache::TILE_SIZE_PX
-        }
-    );
 
     prevUpdateMs = 0;
 }
@@ -154,10 +134,6 @@ void GameEngine::update()
 
     map->update(update_context);
 
-    // TODO: REMOVE
-    playerActor->update(&update_context);
-    npcActor->update(&update_context);
-
     // Execute all requested interactions
     for (InteractRequest irequest : req_interactions)
     {
@@ -213,13 +189,8 @@ void GameEngine::update()
 void GameEngine::handleInput(EventId inputId, UpdateContext* updateContext)
 {
     // Pass input to the Player
-    map->getPlayerSprite()->giveInput(
+    map->getPlayerActor()->giveInput(
         inputId, 
-        updateContext
-    );
-    // TODO: REMOVE
-    playerActor->giveInput(
-        inputId,
         updateContext
     );
 }
@@ -354,7 +325,7 @@ void GameEngine::draw(SDL_Renderer* renderer)
 
     double player_x, player_y;
     std::tie(player_x, player_y) = 
-        map->getPlayerSprite()->getWorldCoords();
+        map->getPlayerActor()->getWorldCoords();
 
     // Center viewable area on player
     double top_left_wx = 
@@ -406,8 +377,4 @@ void GameEngine::draw(SDL_Renderer* renderer)
         gameRenderer.get(),
         visible_bounds
     );
-
-    // TODO: REMOVE
-    playerActor->draw(gameRenderer.get());
-    npcActor->draw(gameRenderer.get());
 }
