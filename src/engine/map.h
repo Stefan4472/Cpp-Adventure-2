@@ -13,6 +13,7 @@
 #include "sprite.h"
 #include "drop.h"
 
+#include "player_sprite.h"
 
 class Map
 {
@@ -148,6 +149,7 @@ public:
 private:
     int numRows, numCols;
     GameContext* gameContext;
+    // std::shared_ptr<Sprite> playerSprite;
     std::vector<std::vector<std::shared_ptr<Tile>>> tiles;
     std::vector<std::vector<std::shared_ptr<MapObject>>> mapObjects;
     std::vector<std::vector<std::shared_ptr<Drop>>> drops;

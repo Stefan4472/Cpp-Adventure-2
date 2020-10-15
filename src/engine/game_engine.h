@@ -18,8 +18,7 @@
 #include "item_factory.h"
 
 // TODO: REMOVE/REPLACE WITH `SPRITE_FACTORY`, MOVE TO MAP
-#include "player_sprite.h"
-#include "friendly_sprite.h"
+#include "sprite_factory.h"
 
 class GameEngine : public EngineInterface
 {
@@ -70,7 +69,7 @@ private:
 
     // TODO: MOVE TO MAP.CPP
     std::shared_ptr<PlayerSprite> player;
-    std::shared_ptr<FriendlySprite> npc;
+    std::shared_ptr<Sprite> npc;
 
     uint32_t prevUpdateMs;
 

@@ -46,10 +46,11 @@ GameEngine::GameEngine(
         TextureCache::TILE_SIZE_PX
     };
 
-    player = std::make_shared<PlayerSprite>(
-        gameContext, 
+    player = std::dynamic_pointer_cast<PlayerSprite>(SpriteFactory::createSprite(
+        gameContext.get(),
+        SpriteType::PLAYER, 
         player_start_tile
-    );
+    ));
 
     SDL_Rect npc_start_tile = {
         160, 
@@ -58,8 +59,9 @@ GameEngine::GameEngine(
         TextureCache::TILE_SIZE_PX
     };
 
-    npc = std::make_shared<FriendlySprite>(
-        gameContext, 
+    npc = SpriteFactory::createSprite(
+        gameContext.get(), 
+        SpriteType::FRIENDLY,
         npc_start_tile
     );
 }

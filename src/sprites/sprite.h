@@ -13,7 +13,7 @@ class Sprite
 {
 public:
     Sprite(
-        std::shared_ptr<GameContext> gameContext, 
+        GameContext* gameContext, 
         SpriteType spriteType, 
         double worldX, 
         double worldY
@@ -38,7 +38,7 @@ public:
     virtual void draw(GameRenderer* renderer) = 0;
 
 protected:
-    std::shared_ptr<GameContext> gameContext;
+    GameContext* gameContext;
     SpriteType spriteType;
     // TODO: DIFFERENTIATE BETWEEN WORLD COORDINATES AND DRAW COORDINATES
     // World coordinates

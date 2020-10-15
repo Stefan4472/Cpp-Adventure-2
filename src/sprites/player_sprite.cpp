@@ -1,8 +1,8 @@
 #include "player_sprite.h"
 
 PlayerSprite::PlayerSprite(
-        std::shared_ptr<GameContext> gameContext, 
-        SDL_Rect& baseTile
+        GameContext* gameContext, 
+        SDL_Rect baseTile
 ) : Sprite(gameContext, SpriteType::PLAYER, baseTile.x + baseTile.w / 2, baseTile.y + baseTile.h - 1)
 {
     spriteModel = ModelFactory::createSpriteModel(

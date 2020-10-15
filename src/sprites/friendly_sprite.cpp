@@ -1,8 +1,8 @@
 #include "friendly_sprite.h"
 
 FriendlySprite::FriendlySprite(
-    std::shared_ptr<GameContext> gameContext, 
-    SDL_Rect& baseTile
+    GameContext* gameContext, 
+    SDL_Rect baseTile
 ) : Sprite(gameContext, SpriteType::FRIENDLY, baseTile.x + baseTile.w / 2, baseTile.y + baseTile.h - 1)
 {
 

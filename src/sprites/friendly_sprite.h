@@ -9,8 +9,8 @@ class FriendlySprite : public Sprite
 {
 public:
     FriendlySprite(
-        std::shared_ptr<GameContext> gameContext, 
-        SDL_Rect& baseTile
+        GameContext* gameContext, 
+        SDL_Rect baseTile
     );
     
     void update(UpdateContext* updateContext);

@@ -1,7 +1,7 @@
 #include "sprite.h"
 
 Sprite::Sprite(
-        std::shared_ptr<GameContext> gameContext, 
+        GameContext* gameContext, 
         SpriteType spriteType, 
         double worldX, 
         double worldY
