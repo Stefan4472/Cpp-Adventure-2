@@ -17,6 +17,7 @@ Actor::Actor(
     double world_y = worldCoords.y + worldCoords.h - 1;
 
     sprite = std::make_shared<Sprite>(
+        gameContext,
         spriteType, 
         model,
         world_x, 
@@ -36,13 +37,7 @@ std::pair<double, double> Actor::getWorldCoords()
 
 std::pair<int, int> Actor::getTileCoords()
 {
-    double world_x, world_y;
-    std::tie(world_x, world_y) = sprite->getWorldCoords();
-
-    return gameContext->engine->resolveTile(
-        world_x, 
-        world_y
-    );
+    return sprite->getTileCoords();
 }
 
 std::pair<int, int> Actor::getFacedTile()

@@ -32,6 +32,11 @@ public:
         double worldY
     ) = 0;
 
+    // Get the coordinates of the tile the player is currently on
+    virtual std::pair<int, int> getPlayerTile() = 0;
+
+    // TODO: LOOKUPSPRITETILE(SPRITE*)
+
     // virtual std::shared_ptr<MapObject> getObjectAtTile(
     //     int tileX, 
     //     int tileY

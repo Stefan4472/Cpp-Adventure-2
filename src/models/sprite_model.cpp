@@ -90,41 +90,6 @@ void SpriteModel::update(int msSincePrevUpdate)
     }
 }
 
-std::pair<TextureId, SDL_Rect> SpriteModel::getDrawInfo()
-{
-    // Currently walking: return frame from correct animation
-    if (isWalking)
-    {
-        auto curr_sheet = getSheetForDirection(
-            facingDirection
-        );
-
-        return std::make_pair(
-            curr_sheet->getTextureID(),
-            curr_sheet->getCurrentFrameSrc()
-        );
-    }
-    // No animation playing: return idle image
-    else
-    {
-        TextureId curr_img = getImgForDirection(
-            facingDirection
-        );
-
-        SDL_Rect source_rect = {
-            0,
-            0,
-            widthPx,
-            heightPx
-        };
-
-        return std::make_pair(
-            curr_img,
-            source_rect
-        );
-    }
-}
-
 void SpriteModel::draw(
         GameRenderer* renderer, 
         double wBottomCenterX, 

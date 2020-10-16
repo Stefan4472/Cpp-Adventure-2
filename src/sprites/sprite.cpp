@@ -1,12 +1,14 @@
 #include "sprite.h"
 
 Sprite::Sprite(
+        GameContext* gameContext,
         SpriteType spriteType, 
         std::shared_ptr<SpriteModel> spriteModel,
         // int hp,
         double worldX, 
         double worldY
 ) {
+    this->gameContext = gameContext;
     this->spriteType = spriteType;
     this->spriteModel = spriteModel;
     this->worldX = worldX;
@@ -44,6 +46,14 @@ std::pair<double, double> Sprite::getWorldCoords()
 {
     return std::make_pair(
         worldX,
+        worldY
+    );
+}
+
+std::pair<int, int> Sprite::getTileCoords()
+{
+    return gameContext->engine->resolveTile(
+        worldX, 
         worldY
     );
 }

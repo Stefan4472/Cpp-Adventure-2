@@ -9,6 +9,7 @@
 
 // TODO: REMOVE
 #include "patrol_action.h"
+#include "follow_action.h"
 
 
 class NPCActor : public Actor

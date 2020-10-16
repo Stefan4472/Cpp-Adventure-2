@@ -14,6 +14,7 @@ class Sprite
 {
 public:
     Sprite(
+        GameContext* gameContext,
         SpriteType spriteType, 
         std::shared_ptr<SpriteModel> spriteModel,
         // int hp,
@@ -31,6 +32,7 @@ public:
     double getWorldX();
     double getWorldY();
     std::pair<double, double> getWorldCoords();
+    std::pair<int, int> getTileCoords();
 
     Direction getFacingDirection();
     
@@ -62,6 +64,7 @@ public:
     void draw(GameRenderer* renderer);
 
 protected:
+    GameContext* gameContext;
     SpriteType spriteType;
     
     // World coordinates

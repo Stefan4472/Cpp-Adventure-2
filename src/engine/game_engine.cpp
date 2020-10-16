@@ -98,6 +98,11 @@ std::pair<int, int> GameEngine::resolveTile(
     }
 }
 
+std::pair<int, int> GameEngine::getPlayerTile()
+{
+    return map->getPlayerActor()->getTileCoords();
+}
+
 void GameEngine::update()
 {
     uint32_t curr_game_time = SDL_GetTicks();

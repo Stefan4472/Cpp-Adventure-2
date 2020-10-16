@@ -47,6 +47,7 @@ public:
         double worldX, 
         double worldY
     );
+    std::pair<int, int> getPlayerTile();
 
     // Update game state
     void update();

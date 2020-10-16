@@ -5,7 +5,7 @@ NPCActor::NPCActor(
         SDL_Rect worldCoords
 ) : Actor(gameContext, SpriteType::FRIENDLY, worldCoords)
 {
-    currAction = std::make_shared<PatrolAction>(
+    currAction = std::make_shared<FollowAction>(
         gameContext,
         sprite
     );
