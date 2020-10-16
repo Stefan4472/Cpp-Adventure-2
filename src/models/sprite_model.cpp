@@ -37,35 +37,42 @@ std::pair<int, int> SpriteModel::getSpriteSize()
     );
 }
 
-Direction SpriteModel::getFacingDirection()
+void SpriteModel::startMoving(Direction newDirection)
 {
-    return facingDirection;
-}
-
-void SpriteModel::moveUp()
-{
-    moveInDirection(Direction::UP);
-}
-
-void SpriteModel::moveDown()
-{
-    moveInDirection(Direction::DOWN);
-}
-
-void SpriteModel::moveLeft()
-{
-    moveInDirection(Direction::LEFT);
-}
-
-void SpriteModel::moveRight()
-{
-    moveInDirection(Direction::RIGHT);
+    resetAnyPlaying();
+    facingDirection = newDirection;
+    getSheetForDirection(newDirection)->start();
+    isWalking = true;
 }
 
 void SpriteModel::stopMoving()
 {
     resetAnyPlaying();
     isWalking = false;
+}
+
+bool SpriteModel::getIsMoving()
+{
+    return isWalking;
+}
+
+void SpriteModel::faceDir(Direction direction)
+{
+    if (getIsMoving())
+    {
+        throw std::runtime_error(
+            "Can't use this method while Sprite is moving"
+        );
+    }
+    else
+    {
+        facingDirection = direction;
+    }
+}
+
+Direction SpriteModel::getFacingDirection()
+{
+    return facingDirection;
 }
 
 void SpriteModel::update(int msSincePrevUpdate)
@@ -111,14 +118,6 @@ std::pair<TextureId, SDL_Rect> SpriteModel::getDrawInfo()
             source_rect
         );
     }
-}
-
-void SpriteModel::moveInDirection(Direction newDirection)
-{
-    resetAnyPlaying();
-    facingDirection = newDirection;
-    getSheetForDirection(newDirection)->start();
-    isWalking = true;
 }
 
 

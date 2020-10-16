@@ -61,7 +61,7 @@ void Sprite::walkUp(int numPx)
     currWalkCommand = Direction::UP;
     goalWorldX = worldX;
     goalWorldY = worldY - numPx;
-    spriteModel->moveUp();
+    spriteModel->startMoving(Direction::UP);
 }
 
 void Sprite::walkDown(int numPx)
@@ -69,7 +69,7 @@ void Sprite::walkDown(int numPx)
     currWalkCommand = Direction::DOWN;
     goalWorldX = worldX;
     goalWorldY = worldY + numPx;
-    spriteModel->moveDown();
+    spriteModel->startMoving(Direction::DOWN);
 }
 
 void Sprite::walkLeft(int numPx)
@@ -77,7 +77,7 @@ void Sprite::walkLeft(int numPx)
     currWalkCommand = Direction::LEFT;
     goalWorldX = worldX - numPx;
     goalWorldY = worldY;
-    spriteModel->moveLeft();
+    spriteModel->startMoving(Direction::LEFT);
 }
 
 void Sprite::walkRight(int numPx)
@@ -85,7 +85,42 @@ void Sprite::walkRight(int numPx)
     currWalkCommand = Direction::RIGHT;
     goalWorldX = worldX + numPx;
     goalWorldY = worldY;
-    spriteModel->moveRight();
+    spriteModel->startMoving(Direction::RIGHT);
+}
+
+void Sprite::walkInDir(Direction direction, int numPx)
+{
+    switch (direction)
+    {
+        case Direction::UP:
+        {
+            return walkUp(numPx);
+        }
+        case Direction::DOWN:
+        {
+            return walkDown(numPx);
+        }
+        case Direction::LEFT:
+        {
+            return walkLeft(numPx);
+        }
+        case Direction::RIGHT:
+        {
+            return walkRight(numPx);
+        }
+        default:
+        {
+            throw std::invalid_argument(
+                std::string("Unsupported walk direction ") +
+                std::to_string(static_cast<int>(direction))
+            );
+        }
+    }
+}
+
+void Sprite::faceDir(Direction direction)
+{
+    spriteModel->faceDir(direction);
 }
 
 void Sprite::update(int msSincePrevUpdate)

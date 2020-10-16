@@ -30,17 +30,27 @@ public:
 
     std::pair<int, int> getSpriteSize();
     
-    void moveUp();
-    void moveDown();
-    void moveLeft();
-    void moveRight();
+    // Start the moving-animation in specified direction.
+    void startMoving(Direction newDirection);
+    // Stop any moving-animation that is currently playing
     void stopMoving();
+    // Whether there is a moving-animation currently playing
+    bool getIsMoving();
+    // Start facing in the specified direction.
+    // NOTE: SpriteModel cannot be currently moving! 
+    void faceDir(Direction direction);
     // Get direction the sprite is currently facing
     Direction getFacingDirection();
 
     void update(int msSincePrevUpdate);
 
     std::pair<TextureId, SDL_Rect> getDrawInfo();
+
+    // void draw(
+    //     GameRenderer* renderer, 
+    //     double wBottomCenterX, 
+    //     double wBottomCenterY
+    // );
 
 private:
     TextureCache* textureCache;

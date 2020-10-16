@@ -42,16 +42,14 @@ public:
     // BE TILE-ALIGNED
     bool getIsWalking();
 
-    // void walkOneTileUp();
-    // void walkOneTileDown();
-    // void walkOneTileLeft();
-    // void walkOneTileRight();
-
-    // OR?
     void walkUp(int numPx);
     void walkDown(int numPx);
     void walkLeft(int numPx);
     void walkRight(int numPx);
+    void walkInDir(Direction direction, int numPx);
+
+    // Note: Sprite cannot be walking when this is called
+    void faceDir(Direction direction);
 
     // Update
     void update(int msSincePrevUpdate);
