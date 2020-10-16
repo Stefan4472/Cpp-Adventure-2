@@ -1,7 +1,6 @@
 #ifndef _FOLLOW_ACTION_H
 #define _FOLLOW_ACTION_H
 
-#include <cmath>
 #include "action.h"
 #include "direction.h"
 

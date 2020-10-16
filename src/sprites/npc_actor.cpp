@@ -31,7 +31,10 @@ NPCActor::NPCActor(
         }
         case SpriteType::IDLER:
         {
-            throw std::invalid_argument("Not implemented yet");
+            currAction = std::make_shared<IdleAction>(
+                gameContext,
+                sprite
+            );
             break;
         }
         default:
