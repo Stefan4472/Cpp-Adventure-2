@@ -26,6 +26,8 @@ SpriteType Sprite::getSpriteType()
 void Sprite::setInHandItem(std::shared_ptr<Item> item)
 {
     inHandItem = item;
+    // Propagate to `spriteModel`
+    spriteModel->setInHandItem(item);
 }
 
 double Sprite::getWorldX()
@@ -188,29 +190,9 @@ void Sprite::update(int msSincePrevUpdate)
 
 void Sprite::draw(GameRenderer* renderer)
 {
-    // Get drawing information from spriteModel
-    TextureId texture_id;
-    SDL_Rect src_rect;
-    std::tie(texture_id, src_rect) = spriteModel->getDrawInfo();
-
-    // Draw model
-    renderer->drawToWorld(
-        texture_id,
-        src_rect,
-        worldX - src_rect.w / 2,
-        worldY - src_rect.h
+    spriteModel->draw(
+        renderer,
+        worldX,
+        worldY
     );
-
-    // Draw in-hand item
-    // (currently drawing at an offset so as to give a rough 
-    // approximation that the item is actually in the Sprite's 
-    // hand.
-    if (inHandItem)
-    {
-        renderer->drawToWorld(
-            inHandItem->getTextureId(),
-            worldX + src_rect.w / 2 - 10,
-            worldY - src_rect.h / 2 - 10
-        );
-    }
 }

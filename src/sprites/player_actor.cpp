@@ -67,6 +67,9 @@ void PlayerActor::respondToInteract(
 
 void PlayerActor::update(UpdateContext* updateContext) 
 {
+    // Make sure we've given the Sprite our `inHandItem`
+    sprite->setInHandItem(inventory.getSelectedItem());
+
     // Update Sprite
     sprite->update(updateContext->msSincePrevUpdate);
 
@@ -130,19 +133,4 @@ void PlayerActor::updateWalkCommand()
 void PlayerActor::draw(GameRenderer* renderer) 
 {
     sprite->draw(renderer);
-
-    // Draw in-hand item
-    // (currently drawing at an offset so as to give a rough 
-    // approximation that the item is actually in the Sprite's 
-    // hand.
-    // TODO: MOVE DRAWING OF ITEM TO SPRITEMODEL
-    auto inHandItem = inventory.getSelectedItem();
-    if (inHandItem)
-    {
-        renderer->drawToWorld(
-            inHandItem->getTextureId(),
-            sprite->getWorldX() + 6,
-            sprite->getWorldY() - 26
-        );
-    }
 }

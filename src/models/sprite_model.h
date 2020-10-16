@@ -5,14 +5,15 @@
 #include "spritesheet.h"
 #include "texture_cache.h"
 #include "update_context.h"
+#include "game_renderer.h"
 #include "direction.h"
+#include "item.h"
 
 
 class SpriteModel
 {
 public:
     // Note: coded so that only one animation should be playing at a time
-    // TODO: STORE REF TO INHANDITEM, SO WE CAN DRAW IT CORRECTLY
     // NOTE: ASSUMES ALL `IDLE` IMAGES ARE THE SAME DIMENSIONS,
     // AND THAT EACH FRAME OF PROVIDED SPRITESHEETS IS THE SAME DIMENSION
     // AS THE `IDLE` IMAGES.
@@ -30,6 +31,8 @@ public:
 
     std::pair<int, int> getSpriteSize();
     
+    void setInHandItem(std::shared_ptr<Item> inHandItem);
+    
     // Start the moving-animation in specified direction.
     void startMoving(Direction newDirection);
     // Stop any moving-animation that is currently playing
@@ -44,13 +47,16 @@ public:
 
     void update(int msSincePrevUpdate);
 
-    std::pair<TextureId, SDL_Rect> getDrawInfo();
-
-    // void draw(
-    //     GameRenderer* renderer, 
-    //     double wBottomCenterX, 
-    //     double wBottomCenterY
-    // );
+    // Draw Model to the provided Renderer.
+    // The coordinates provided mark the center of the bottom
+    // of the sprite (i.e., where the sprite is standing). This
+    // is done because the caller might not necessarily know
+    // how big the drawn sprite will be.
+    void draw(
+        GameRenderer* renderer, 
+        double wBottomCenterX, 
+        double wBottomCenterY
+    );
 
 private:
     TextureCache* textureCache;
@@ -62,6 +68,9 @@ private:
     std::shared_ptr<Spritesheet> walkDownSheet;
     std::shared_ptr<Spritesheet> walkLeftSheet;
     std::shared_ptr<Spritesheet> walkRightSheet;
+
+    // Item in the Sprite's hand. May be NULL.
+    std::shared_ptr<Item> inHandItem;
 
     // Size of sprite, in pixels
     int widthPx, heightPx;

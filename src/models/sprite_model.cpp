@@ -37,6 +37,11 @@ std::pair<int, int> SpriteModel::getSpriteSize()
     );
 }
 
+void SpriteModel::setInHandItem(std::shared_ptr<Item> inHandItem)
+{
+    this->inHandItem = inHandItem;
+}
+
 void SpriteModel::startMoving(Direction newDirection)
 {
     resetAnyPlaying();
@@ -116,6 +121,52 @@ std::pair<TextureId, SDL_Rect> SpriteModel::getDrawInfo()
         return std::make_pair(
             curr_img,
             source_rect
+        );
+    }
+}
+
+void SpriteModel::draw(
+        GameRenderer* renderer, 
+        double wBottomCenterX, 
+        double wBottomCenterY
+) {
+    TextureId texture_id;
+    SDL_Rect source_rect;
+
+    // Currently walking: get animation frame
+    if (isWalking)
+    {
+        auto curr_sheet = getSheetForDirection(
+            facingDirection
+        );
+        texture_id = curr_sheet->getTextureID();
+        source_rect = curr_sheet->getCurrentFrameSrc();
+    }
+    // No animation playing: get idle image
+    else
+    {
+        texture_id = getImgForDirection(facingDirection);
+        source_rect = {0, 0, widthPx, heightPx};
+    }
+
+    // Draw base image
+    renderer->drawToWorld(
+        texture_id,
+        source_rect,
+        wBottomCenterX - source_rect.w / 2,
+        wBottomCenterY - source_rect.h
+    );
+
+    // Draw in-hand item
+    // (currently drawing at an offset so as to give a rough 
+    // approximation that the item is actually in the Sprite's 
+    // hand.
+    if (inHandItem)
+    {
+        renderer->drawToWorld(
+            inHandItem->getTextureId(),
+            wBottomCenterX + source_rect.w / 2 - 10,
+            wBottomCenterY - source_rect.h / 2 - 10
         );
     }
 }
