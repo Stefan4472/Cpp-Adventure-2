@@ -6,6 +6,7 @@
 #include <memory>
 #include <queue>
 #include <list>
+#include <random>
 #include <iostream>
 #include "input_event.h"
 #include "texture_cache.h"
@@ -48,6 +49,7 @@ public:
         double worldY
     );
     std::pair<int, int> getPlayerTile();
+    int genRandInt1To100();
 
     // Update game state
     void update();
@@ -65,6 +67,10 @@ private:
     std::shared_ptr<GameContext> gameContext;
 
     uint32_t prevUpdateMs;
+
+    // Used for random number generation
+    std::default_random_engine randEngine;
+    std::uniform_int_distribution<int> randDistribution;
 
     void handleInput(
         EventId inputId, 

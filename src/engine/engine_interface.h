@@ -34,6 +34,11 @@ public:
 
     // Get the coordinates of the tile the player is currently on
     virtual std::pair<int, int> getPlayerTile() = 0;
+    
+    // Generate and return a random integer between 1 and 100,
+    // inclusive.  TODO: THIS IS VERY SIMPLE AT THE MOMENT.
+    virtual int genRandInt1To100() = 0;
+
 
     // TODO: LOOKUPSPRITETILE(SPRITE*)
 

@@ -5,7 +5,8 @@ GameEngine::GameEngine(
         SDL_Renderer* renderer,
         int gameWidth,
         int gameHeight
-) {
+) : randDistribution(0, 100)
+{
     std::cout << "Init GameEngine at " << rootPath << " with width,height " << gameWidth << ", " << gameHeight << std::endl;
     auto graphics_path = rootPath / "graphics";
     auto map_path = rootPath / "map";
@@ -101,6 +102,11 @@ std::pair<int, int> GameEngine::resolveTile(
 std::pair<int, int> GameEngine::getPlayerTile()
 {
     return map->getPlayerActor()->getTileCoords();
+}
+
+int GameEngine::genRandInt1To100()
+{
+    return randDistribution(randEngine);
 }
 
 void GameEngine::update()

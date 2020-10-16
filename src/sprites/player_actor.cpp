@@ -12,6 +12,7 @@ void PlayerActor::giveInput(
         EventId eventId, 
         UpdateContext* updateContext
 ) {
+    std::cout << gameContext->engine->genRandInt1To100() << std::endl;
     if (eventId == EventId::PRESS_ACTION)
     {
         executeAction(updateContext);

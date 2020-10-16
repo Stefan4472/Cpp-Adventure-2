@@ -6,6 +6,8 @@
 #include "input_handler.h"
 #include "inventory.h"
 
+// TODO: REMOVE?
+#include <iostream>
 
 class PlayerActor : public Actor
 {
