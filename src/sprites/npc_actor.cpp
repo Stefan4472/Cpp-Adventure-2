@@ -26,7 +26,10 @@ NPCActor::NPCActor(
         }
         case SpriteType::WANDERER:
         {
-            throw std::invalid_argument("Not implemented yet");
+            currAction = std::make_shared<WanderAction>(
+                gameContext,
+                sprite
+            );
             break;
         }
         case SpriteType::IDLER:

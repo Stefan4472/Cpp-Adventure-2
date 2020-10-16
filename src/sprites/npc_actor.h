@@ -11,6 +11,7 @@
 #include "patrol_action.h"
 #include "follow_action.h"
 #include "idle_action.h"
+#include "wander_action.h"
 
 
 class NPCActor : public Actor
