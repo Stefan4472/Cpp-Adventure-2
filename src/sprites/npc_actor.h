@@ -7,6 +7,9 @@
 #include "inventory.h"
 #include "action.h"
 
+// TODO: REMOVE
+#include "patrol_action.h"
+
 
 class NPCActor : public Actor
 {
