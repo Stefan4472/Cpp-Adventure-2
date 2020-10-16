@@ -14,10 +14,14 @@ std::shared_ptr<Actor> ActorFactory::createActor(
                 worldCoords
             );
         }
-        case SpriteType::FRIENDLY:
+        case SpriteType::PATROLLER:
+        case SpriteType::FOLLOWER:
+        case SpriteType::WANDERER:
+        case SpriteType::IDLER:
         {
             return std::make_shared<NPCActor>(
                 gameContext,
+                spriteType,
                 worldCoords
             );
         }

@@ -2,13 +2,43 @@
 
 NPCActor::NPCActor(
         GameContext* gameContext,
+        SpriteType spriteType,
         SDL_Rect worldCoords
-) : Actor(gameContext, SpriteType::FRIENDLY, worldCoords)
+) : Actor(gameContext, spriteType, worldCoords)
 {
-    currAction = std::make_shared<FollowAction>(
-        gameContext,
-        sprite
-    );
+    switch (spriteType)
+    {
+        case SpriteType::PATROLLER:
+        {
+            currAction = std::make_shared<PatrolAction>(
+                gameContext,
+                sprite
+            );
+            break;
+        }
+        case SpriteType::FOLLOWER:
+        {
+            currAction = std::make_shared<FollowAction>(
+                gameContext,
+                sprite
+            );
+            break;
+        }
+        case SpriteType::WANDERER:
+        {
+            throw std::invalid_argument("Not implemented yet");
+            break;
+        }
+        case SpriteType::IDLER:
+        {
+            throw std::invalid_argument("Not implemented yet");
+            break;
+        }
+        default:
+        {
+            throw std::invalid_argument("Unsupported spriteType");
+        }
+    }
     currAction->start();
 }
 

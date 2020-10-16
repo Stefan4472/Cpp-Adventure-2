@@ -15,9 +15,13 @@
 class NPCActor : public Actor
 {
 public:
-    // NOTE: currently, `SpriteType` is fixed to be `FRIENDLY`
+    // NOTE: currently, `SpriteType` only determines the
+    // action to be executed. In the future, NPCActor will
+    // only be an abstract parent class, and might not even
+    // necessarily know the SpriteType of its child implementation.
     NPCActor(
         GameContext* gameContext,
+        SpriteType spriteType,
         SDL_Rect worldCoords
     );
 

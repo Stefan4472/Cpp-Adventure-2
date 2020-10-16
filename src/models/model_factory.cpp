@@ -46,7 +46,10 @@ std::shared_ptr<SpriteModel> ModelFactory::createSpriteModel(
                 walk_right_sheet
             );
         }
-        case SpriteType::FRIENDLY:
+        case SpriteType::PATROLLER:
+        case SpriteType::FOLLOWER:
+        case SpriteType::WANDERER:
+        case SpriteType::IDLER:
         {
             auto walk_up_sheet = std::make_shared<Spritesheet>(
                 textureCache,

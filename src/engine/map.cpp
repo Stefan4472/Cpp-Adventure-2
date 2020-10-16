@@ -952,7 +952,19 @@ SpriteType Map::resolveSpriteType(int spriteId)
         }
         case 2:
         {
-            return SpriteType::FRIENDLY;
+            return SpriteType::PATROLLER;
+        }
+        case 3:
+        {
+            return SpriteType::FOLLOWER;
+        }
+        case 4:
+        {
+            return SpriteType::WANDERER;
+        }
+        case 5:
+        {
+            return SpriteType::IDLER;
         }
         default:
         {
