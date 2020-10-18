@@ -10,6 +10,9 @@
 #include "sprite_model.h"
 #include "item.h"
 
+// TODO: WIDESPREAD USAGE OF `SPRITEID`
+using SpriteID = int;
+
 class Sprite
 {
 public:

@@ -24,10 +24,6 @@ Map::Map(
     {
         for (auto actor : row)
         {
-            if (actor)
-            {
-                std::cout << actor->getSprite()->getID() << std::endl;
-            }
             if (actor && actor->getSprite()->getSpriteType() == SpriteType::PLAYER)
             {
                 playerActor = std::dynamic_pointer_cast<PlayerActor>(
@@ -97,17 +93,47 @@ bool Map::requestMoveToTile(
         int newTileX, 
         int newTileY
 ) {
+    std::cout << "Move tile request for sprite " << sprite->getID() << " to " <<
+        newTileX << ", " << newTileY << std::endl;
     if (isTileWalkable(newTileX, newTileY))
     {
+        auto it = moveTileRequests.find(sprite->getID());
+        // This sprite has a pending move request--make sure it has
+        // fulfilled the request before allowing a new one
+        if (it != moveTileRequests.end())
+        {
+            int curr_tile_x, curr_tile_y;
+            std::tie(curr_tile_x, curr_tile_y) = sprite->getTileCoords();
+
+            // All good: remove
+            if (curr_tile_x == it->second.newTileX && curr_tile_y == it->second.newTileY)
+            {
+                moveTileRequests.erase(sprite->getID());
+            }
+            else
+            {
+                throw std::runtime_error(
+                    std::string("Sprite ") + std::to_string(sprite->getID()) + 
+                    " has an unfulfilled MoveToTileRequest"
+                );
+            }
+            
+        }
+
+        std::cout << sprite->getID() << " submitted MoveToTileRequest to " << newTileX << ", " << newTileY << std::endl;
         // Add to `moveTileRequests` mapping
-        // moveTileRequests.insert(sprite, MoveToTileRequest{
-        //     sprite,
-        //     currTileX,
-        //     currTileY,
-        //     newTileX,
-        //     newTileY
-        // });
+        moveTileRequests[sprite->getID()] = MoveToTileRequest{
+            sprite,
+            currTileX,
+            currTileY,
+            newTileX,
+            newTileY
+        };
         return true;
+    }
+    else
+    {
+        return false;
     }
 }
 
@@ -381,25 +407,59 @@ void Map::update(UpdateContext& updateContext)
                 int start_tx, start_ty;
                 std::tie(start_tx, start_ty) = actor->getTileCoords();
 
+                // Update actor
                 actor->update(&updateContext);
 
                 // Get sprite's ending tile coordinates
                 int end_tx, end_ty;
                 std::tie(end_tx, end_ty) = actor->getTileCoords();
 
+                // Assert the sprite is still within the map
                 if (!isTileWithinMap(end_tx, end_ty))
                 {
-                    std::cout << "An NPC is off the map" << std::endl;
-                    return;
+                    throw std::runtime_error(
+                        "An NPC is off the map"
+                    );
                 }
-                // Move Sprite reference if it has changed tiles
+
+                // Handle case where Sprite has changed tiles
                 // TODO: MAKE SURE NO SPRITE ISN'T ALREADY THERE?
                 if (end_tx != start_tx || end_ty != start_ty)
                 {
-                    // std::cout << actors[start_ty][start_tx] << std::endl;
-                    // std::cout << actors[end_ty][end_tx] << std::endl;
-                    actors[start_ty][start_tx].reset();
-                    actors[end_ty][end_tx] = actor;
+                    int sprite_id = actor->getSprite()->getID();
+                    
+                    // Look up in `moveTileRequests` map
+                    auto it = moveTileRequests.find(sprite_id);
+                    
+                    if (it == moveTileRequests.end())
+                    {
+                        throw std::runtime_error(
+                            std::string("Sprite ") + std::to_string(sprite_id) +
+                            " changed tiles without submitting a MoveToTileRequest"
+                        );
+                    }
+                    else
+                    {
+                        MoveToTileRequest request = it->second;
+                        // Change matches request: all good
+                        if (request.newTileX == end_tx && request.newTileY == end_ty)
+                        {
+                            std::cout << sprite_id << " has successfully moved to " <<
+                                request.newTileX << ", " << request.newTileY << std::endl;
+                            // Move reference
+                            actors[start_ty][start_tx].reset();
+                            actors[end_ty][end_tx] = actor;
+                            // Remove request
+                            moveTileRequests.erase(sprite_id);
+                        }
+                        else
+                        {
+                            throw std::runtime_error(
+                                std::string("Sprite ") + std::to_string(sprite_id) +
+                                " changed to a tile not specified in MoveToTileRequest"
+                            );
+                        }
+                    }
                 }
             }
         }

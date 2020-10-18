@@ -106,8 +106,6 @@ bool GameEngine::requestMoveToTile(
         int newTileX, 
         int newTileY
 ) {
-    std::cout << "Move tile request for sprite " << sprite << " to " <<
-        newTileX << ", " << newTileY << std::endl;
     return map->requestMoveToTile(
         sprite,
         currTileX,

@@ -12,7 +12,6 @@ void WanderAction::start()
 {
     currDirection = genRandomDirection();
     tilesLeft = genRandomDistance();
-    sprite->walkInDir(currDirection, 1);
 }
 
 bool WanderAction::getIsFinished()

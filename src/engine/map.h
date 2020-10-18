@@ -188,8 +188,8 @@ private:
     std::vector<std::vector<std::shared_ptr<Actor>>> actors;
     std::shared_ptr<PlayerActor> playerActor;
 
-    // Store mapping of 'Sprite*' to 'MoveToTileRequest'
-    // std::unordered_map<Sprite*, MoveToTileRequest> moveTileRequests;
+    // Store mapping of SpriteID to 'MoveToTileRequest'
+    std::unordered_map<SpriteID, MoveToTileRequest> moveTileRequests;
 
     // Grid caching which tiles are walkable. 
     // std::vector<std::vector<bool>> walkableTiles;
