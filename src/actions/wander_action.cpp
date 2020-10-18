@@ -12,7 +12,7 @@ void WanderAction::start()
 {
     currDirection = genRandomDirection();
     tilesLeft = genRandomDistance();
-    sprite->walkInDir(currDirection, TextureCache::TILE_SIZE_PX);
+    sprite->walkInDir(currDirection, 1);
 }
 
 bool WanderAction::getIsFinished()
@@ -45,10 +45,7 @@ void WanderAction::update(UpdateContext* updateContext)
         {
             if (requestMoveInDir(updateContext, currDirection))
             {
-                sprite->walkInDir(
-                    currDirection, 
-                    TextureCache::TILE_SIZE_PX
-                );
+                sprite->walkInDir(currDirection, 1);
                 move_success = true;
             }
             else

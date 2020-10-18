@@ -114,10 +114,7 @@ void PlayerActor::updateWalkCommand(UpdateContext* updateContext)
     // Execute command if we are clear to change tiles
     if (can_move)
     {
-        sprite->walkInDir(
-            direction_input, 
-            TextureCache::TILE_SIZE_PX
-        );
+        sprite->walkInDir(direction_input, 1);
     }
     else
     {

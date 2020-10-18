@@ -34,10 +34,7 @@ void PatrolAction::update(UpdateContext* updateContext)
         // Request movement
         if (requestMoveInDir(updateContext, currDirection))
         {
-            sprite->walkInDir(
-                currDirection, 
-                TextureCache::TILE_SIZE_PX
-            );
+            sprite->walkInDir(currDirection, 1);
             tilesLeft--;
         }
         else

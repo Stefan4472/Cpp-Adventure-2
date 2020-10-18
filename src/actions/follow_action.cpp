@@ -76,10 +76,7 @@ void FollowAction::update(UpdateContext* updateContext)
             // Request to move in the desired direction
             if (requestMoveInDir(updateContext, goal_dir))
             {
-                sprite->walkInDir(
-                    goal_dir,
-                    TextureCache::TILE_SIZE_PX
-                );
+                sprite->walkInDir(goal_dir, 1);
             }
             else
             {

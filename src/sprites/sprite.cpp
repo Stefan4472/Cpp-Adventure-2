@@ -68,57 +68,57 @@ bool Sprite::getIsWalking()
     return (currWalkCommand != Direction::NONE);
 }
 
-void Sprite::walkUp(int numPx)
+void Sprite::walkUp(int numTiles)
 {
     currWalkCommand = Direction::UP;
     goalWorldX = worldX;
-    goalWorldY = worldY - numPx;
+    goalWorldY = worldY - numTiles * TextureCache::TILE_SIZE_PX;
     spriteModel->startMoving(Direction::UP);
 }
 
-void Sprite::walkDown(int numPx)
+void Sprite::walkDown(int numTiles)
 {
     currWalkCommand = Direction::DOWN;
     goalWorldX = worldX;
-    goalWorldY = worldY + numPx;
+    goalWorldY = worldY + numTiles * TextureCache::TILE_SIZE_PX;
     spriteModel->startMoving(Direction::DOWN);
 }
 
-void Sprite::walkLeft(int numPx)
+void Sprite::walkLeft(int numTiles)
 {
     currWalkCommand = Direction::LEFT;
-    goalWorldX = worldX - numPx;
+    goalWorldX = worldX - numTiles * TextureCache::TILE_SIZE_PX;
     goalWorldY = worldY;
     spriteModel->startMoving(Direction::LEFT);
 }
 
-void Sprite::walkRight(int numPx)
+void Sprite::walkRight(int numTiles)
 {
     currWalkCommand = Direction::RIGHT;
-    goalWorldX = worldX + numPx;
+    goalWorldX = worldX + numTiles * TextureCache::TILE_SIZE_PX;
     goalWorldY = worldY;
     spriteModel->startMoving(Direction::RIGHT);
 }
 
-void Sprite::walkInDir(Direction direction, int numPx)
+void Sprite::walkInDir(Direction direction, int numTiles)
 {
     switch (direction)
     {
         case Direction::UP:
         {
-            return walkUp(numPx);
+            return walkUp(numTiles);
         }
         case Direction::DOWN:
         {
-            return walkDown(numPx);
+            return walkDown(numTiles);
         }
         case Direction::LEFT:
         {
-            return walkLeft(numPx);
+            return walkLeft(numTiles);
         }
         case Direction::RIGHT:
         {
-            return walkRight(numPx);
+            return walkRight(numTiles);
         }
         default:
         {

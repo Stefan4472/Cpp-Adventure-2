@@ -45,11 +45,11 @@ public:
     bool getIsWalking();
 
     // TODO: ARG SHOULD BE `NUMTILES`, WHICH IS INTERNALLY CONVERTED TO PIXELS
-    void walkUp(int numPx);
-    void walkDown(int numPx);
-    void walkLeft(int numPx);
-    void walkRight(int numPx);
-    void walkInDir(Direction direction, int numPx);
+    void walkUp(int numTiles);
+    void walkDown(int numTiles);
+    void walkLeft(int numTiles);
+    void walkRight(int numTiles);
+    void walkInDir(Direction direction, int numTiles);
 
     // Note: Sprite cannot be walking when this is called
     void faceDir(Direction direction);
