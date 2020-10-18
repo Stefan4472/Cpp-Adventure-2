@@ -48,6 +48,13 @@ public:
         double worldX, 
         double worldY
     );
+    bool requestMoveToTile(
+        Sprite* sprite,
+        int currTileX, 
+        int currTileY,
+        int newTileX, 
+        int newTileY
+    );
     std::pair<int, int> getPlayerTile();
     int genRandInt1To100();
 

@@ -85,6 +85,19 @@ std::pair<int, int> Map::resolveTile(double worldX, double worldY)
     );
 }
 
+bool Map::requestMoveToTile(
+        Sprite* sprite,
+        int currTileX, 
+        int currTileY,
+        int newTileX, 
+        int newTileY
+) {
+    if (isTileWalkable(newTileX, newTileY))
+    {
+        return true;
+    }
+}
+
 SDL_Rect Map::calcTileCoords(int tileX, int tileY) 
 {
     if (isTileWithinMap(tileX, tileY))

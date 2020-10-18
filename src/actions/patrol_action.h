@@ -20,6 +20,7 @@ public:
 
 private:
     Direction currDirection;
+    int tilesLeft;
 };
 
 #endif

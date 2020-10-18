@@ -1,6 +1,7 @@
 #include "update_context.h"
 
 UpdateContext::UpdateContext(
+        GameContext* gameContext,
         uint32_t gameRuntimeMs,
         uint32_t msSincePrevUpdate,
         std::list<InteractRequest>& interactions,
@@ -9,6 +10,7 @@ UpdateContext::UpdateContext(
         std::list<ReplaceTileRequest>& replaceTileRequests,
         std::list<CreateDropRequest>& createDropRequests
 ) {
+    this->gameContext = gameContext;
     this->gameRuntimeMs = gameRuntimeMs;
     this->msSincePrevUpdate = msSincePrevUpdate;
     this->interactions = &interactions;
@@ -87,6 +89,11 @@ bool UpdateContext::requestMoveToTile(
         int newTileX, 
         int newTileY
 ) {
-    std::cout << "Move tile request for sprite " << sprite << " to " <<
-        newTileX << ", " << newTileY << std::endl;
+    gameContext->engine->requestMoveToTile(
+        sprite,
+        currTileX,
+        currTileY,
+        newTileX,
+        newTileY
+    );
 }

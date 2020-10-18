@@ -99,6 +99,24 @@ std::pair<int, int> GameEngine::resolveTile(
     }
 }
 
+bool GameEngine::requestMoveToTile(
+        Sprite* sprite,
+        int currTileX, 
+        int currTileY,
+        int newTileX, 
+        int newTileY
+) {
+    std::cout << "Move tile request for sprite " << sprite << " to " <<
+        newTileX << ", " << newTileY << std::endl;
+    return map->requestMoveToTile(
+        sprite,
+        currTileX,
+        currTileY,
+        newTileX,
+        newTileY
+    );
+}
+
 std::pair<int, int> GameEngine::getPlayerTile()
 {
     return map->getPlayerActor()->getTileCoords();
@@ -127,6 +145,7 @@ void GameEngine::update()
  
     // Create UpdateContext
     UpdateContext update_context = {
+        gameContext.get(),
         curr_game_time,
         ms_since_prev,
         req_interactions,

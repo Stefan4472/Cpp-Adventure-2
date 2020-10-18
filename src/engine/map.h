@@ -51,6 +51,17 @@ public:
         double worldX,
         double worldY
     );
+    // Sprite requests to move to the specified tile.
+    // Return whether this is allowed (i.e., tile is walkable).
+    // This will also ensure two sprites can't move onto the
+    // same tile during a single game update.
+    bool requestMoveToTile(
+        Sprite* sprite,
+        int currTileX, 
+        int currTileY,
+        int newTileX, 
+        int newTileY
+    );
     // Convert tile coordinates to world coordinates.
     // Throws runtime_error if tile coordinates are outside of world.
     SDL_Rect calcTileCoords(

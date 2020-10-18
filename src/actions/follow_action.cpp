@@ -40,7 +40,11 @@ void FollowAction::update(UpdateContext* updateContext)
         // Get closer if Manhattan distance greater than one tile
         if (man_dist > 1)
         {
-            Direction dir;
+            // Direction to move
+            Direction goal_dir;
+            // Tile coordinates to move to
+            int goal_tile_x, goal_tile_y;
+
             // Determine on which axis we are farther away
             if (std::abs(x_dist) > std::abs(y_dist))
             {
@@ -48,12 +52,16 @@ void FollowAction::update(UpdateContext* updateContext)
                 if (x_dist > 0)
                 {
                     // Move one tile right
-                    dir = Direction::RIGHT;
+                    goal_dir = Direction::RIGHT;
+                    goal_tile_x = my_tile_x + 1;
+                    goal_tile_y = my_tile_y;
                 }
                 else
                 {
                     // Move one tile left
-                    dir = Direction::LEFT;
+                    goal_dir = Direction::LEFT;
+                    goal_tile_x = my_tile_x - 1;
+                    goal_tile_y = my_tile_y;
                 }
             }
             else
@@ -62,17 +70,36 @@ void FollowAction::update(UpdateContext* updateContext)
                 if (y_dist > 0)
                 {
                     // Move one tile down
-                    dir = Direction::DOWN;
+                    goal_dir = Direction::DOWN;
+                    goal_tile_x = my_tile_x;
+                    goal_tile_y = my_tile_y + 1;
                 }
                 else
                 {
                     // Move one tile up
-                    dir = Direction::UP;
+                    goal_dir = Direction::UP;
+                    goal_tile_x = my_tile_x;
+                    goal_tile_y = my_tile_y - 1;
                 }
             }
+            
+            // Request to change tiles
+            bool can_move = updateContext->requestMoveToTile(
+                sprite.get(),
+                my_tile_x,
+                my_tile_y,
+                goal_tile_x,
+                goal_tile_y
+            );
 
             // Move one tile in desired direction
-            sprite->walkInDir(dir, TextureCache::TILE_SIZE_PX);
+            if (can_move)
+            {
+                sprite->walkInDir(
+                    goal_dir, 
+                    TextureCache::TILE_SIZE_PX
+                );
+            }
         }
     }
 }

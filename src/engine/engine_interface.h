@@ -32,6 +32,14 @@ public:
         double worldY
     ) = 0;
 
+    virtual bool requestMoveToTile(
+        Sprite* sprite,
+        int currTileX, 
+        int currTileY,
+        int newTileX, 
+        int newTileY
+    ) = 0;
+
     // Get the coordinates of the tile the player is currently on
     virtual std::pair<int, int> getPlayerTile() = 0;
     

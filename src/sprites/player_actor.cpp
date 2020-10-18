@@ -131,7 +131,7 @@ void PlayerActor::updateWalkCommand(UpdateContext* updateContext)
         }
     }
 
-    // Request the tile move
+    // Request to move to desired tile
     bool can_move = updateContext->requestMoveToTile(
         getSprite().get(),
         curr_tile_x,
@@ -148,6 +148,7 @@ void PlayerActor::updateWalkCommand(UpdateContext* updateContext)
             TextureCache::TILE_SIZE_PX
         );
     }
+    // TODO: PLAY WALKING ANIMATION, BUT DON'T SET MOVE GOAL, OTHERWISE
 }
 
 void PlayerActor::draw(GameRenderer* renderer) 

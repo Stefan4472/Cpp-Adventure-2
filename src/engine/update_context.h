@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <list>
 #include "engine_requests.h"
+#include "game_context.h"
 
 // TODO: REMOVE
 #include <iostream>
@@ -11,6 +12,7 @@ class UpdateContext
 {
 public:
     UpdateContext(
+        GameContext* gameContext,
         uint32_t gameRuntimeMs,
         uint32_t msSincePrevUpdate,
         std::list<InteractRequest>& interactions,
@@ -67,6 +69,7 @@ public:
     );
 
 private:
+    GameContext* gameContext;
     std::list<InteractRequest>* interactions;
     std::list<CreateObjectRequest>* createObjectRequests;
     std::list<DestroyObjectRequest>* destroyObjectRequests;

@@ -44,6 +44,7 @@ public:
     // BE TILE-ALIGNED
     bool getIsWalking();
 
+    // TODO: ARG SHOULD BE `NUMTILES`, WHICH IS INTERNALLY CONVERTED TO PIXELS
     void walkUp(int numPx);
     void walkDown(int numPx);
     void walkLeft(int numPx);

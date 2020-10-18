@@ -33,8 +33,75 @@ void WanderAction::update(UpdateContext* updateContext)
             currDirection = genRandomDirection();
             tilesLeft = genRandomDistance();
         }
-        // Start walking one tile in the desired direction
-        sprite->walkInDir(currDirection, TextureCache::TILE_SIZE_PX);
+
+        bool is_path_blocked = false;
+        int num_attempts = 0;
+        do
+        {
+            int my_tile_x, my_tile_y;
+            std::tie(my_tile_x, my_tile_y) = sprite->getTileCoords();
+
+            // Tile coordinates to move to
+            int goal_tile_x, goal_tile_y;
+
+            switch (currDirection)
+            {
+                case Direction::UP:
+                {
+                    goal_tile_x = my_tile_x;
+                    goal_tile_y = my_tile_y - 1;
+                    break;
+                }
+                case Direction::DOWN:
+                {
+                    goal_tile_x = my_tile_x;
+                    goal_tile_y = my_tile_y + 1;
+                    break;
+                }
+                case Direction::LEFT:
+                {
+                    goal_tile_x = my_tile_x - 1;
+                    goal_tile_y = my_tile_y;
+                    break;
+                }
+                case Direction::RIGHT:
+                {
+                    goal_tile_x = my_tile_x + 1;
+                    goal_tile_y = my_tile_y;
+                    break;
+                }
+                default:
+                {
+                    throw std::runtime_error(
+                        "Unhandled case: Programmer error"
+                    );
+                }
+            }
+            
+            // Request to change tiles
+            bool can_move = updateContext->requestMoveToTile(
+                sprite.get(),
+                my_tile_x,
+                my_tile_y,
+                goal_tile_x,
+                goal_tile_y
+            );
+
+            // Move one tile in desired direction
+            if (can_move)
+            {
+                sprite->walkInDir(
+                    currDirection, 
+                    TextureCache::TILE_SIZE_PX
+                );
+                is_path_blocked = false;
+            }
+            else
+            {
+                is_path_blocked = true;
+            }
+            num_attempts++;
+        } while (is_path_blocked && num_attempts < 4);
     }
 }
 
