@@ -15,6 +15,7 @@ class PlayerActor : public Actor
 public:
     PlayerActor(
         GameContext* gameContext,
+        int spriteID,
         SDL_Rect worldCoords
     );
 

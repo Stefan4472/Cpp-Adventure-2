@@ -3,6 +3,7 @@
 Sprite::Sprite(
         GameContext* gameContext,
         SpriteType spriteType, 
+        int spriteID,
         std::shared_ptr<SpriteModel> spriteModel,
         // int hp,
         double worldX, 
@@ -10,6 +11,7 @@ Sprite::Sprite(
 ) {
     this->gameContext = gameContext;
     this->spriteType = spriteType;
+    this->id = spriteID;
     this->spriteModel = spriteModel;
     this->worldX = worldX;
     this->worldY = worldY;
@@ -23,6 +25,11 @@ Sprite::Sprite(
 SpriteType Sprite::getSpriteType()
 {
     return spriteType;
+}
+
+int Sprite::getID()
+{
+    return id;
 }
 
 void Sprite::setInHandItem(std::shared_ptr<Item> item)

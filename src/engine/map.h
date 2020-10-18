@@ -3,6 +3,7 @@
 
 #include <boost/filesystem.hpp>
 #include <vector>
+#include <unordered_map>
 #include <sstream>
 #include <stdexcept>
 #include "tile_factory.h"
@@ -11,14 +12,13 @@
 #include "actor_factory.h"
 #include "game_renderer.h"
 #include "game_context.h"
+#include "engine_requests.h"
 #include "drop.h"
 
 
 class Map
 {
 public:
-    // TODO: ADD SPRITES TO MAP. DEFINED IN 'SPRITES.TXT' AND INITIALIZED
-    // BASED ON TILE. THEN STORED IN A LIST OR HASHMAP.
     Map(
         GameContext* gameContext,
         std::vector<std::vector<std::shared_ptr<Tile>>> tiles,
@@ -187,6 +187,9 @@ private:
     std::vector<std::vector<std::shared_ptr<Drop>>> drops;
     std::vector<std::vector<std::shared_ptr<Actor>>> actors;
     std::shared_ptr<PlayerActor> playerActor;
+
+    // Store mapping of 'Sprite*' to 'MoveToTileRequest'
+    // std::unordered_map<Sprite*, MoveToTileRequest> moveTileRequests;
 
     // Grid caching which tiles are walkable. 
     // std::vector<std::vector<bool>> walkableTiles;

@@ -3,6 +3,7 @@
 Actor::Actor(
     GameContext* gameContext,
     SpriteType spriteType,
+    int spriteID,
     SDL_Rect worldCoords
 ) {
     this->gameContext = gameContext;
@@ -19,6 +20,7 @@ Actor::Actor(
     sprite = std::make_shared<Sprite>(
         gameContext,
         spriteType, 
+        spriteID,
         model,
         world_x, 
         world_y

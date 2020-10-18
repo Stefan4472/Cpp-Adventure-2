@@ -13,6 +13,7 @@ public:
     static std::shared_ptr<Actor> createActor(
         GameContext* gameContext,
         SpriteType spriteType,
+        int spriteId,
         SDL_Rect worldCoords
     );
 };

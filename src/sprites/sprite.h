@@ -16,6 +16,7 @@ public:
     Sprite(
         GameContext* gameContext,
         SpriteType spriteType, 
+        int spriteID,
         std::shared_ptr<SpriteModel> spriteModel,
         // int hp,
         double worldX, 
@@ -26,7 +27,8 @@ public:
     const int TILE_WALK_TIME_MS = 400;
 
     SpriteType getSpriteType();
-    
+    int getID();
+
     void setInHandItem(std::shared_ptr<Item> item);
 
     double getWorldX();
@@ -67,6 +69,7 @@ public:
 protected:
     GameContext* gameContext;
     SpriteType spriteType;
+    int id;
     
     // World coordinates
     double worldX, worldY;

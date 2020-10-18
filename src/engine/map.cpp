@@ -17,12 +17,17 @@ Map::Map(
     numRows = this->tiles.size();
     numCols = this->tiles[0].size();
 
-    // Find reference to the PlayerSprite.
-    // `checkMapValidity()` will have ensured there is exactly one.
+    // Find reference to the PlayerSprite, and count the number of 
+    // sprites. `checkMapValidity()` will have ensured there is 
+    // exactly one PlayerSprite.
     for (auto row : this->actors)
     {
         for (auto actor : row)
         {
+            if (actor)
+            {
+                std::cout << actor->getSprite()->getID() << std::endl;
+            }
             if (actor && actor->getSprite()->getSpriteType() == SpriteType::PLAYER)
             {
                 playerActor = std::dynamic_pointer_cast<PlayerActor>(
@@ -94,6 +99,14 @@ bool Map::requestMoveToTile(
 ) {
     if (isTileWalkable(newTileX, newTileY))
     {
+        // Add to `moveTileRequests` mapping
+        // moveTileRequests.insert(sprite, MoveToTileRequest{
+        //     sprite,
+        //     currTileX,
+        //     currTileY,
+        //     newTileX,
+        //     newTileY
+        // });
         return true;
     }
 }
@@ -726,6 +739,7 @@ std::vector<std::vector<std::shared_ptr<Actor>>> Map::loadActors(
     std::string next_line;
     int curr_row = 0;
     int curr_col = 0;
+    int num_actors = 0;
 
     while (std::getline(sprites_file, next_line))
     {
@@ -745,11 +759,15 @@ std::vector<std::vector<std::shared_ptr<Actor>>> Map::loadActors(
                     TextureCache::TILE_SIZE_PX
                 };
 
+                // Create Actor, assigning IDs in sequence
                 map_actors.back().push_back(ActorFactory::createActor(
                     gameContext,
                     resolveSpriteType(next_val),
+                    (num_actors + 1),
                     base_tile
                 ));
+
+                num_actors++;
             }
             else
             {

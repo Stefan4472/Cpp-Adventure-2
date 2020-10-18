@@ -2,8 +2,9 @@
 
 PlayerActor::PlayerActor(
         GameContext* gameContext,
+        int spriteID,
         SDL_Rect worldCoords
-) : Actor(gameContext, SpriteType::PLAYER, worldCoords)
+) : Actor(gameContext, SpriteType::PLAYER, spriteID, worldCoords)
 {
 
 }

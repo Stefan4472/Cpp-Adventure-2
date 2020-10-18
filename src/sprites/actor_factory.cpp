@@ -3,6 +3,7 @@
 std::shared_ptr<Actor> ActorFactory::createActor(
         GameContext* gameContext,
         SpriteType spriteType,
+        int spriteId,
         SDL_Rect worldCoords
 ) {
     switch (spriteType)
@@ -11,6 +12,7 @@ std::shared_ptr<Actor> ActorFactory::createActor(
         {
             return std::make_shared<PlayerActor>(
                 gameContext,
+                spriteId,
                 worldCoords
             );
         }
@@ -22,6 +24,7 @@ std::shared_ptr<Actor> ActorFactory::createActor(
             return std::make_shared<NPCActor>(
                 gameContext,
                 spriteType,
+                spriteId,
                 worldCoords
             );
         }

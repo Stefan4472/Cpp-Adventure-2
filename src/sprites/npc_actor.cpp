@@ -3,8 +3,9 @@
 NPCActor::NPCActor(
         GameContext* gameContext,
         SpriteType spriteType,
+        int spriteID,
         SDL_Rect worldCoords
-) : Actor(gameContext, spriteType, worldCoords)
+) : Actor(gameContext, spriteType, spriteID, worldCoords)
 {
     switch (spriteType)
     {

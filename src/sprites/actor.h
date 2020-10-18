@@ -12,6 +12,7 @@ public:
     Actor(
         GameContext* gameContext,
         SpriteType spriteType,
+        int spriteID,
         SDL_Rect worldCoords
     );
 
