@@ -23,5 +23,6 @@ private:
     // TODO: MAKE THIS A UTILITY GAMEENGINE METHOD
     Direction genRandomDirection();
     int genRandomDistance();
+    // void handlePathBlocked();
 };
 #endif

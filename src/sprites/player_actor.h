@@ -5,6 +5,7 @@
 #include "input_event.h"
 #include "input_handler.h"
 #include "inventory.h"
+#include "util.h"
 
 // TODO: REMOVE?
 #include <iostream>

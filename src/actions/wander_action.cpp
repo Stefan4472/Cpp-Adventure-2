@@ -23,85 +23,41 @@ bool WanderAction::getIsFinished()
 void WanderAction::update(UpdateContext* updateContext)
 {
     // Sprite has finished walking one direction in `currDirection`
+    // TODO: THIS CODE IS NOT *TECHNICALLY* 100% CORRECT, COULD BE IMPROVED
     if (!sprite->getIsWalking())
     {
-        tilesLeft--;
+        if (tilesLeft)
+        {
+            tilesLeft--;
+        }
         // Sprite has now walked the desired number of tiles:
-        // generate new direction and new distance
+        // randomly pick new direction and new distance
         if (tilesLeft == 0)
         {
             currDirection = genRandomDirection();
             tilesLeft = genRandomDistance();
         }
 
-        bool is_path_blocked = false;
+        // In any case: attempt to move in desired direction
+        bool move_success = false;
         int num_attempts = 0;
-        do
+        while (!move_success && num_attempts < 5)
         {
-            int my_tile_x, my_tile_y;
-            std::tie(my_tile_x, my_tile_y) = sprite->getTileCoords();
-
-            // Tile coordinates to move to
-            int goal_tile_x, goal_tile_y;
-
-            switch (currDirection)
-            {
-                case Direction::UP:
-                {
-                    goal_tile_x = my_tile_x;
-                    goal_tile_y = my_tile_y - 1;
-                    break;
-                }
-                case Direction::DOWN:
-                {
-                    goal_tile_x = my_tile_x;
-                    goal_tile_y = my_tile_y + 1;
-                    break;
-                }
-                case Direction::LEFT:
-                {
-                    goal_tile_x = my_tile_x - 1;
-                    goal_tile_y = my_tile_y;
-                    break;
-                }
-                case Direction::RIGHT:
-                {
-                    goal_tile_x = my_tile_x + 1;
-                    goal_tile_y = my_tile_y;
-                    break;
-                }
-                default:
-                {
-                    throw std::runtime_error(
-                        "Unhandled case: Programmer error"
-                    );
-                }
-            }
-            
-            // Request to change tiles
-            bool can_move = updateContext->requestMoveToTile(
-                sprite.get(),
-                my_tile_x,
-                my_tile_y,
-                goal_tile_x,
-                goal_tile_y
-            );
-
-            // Move one tile in desired direction
-            if (can_move)
+            if (requestMoveInDir(updateContext, currDirection))
             {
                 sprite->walkInDir(
                     currDirection, 
                     TextureCache::TILE_SIZE_PX
                 );
-                is_path_blocked = false;
+                move_success = true;
             }
             else
             {
-                is_path_blocked = true;
+                // Try changing direction
+                currDirection = genRandomDirection();
             }
             num_attempts++;
-        } while (is_path_blocked && num_attempts < 4);
+        }
     }
 }
 
@@ -131,3 +87,8 @@ int WanderAction::genRandomDistance()
     // Generate random distance from 1 to 6
     return 1 + gameContext->engine->genRandInt1To100() / 20;
 }
+
+// void WanderAction::handlePathBlocked()
+// {
+    
+// }

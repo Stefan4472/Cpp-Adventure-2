@@ -91,53 +91,24 @@ void PlayerActor::updateWalkCommand(UpdateContext* updateContext)
     }
 
     // Get current tile coordinates
-    int curr_tile_x, curr_tile_y;
-    std::tie(curr_tile_x, curr_tile_y) = getTileCoords();
+    int my_tile_x, my_tile_y;
+    std::tie(my_tile_x, my_tile_y) = getTileCoords();
 
-    // Desired tile coordinates
-    int des_tile_x, des_tile_y;
-
-    switch (direction_input)
-    {
-        case Direction::UP:
-        {
-            des_tile_x = curr_tile_x;
-            des_tile_y = curr_tile_y - 1;
-            break;
-        }
-        case Direction::DOWN:
-        {
-            des_tile_x = curr_tile_x;
-            des_tile_y = curr_tile_y + 1;
-            break;
-        }
-        case Direction::LEFT:
-        {
-            des_tile_x = curr_tile_x - 1;
-            des_tile_y = curr_tile_y;
-            break;
-        }
-        case Direction::RIGHT:
-        {
-            des_tile_x = curr_tile_x + 1;
-            des_tile_y = curr_tile_y;
-            break;
-        }
-        default:
-        {
-            throw std::runtime_error(
-                "Unhandled case: Programmer error"
-            );
-        }
-    }
+    // Calculate desired tile coordinates
+    int goal_tile_x, goal_tile_y;
+    std::tie(goal_tile_x, goal_tile_y) = util::calcTileChange(
+        my_tile_x,
+        my_tile_y,
+        direction_input
+    );
 
     // Request to move to desired tile
     bool can_move = updateContext->requestMoveToTile(
         getSprite().get(),
-        curr_tile_x,
-        curr_tile_y,
-        des_tile_x,
-        des_tile_y
+        my_tile_x,
+        my_tile_y,
+        goal_tile_x,
+        goal_tile_y
     );
 
     // Execute command if we are clear to change tiles
@@ -148,7 +119,10 @@ void PlayerActor::updateWalkCommand(UpdateContext* updateContext)
             TextureCache::TILE_SIZE_PX
         );
     }
-    // TODO: PLAY WALKING ANIMATION, BUT DON'T SET MOVE GOAL, OTHERWISE
+    else
+    {
+        // TODO: PLAY WALKING ANIMATION, BUT DON'T SET MOVE GOAL, OTHERWISE
+    }
 }
 
 void PlayerActor::draw(GameRenderer* renderer) 

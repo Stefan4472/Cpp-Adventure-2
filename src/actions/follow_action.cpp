@@ -42,8 +42,6 @@ void FollowAction::update(UpdateContext* updateContext)
         {
             // Direction to move
             Direction goal_dir;
-            // Tile coordinates to move to
-            int goal_tile_x, goal_tile_y;
 
             // Determine on which axis we are farther away
             if (std::abs(x_dist) > std::abs(y_dist))
@@ -53,15 +51,11 @@ void FollowAction::update(UpdateContext* updateContext)
                 {
                     // Move one tile right
                     goal_dir = Direction::RIGHT;
-                    goal_tile_x = my_tile_x + 1;
-                    goal_tile_y = my_tile_y;
                 }
                 else
                 {
                     // Move one tile left
                     goal_dir = Direction::LEFT;
-                    goal_tile_x = my_tile_x - 1;
-                    goal_tile_y = my_tile_y;
                 }
             }
             else
@@ -71,34 +65,25 @@ void FollowAction::update(UpdateContext* updateContext)
                 {
                     // Move one tile down
                     goal_dir = Direction::DOWN;
-                    goal_tile_x = my_tile_x;
-                    goal_tile_y = my_tile_y + 1;
                 }
                 else
                 {
                     // Move one tile up
                     goal_dir = Direction::UP;
-                    goal_tile_x = my_tile_x;
-                    goal_tile_y = my_tile_y - 1;
                 }
             }
             
-            // Request to change tiles
-            bool can_move = updateContext->requestMoveToTile(
-                sprite.get(),
-                my_tile_x,
-                my_tile_y,
-                goal_tile_x,
-                goal_tile_y
-            );
-
-            // Move one tile in desired direction
-            if (can_move)
+            // Request to move in the desired direction
+            if (requestMoveInDir(updateContext, goal_dir))
             {
                 sprite->walkInDir(
-                    goal_dir, 
+                    goal_dir,
                     TextureCache::TILE_SIZE_PX
                 );
+            }
+            else
+            {
+                // Path blocked: do nothing
             }
         }
     }
