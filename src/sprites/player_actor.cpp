@@ -76,57 +76,77 @@ void PlayerActor::update(UpdateContext* updateContext)
     // Not walking: see if there's new input
     if (!sprite->getIsWalking())
     {
-        updateWalkCommand();
+        updateWalkCommand(updateContext);
     }
 }
 
-void PlayerActor::updateWalkCommand()
+void PlayerActor::updateWalkCommand(UpdateContext* updateContext)
 {
     Direction direction_input = inputHandler.getNextWalkCommand();
     
+    // Exit immediately if no direction input
+    if (direction_input == Direction::NONE)
+    {
+        return;
+    }
+
+    // Get current tile coordinates
     int curr_tile_x, curr_tile_y;
     std::tie(curr_tile_x, curr_tile_y) = getTileCoords();
 
-    // For each case: check that the adjacent tile is walkable,
-    // then set a goal for one tile in the desired direction.
+    // Desired tile coordinates
+    int des_tile_x, des_tile_y;
+
     switch (direction_input)
     {
         case Direction::UP:
         {
-            if (gameContext->engine->isTileWalkable(curr_tile_x, curr_tile_y - 1))
-            {
-                sprite->walkUp(TextureCache::TILE_SIZE_PX);
-            }
+            des_tile_x = curr_tile_x;
+            des_tile_y = curr_tile_y - 1;
             break;
         }
         case Direction::DOWN:
         {
-            if (gameContext->engine->isTileWalkable(curr_tile_x, curr_tile_y + 1))
-            {
-                sprite->walkDown(TextureCache::TILE_SIZE_PX);
-            }
+            des_tile_x = curr_tile_x;
+            des_tile_y = curr_tile_y + 1;
             break;
         }
         case Direction::LEFT:
         {
-            if (gameContext->engine->isTileWalkable(curr_tile_x - 1, curr_tile_y))
-            {
-                sprite->walkLeft(TextureCache::TILE_SIZE_PX);
-            }
+            des_tile_x = curr_tile_x - 1;
+            des_tile_y = curr_tile_y;
             break;
         }
         case Direction::RIGHT:
         {
-            if (gameContext->engine->isTileWalkable(curr_tile_x + 1, curr_tile_y))
-            {
-                sprite->walkRight(TextureCache::TILE_SIZE_PX);
-            }
+            des_tile_x = curr_tile_x + 1;
+            des_tile_y = curr_tile_y;
             break;
         }
-        case Direction::NONE:
+        default:
         {
-            break;
+            throw std::runtime_error(
+                "Unhandled case: Programmer error"
+            );
         }
+    }
+
+    // Request the tile move
+    bool can_move = updateContext->requestMoveToTile(
+        getSprite().get(),
+        curr_tile_x,
+        curr_tile_y,
+        des_tile_x,
+        des_tile_y
+    );
+
+    // Execute command if we are clear to change tiles
+    if (can_move)
+    {
+        sprite->walkInDir(
+            direction_input, 
+            TextureCache::TILE_SIZE_PX
+        );
     }
 }
 

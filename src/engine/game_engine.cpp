@@ -118,6 +118,7 @@ void GameEngine::update()
     }
     uint32_t ms_since_prev = curr_game_time - prevUpdateMs;
  
+    // TODO: RENAME: E.G., `INTERACT_REQUESTS`, `CREATE_OBJECT_REQUESTS`
     std::list<InteractRequest> req_interactions;
     std::list<CreateObjectRequest> req_created_objects;
     std::list<DestroyObjectRequest> req_destroyed_objects;

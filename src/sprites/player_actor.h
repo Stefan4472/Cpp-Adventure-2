@@ -50,6 +50,8 @@ private:
     Inventory inventory;
     // Direction currently being walked in
     // Direction currWalkCommand;
-    void updateWalkCommand();
+    void updateWalkCommand(
+        UpdateContext* updateContext
+    );
 };
 #endif

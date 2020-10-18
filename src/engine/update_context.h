@@ -4,6 +4,8 @@
 #include <list>
 #include "engine_requests.h"
 
+// TODO: REMOVE
+#include <iostream>
 
 class UpdateContext
 {
@@ -51,6 +53,17 @@ public:
         int quantity,
         int tileX, 
         int tileY
+    );
+
+    // `Move-Tile` requests are different, because they
+    // must return instantly. They are handled synchronously
+    // by the Map.
+    bool requestMoveToTile(
+        Sprite* sprite,
+        int currTileX, 
+        int currTileY,
+        int newTileX, 
+        int newTileY
     );
 
 private:

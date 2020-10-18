@@ -62,4 +62,13 @@ struct CreateDropRequest
     int tileY;
 };
 
+// Represents a sprite's request to move to the specified
+// new tile, imminently.
+struct MoveToTileRequest
+{
+    Sprite* sprite;
+    int currTileX, currTileY;
+    int newTileX, newTileY;
+};
+
 #endif

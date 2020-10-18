@@ -79,3 +79,14 @@ void UpdateContext::requestCreateDrop(
         tileY
     });
 }
+
+bool UpdateContext::requestMoveToTile(
+        Sprite* sprite,
+        int currTileX, 
+        int currTileY,
+        int newTileX, 
+        int newTileY
+) {
+    std::cout << "Move tile request for sprite " << sprite << " to " <<
+        newTileX << ", " << newTileY << std::endl;
+}

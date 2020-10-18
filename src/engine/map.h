@@ -177,6 +177,9 @@ private:
     std::vector<std::vector<std::shared_ptr<Actor>>> actors;
     std::shared_ptr<PlayerActor> playerActor;
 
+    // Grid caching which tiles are walkable. 
+    // std::vector<std::vector<bool>> walkableTiles;
+
     static std::vector<std::vector<std::shared_ptr<Tile>>> loadTiles(
         GameContext* gameContext,
         boost::filesystem::path tilesPath
