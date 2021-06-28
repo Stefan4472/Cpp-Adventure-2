@@ -1,8 +1,8 @@
 # Cpp-Adventure-2
 
-Uses SDL2 and boost.
+A small (and far from finished) game written in C++ for fun, learning, and experimentation. Uses SDL2 and boost. Compile via CMake.
 
-Simple install for boost:
+Simple install for boost on Linux:
 ```
 sudo apt-get install libboost-all-dev
 ```
